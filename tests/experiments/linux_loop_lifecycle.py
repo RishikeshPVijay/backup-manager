@@ -58,6 +58,8 @@ async def probe():
         run("losetup", device, image)
         try:
             reference.symlink_to(device)
+            prelaunch = await provider.resolve_identity(config, context)
+            assert prelaunch.verified_physical and prelaunch.physical_identity == f"filesystem:{filesystem_uuid}"
             acquired = await provider.acquire(config, context, commands)
             assert acquired.changed_physical_state and acquired.inspection.identity.verified_physical
             assert acquired.inspection.state is StorageState.AVAILABLE

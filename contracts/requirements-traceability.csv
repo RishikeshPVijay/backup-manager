@@ -18,12 +18,12 @@ D16,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,Domain mapping is provisi
 D17,confirmed,AT-015;AT-016;AT-018,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D18,confirmed,AT-015;AT-016;AT-018,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D19,confirmed,AT-015;AT-016;AT-018,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D20,confirmed,AT-015;AT-016;AT-018,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D20,confirmed,AT-015;AT-016;AT-018,not_executed,linux_shared_storage.py asserts release after final claimant and independent dispatcher completion
 D21,confirmed,AT-015;AT-016;AT-018,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D22,confirmed,AT-015;AT-016;AT-018,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D23,confirmed,AT-015;AT-016;AT-018,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D24,confirmed,AT-015;AT-016;AT-018,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D25,confirmed,AT-019;AT-023;AT-029,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D25,confirmed,AT-019;AT-023;AT-029,not_executed,linux_crash_fencing.py asserts SIGKILL leaves live scope claims fenced and later recovers only after termination
 D26,confirmed,AT-019;AT-023;AT-029,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D27,confirmed,AT-019;AT-023;AT-029,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D28,confirmed,AT-019;AT-023;AT-029,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
@@ -82,8 +82,8 @@ D80,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisi
 D81,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D82,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D83,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D84,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D85,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D84,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,linux_crash_fencing.py asserts claims remain held until the recorded scope is empty
+D85,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,StorageCoordinatorTests.test_recovery_preserves_mounted_storage_and_drops_orphan_release_authority asserts no provider release during recovery
 D86,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D87,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D88,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
@@ -94,14 +94,14 @@ D92,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisi
 D93,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D94,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D95,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D96,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D96,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,linux_shared_storage.py asserts two waiting process claims produce one physical acquisition call
 D97,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D98,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D99,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D98,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,linux_shared_storage.py asserts one participant withdrawal leaves the other acquisition active
+D99,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,linux_shared_storage.py asserts last-waiter cancellation and fresh retry; StorageDriverTests asserts cleanup reservation on a raced successful mount
 D100,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D101,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D102,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D103,confirmed,AT-005;AT-039,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D103,confirmed,AT-005;AT-039,not_executed,linux_atomic_claims.py asserts cross-process exclusive repository claim admission; operation matrix certification pending
 D104,confirmed,AT-005;AT-039,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D105,confirmed,AT-005;AT-039,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 R1,confirmed,AT-003;AT-004;AT-010;AT-011;AT-029;AT-030,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
@@ -118,7 +118,7 @@ G1,confirmed,AT-003;AT-007;AT-008;AT-009;AT-015;AT-040,not_executed,Domain mappi
 G2,superseded_by_shared_retention_policy,AT-003;AT-007;AT-008;AT-009;AT-015;AT-040,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 G3,confirmed,AT-003;AT-007;AT-008;AT-009;AT-015;AT-040,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 G4,confirmed,AT-003;AT-007;AT-008;AT-009;AT-015;AT-040,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-G5,confirmed,AT-003;AT-007;AT-008;AT-009;AT-015;AT-040,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+G5,confirmed,AT-003;AT-007;AT-008;AT-009;AT-015;AT-040,not_executed,linux_atomic_claims.py asserts reverse-ordered requests admit only one complete claim set
 G6,confirmed,AT-003;AT-007;AT-008;AT-009;AT-015;AT-040,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 G7,confirmed,AT-003;AT-007;AT-008;AT-009;AT-015;AT-040,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 L1,confirmed,AT-017;AT-018;AT-021;AT-022,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
@@ -129,9 +129,9 @@ L5,confirmed,AT-017;AT-018;AT-021;AT-022,not_executed,Domain mapping is provisio
 L6,confirmed,AT-017;AT-018;AT-021;AT-022,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 A1,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 A2,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-A3,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-A4,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-A5,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+A3,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,linux_atomic_claims.py asserts one complete ordered set and one busy outcome across two processes
+A4,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,linux_journaled_supervisor.py asserts scope verification and timed containment shutdown
+A5,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,linux_shared_storage.py asserts independent lifecycle dispatch through a scoped fixture provider
 A6,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 A7,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 A8,confirmed,AT-007;AT-008;AT-009;AT-030;AT-031,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release

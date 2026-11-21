@@ -195,7 +195,7 @@ def drop_claim(database, claim_id, owner_id):
     return None
 
 
-def complete_acquisition(database, operation_id, *, available, ownership_evidence, cancelled_clean=False):
+def complete_acquisition(database, operation_id, *, available, ownership_evidence, absence_confirmed=False):
     row = database.execute(
         """SELECT operation.resource_id, operation.state, resource.coordination_id, resource.identity_generation
            FROM storage_operations AS operation JOIN storage_resources AS resource USING (resource_id)
@@ -225,15 +225,15 @@ def complete_acquisition(database, operation_id, *, available, ownership_evidenc
         )
         if stored.rowcount != 1:
             raise StateUnsafe("Existing ownership requires physical reconciliation.")
-    cancelled_with_no_mount = (
-        previous == "CANCEL_REQUESTED" and command[1] is None
-        and cancelled_clean and not available and not ownership_evidence
+    stopped_without_mount = (
+        absence_confirmed and not available and not ownership_evidence
+        and (command[1] is not None or previous == "CANCEL_REQUESTED")
     )
     database.execute(
         "UPDATE storage_operations SET state = ? WHERE operation_id = ?",
-        ("TERMINATED" if command[1] == 0 or cancelled_with_no_mount else "RECOVERY_REQUIRED", operation_id),
+        ("TERMINATED" if command[1] == 0 or stopped_without_mount else "RECOVERY_REQUIRED", operation_id),
     )
-    if command[1] != 0 or previous == "CANCEL_REQUESTED":
+    if (command[1] != 0 and not stopped_without_mount) or previous == "CANCEL_REQUESTED":
         return
     state = "ACTIVE" if available else "RELEASED"
     database.execute(

@@ -36,7 +36,7 @@ class StateTests(unittest.TestCase):
         )
         with closing(sqlite3.connect(self.path)) as database:
             self.assertEqual(database.execute("PRAGMA journal_mode").fetchone(), ("wal",))
-            self.assertEqual(database.execute("SELECT version FROM schema_migrations").fetchall(), [(1,)])
+            self.assertEqual(database.execute("SELECT version FROM schema_migrations").fetchall(), [(1,), (2,)])
 
     def test_identity_and_generation_mismatch_is_unsafe(self):
         record = initialize(self.path, self.anchor)
@@ -137,3 +137,41 @@ with state_write(*(Path(item) for item in sys.argv[1:])):
             self.assertEqual(backup.execute("SELECT generation FROM instance_state").fetchone(), (1,))
         with self.assertRaises(StateUnsafe):
             backup_state(self.path, self.anchor, destination)
+
+    def test_upgrade_backs_up_old_schema_before_transaction(self):
+        from unittest.mock import patch
+        from backup_manager.state import MIGRATIONS, upgrade_state
+
+        with patch("backup_manager.state.MIGRATIONS", MIGRATIONS[:1]):
+            old = initialize(self.path, self.anchor)
+        with self.assertRaisesRegex(StateUnsafe, "explicit upgrade"):
+            check(self.path, self.anchor)
+        destination = self.path.parent / "before.db"
+        upgraded = upgrade_state(self.path, self.anchor, destination)
+        self.assertEqual(upgraded["generation"], old["generation"] + 1)
+        self.assertEqual(check(self.path, self.anchor), upgraded)
+        with closing(sqlite3.connect(destination)) as previous:
+            self.assertEqual(previous.execute("SELECT version FROM schema_migrations").fetchall(), [(1,)])
+
+    def test_failed_upgrade_rolls_back_schema_and_preserves_backup(self):
+        from unittest.mock import patch
+        from backup_manager.state import MIGRATIONS, migration, upgrade_state
+
+        with patch("backup_manager.state.MIGRATIONS", MIGRATIONS[:1]):
+            initialize(self.path, self.anchor)
+        destination = self.path.parent / "before.db"
+
+        def broken(name):
+            if name == MIGRATIONS[-1]:
+                return "CREATE TABLE interrupted(x); INVALID SQL;", "broken"
+            return migration(name)
+
+        with patch("backup_manager.state.migration", side_effect=broken):
+            with self.assertRaisesRegex(StateUnsafe, "upgrade failed"):
+                upgrade_state(self.path, self.anchor, destination)
+        with closing(sqlite3.connect(self.path)) as database:
+            self.assertEqual(database.execute("SELECT version FROM schema_migrations").fetchall(), [(1,)])
+            self.assertIsNone(database.execute("SELECT name FROM sqlite_master WHERE name = 'interrupted'").fetchone())
+        self.assertTrue(destination.with_name("before.db.manifest.json").exists())
+        with self.assertRaises(StateUnsafe):
+            check(self.path, self.anchor)

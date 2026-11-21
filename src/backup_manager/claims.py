@@ -66,3 +66,30 @@ def admit_repository_claims(database, operation_id, owner_id, requests, compatib
         [(claim_set_id, request.repository_key, request.access_mode) for request in ordered],
     )
     return claim_set_id
+
+
+def repository_authorized(database, operation_id, owner_id):
+    return database.execute(
+        """SELECT 1 FROM repository_claim_sets AS claim
+           JOIN process_owners AS owner USING (owner_id)
+           WHERE claim.operation_id = ? AND claim.owner_id = ?
+             AND claim.state = 'ACTIVE' AND owner.state = 'ACTIVE'""",
+        (operation_id, owner_id),
+    ).fetchone() is not None
+
+
+def relinquish_repository_claims(database, operation_id, owner_id):
+    if not repository_authorized(database, operation_id, owner_id):
+        raise StateUnsafe("Repository claims are absent or require recovery.")
+    execution = database.execute(
+        """SELECT state, termination_evidence FROM command_executions
+           WHERE operation_id = ? AND owner_id = ?""",
+        (operation_id, owner_id),
+    ).fetchone()
+    if execution is not None and (execution[0] != "TERMINATED" or not execution[1]):
+        raise StateUnsafe("Repository command termination is unconfirmed.")
+    return database.execute(
+        """UPDATE repository_claim_sets SET state = 'RELEASED'
+           WHERE operation_id = ? AND owner_id = ?""",
+        (operation_id, owner_id),
+    ).rowcount == 1

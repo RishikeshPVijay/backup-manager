@@ -22,6 +22,7 @@ class LaunchReceipt:
     supervisor_id: str
     containment_id: str
     process: ProcessIdentity
+    cgroup_namespace: str | None = None
 
 
 def now():
@@ -46,7 +47,7 @@ def register_owner(database, identity, supervisor_id):
     return owner_id
 
 
-def record_intent(database, operation_id, owner_id):
+def record_intent(database, operation_id, owner_id, *, scope_gate=False):
     """The caller commits this intent before requesting a launch."""
     owner = database.execute(
         "SELECT supervisor_id FROM process_owners WHERE owner_id = ? AND state = 'ACTIVE'",
@@ -59,7 +60,7 @@ def record_intent(database, operation_id, owner_id):
         """INSERT INTO command_executions
            (execution_id, operation_id, owner_id, state, launch_intent_at, process_identity_json)
            VALUES (?, ?, ?, 'LAUNCH_INTENT', ?, ?)""",
-        (execution_id, operation_id, owner_id, now(), json.dumps({"supervisor_id": owner[0]})),
+        (execution_id, operation_id, owner_id, now(), json.dumps({"supervisor_id": owner[0], "scope_gate": scope_gate})),
     )
     event(database, execution_id, "launch_intent")
     return LaunchIntent(execution_id, operation_id, owner_id, owner[0])
@@ -79,14 +80,37 @@ def execution(database, intent):
     return row
 
 
+def record_scope_ready(database, intent, receipt):
+    state, payload, boot_id, supervisor_id, owner_state = execution(database, intent)
+    if (
+        state != "LAUNCH_INTENT" or owner_state != "ACTIVE"
+        or not json.loads(payload).get("scope_gate")
+        or json.loads(payload).get("containment_id") is not None
+        or receipt.supervisor_id != supervisor_id or boot_id != receipt.process.boot_id
+        or not receipt.cgroup_namespace or not receipt.containment_id
+    ):
+        raise StateUnsafe("The scope is not associated with the active launch gate.")
+    database.execute(
+        "UPDATE command_executions SET process_identity_json = ? WHERE execution_id = ?",
+        (json.dumps({**asdict(receipt), "scope_gate": True}), intent.execution_id),
+    )
+    event(database, intent.execution_id, "scope_ready")
+
+
 def record_launched(database, intent, receipt):
-    state, _, boot_id, supervisor_id, owner_state = execution(database, intent)
+    state, payload, boot_id, supervisor_id, owner_state = execution(database, intent)
     if (
         state != "LAUNCH_INTENT" or owner_state != "ACTIVE"
         or receipt.supervisor_id != supervisor_id or receipt.process.boot_id != boot_id
         or not receipt.containment_id
     ):
         raise StateUnsafe("Launch receipt does not match the active intent.")
+    prepared = json.loads(payload)
+    if prepared.get("scope_gate") and (
+        prepared.get("containment_id") != receipt.containment_id
+        or prepared.get("cgroup_namespace") != receipt.cgroup_namespace
+    ):
+        raise StateUnsafe("Command launch differs from its prepared scope.")
     database.execute(
         """UPDATE command_executions SET state = 'LAUNCHED', launched_at = ?, process_identity_json = ?
            WHERE execution_id = ?""",

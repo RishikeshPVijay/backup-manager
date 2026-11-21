@@ -11,7 +11,7 @@ import sys
 from time import monotonic
 from uuid import UUID
 
-from .launch_journal import LaunchReceipt, fence_uncertain, record_intent, record_launched, record_terminated
+from .launch_journal import LaunchReceipt, fence_uncertain, record_intent, record_launched, record_scope_ready, record_terminated
 from .process_identity import Presence, ProcessIdentity
 from .scope_worker import OUTPUT_LIMIT, REQUEST_LIMIT
 from .state import state_write
@@ -101,7 +101,7 @@ def stop_scope(unit):
         return False
 
 
-def execute(intent, argv, *, deadline, on_launch, cwd=None, env=None, stdin_payload=None, cancelled=None):
+def execute(intent, argv, *, deadline, on_launch, cwd=None, env=None, stdin_payload=None, cancelled=None, on_scope_ready=None):
     """Run after the caller commits intent. The callback must durably record the receipt."""
     unit = f"backup-manager-{UUID(intent.execution_id).hex}.scope"
     request = json.dumps({
@@ -125,12 +125,16 @@ def execute(intent, argv, *, deadline, on_launch, cwd=None, env=None, stdin_payl
         frames = Frames(wrapper.stdout)
         worker = ProcessIdentity(**frames.read(deadline)["worker"])
         location = cgroup_for(worker, unit)
+        containment = str(location.relative_to(CGROUP_ROOT))
+        namespace = os.readlink("/proc/self/ns/cgroup")
+        if on_scope_ready is not None:
+            on_scope_ready(LaunchReceipt(intent.supervisor_id, containment, worker, namespace))
         wrapper.stdin.write(request)
         wrapper.stdin.flush()
         process = ProcessIdentity(**frames.read(deadline)["process"])
         if process.boot_id != worker.boot_id or process.pid_namespace != worker.pid_namespace:
             raise SupervisionUncertain("The launched process identity differs from the scoped worker.")
-        on_launch(LaunchReceipt(intent.supervisor_id, str(location.relative_to(CGROUP_ROOT)), process))
+        on_launch(LaunchReceipt(intent.supervisor_id, containment, process, namespace))
         result = frames.read(deadline, cancelled)
         return_value = ScopedResult(
             int(result["exit_code"]), base64.b64decode(result["stdout"], validate=True),
@@ -160,25 +164,32 @@ def execute(intent, argv, *, deadline, on_launch, cwd=None, env=None, stdin_payl
 
 def run_journaled(path, anchor, operation_id, owner_id, argv, *, deadline, cwd=None, env=None, stdin_payload=None, authorize=None, cancelled=None):
     """Run a declared operation and durably journal the supervised transitions."""
-    with state_write(path, anchor) as database:
-        authorized = authorize is None or authorize(database)
-        intent = record_intent(database, operation_id, owner_id) if authorized else None
+    with state_write(path, anchor, wait=5) as database:
+        existing = database.execute(
+            "SELECT 1 FROM command_executions WHERE operation_id = ?", (operation_id,),
+        ).fetchone()
+        authorized = existing is None and (authorize is None or authorize(database))
+        intent = record_intent(database, operation_id, owner_id, scope_gate=True) if authorized else None
     if intent is None:
         raise SupervisionUncertain("The operation no longer authorizes launch.")
 
     def persist(receipt):
-        with state_write(path, anchor) as database:
+        with state_write(path, anchor, wait=5) as database:
             record_launched(database, intent, receipt)
+
+    def persist_scope(receipt):
+        with state_write(path, anchor, wait=5) as database:
+            record_scope_ready(database, intent, receipt)
 
     try:
         result = execute(
             intent, argv, deadline=deadline, on_launch=persist, cwd=cwd, env=env,
-            stdin_payload=stdin_payload, cancelled=cancelled,
+            stdin_payload=stdin_payload, cancelled=cancelled, on_scope_ready=persist_scope,
         )
     except SupervisionUncertain:
-        with state_write(path, anchor) as database:
+        with state_write(path, anchor, wait=5) as database:
             fence_uncertain(database, intent)
         raise
-    with state_write(path, anchor) as database:
+    with state_write(path, anchor, wait=5) as database:
         record_terminated(database, intent, result)
     return result

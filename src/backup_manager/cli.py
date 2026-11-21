@@ -5,10 +5,12 @@ from importlib.metadata import version
 import json
 from pathlib import Path
 import sys
+from time import monotonic_ns
 
 from .config import IDENTIFIER, load_global, load_job
 from .errors import Diagnostic, InvalidInvocation, Result, Status
 from . import state
+from .storage_coordinator import StorageCoordinator
 
 DEFAULT_CONFIG = Path("/etc/backup-manager/config.toml")
 
@@ -139,28 +141,61 @@ def config_validate(args):
     return Result(Status.INVALID if errors else Status.FULL, errors=tuple(errors))
 
 
+def confirm(args, target):
+    if args.yes:
+        return
+    if not sys.stdin.isatty():
+        raise InvalidInvocation
+    print(f"Type {target} to confirm.", file=sys.stderr)
+    if sys.stdin.readline().rstrip("\n") != target:
+        raise InvalidInvocation
+
+
 def dispatch(args):
     if args.group == "version":
         return Result(data={"version": version("backup-manager")})
     if args.group == "config":
         return config_validate(args)
-    if args.group == "state" and args.action in {"init", "check"}:
+    if args.group == "state" and args.action in {"init", "check", "backup"}:
         config = load_global(getattr(args, "config", DEFAULT_CONFIG))
         if config.errors:
             return Result(Status.INVALID, errors=config.errors)
         path = Path(config.data["state"]["path"])
         anchor = Path(config.data["state"]["anchor_path"])
-        if args.action == "init" and not args.yes:
-            if not sys.stdin.isatty():
-                raise InvalidInvocation
-            print(f"Type {path} to confirm initialization.", file=sys.stderr)
-            if sys.stdin.readline().rstrip("\n") != str(path):
-                raise InvalidInvocation
+        if args.action == "init":
+            confirm(args, str(path))
         try:
-            data = state.initialize(path, anchor) if args.action == "init" else state.check(path, anchor)
+            if args.action == "init":
+                data = state.initialize(path, anchor)
+            elif args.action == "backup":
+                data = state.backup_state(path, anchor, args.path.absolute())
+            else:
+                data = state.check(path, anchor)
         except state.StateUnsafe as error:
             return Result(Status.UNSAFE, errors=(Diagnostic("STATE_UNSAFE", str(error)),))
         return Result(data=data)
+    if args.group == "storage" and args.action == "recover":
+        config = load_global(getattr(args, "config", DEFAULT_CONFIG))
+        if config.errors:
+            return Result(Status.INVALID, errors=config.errors)
+        if args.storage not in config.data["storage"]:
+            return Result(Status.INVALID, errors=(Diagnostic("UNKNOWN_STORAGE", "Storage identifier is not configured."),))
+        confirm(args, args.storage)
+        execution = config.data.get("execution", {})
+        budgets = (execution.get("acquire_timeout_seconds"), execution.get("release_timeout_seconds"))
+        if any(budget is None for budget in budgets):
+            return Result(Status.INVALID, errors=(Diagnostic("STORAGE_BUDGET", "Storage recovery requires configured lifecycle budgets."),))
+        timeout = min(budgets[0], getattr(args, "timeout_seconds", budgets[0]))
+        try:
+            coordinator = StorageCoordinator(
+                Path(config.data["state"]["path"]), Path(config.data["state"]["anchor_path"]),
+                config.data["storage"], acquire_seconds=budgets[0], release_seconds=budgets[1],
+            )
+            return Result(data=coordinator.recover_storage(
+                args.storage, deadline=monotonic_ns() + timeout * 1_000_000_000,
+            ))
+        except (state.StateUnsafe, TimeoutError):
+            return Result(Status.UNSAFE, errors=(Diagnostic("STORAGE_RECOVERY", "Storage remains fenced pending reconciliation."),))
     if args.group == "batch" and bool(args.jobs) == args.all:
         raise InvalidInvocation
     if getattr(args, "limit", None) and args.limit > 1000:

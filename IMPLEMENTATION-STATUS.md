@@ -1,6 +1,6 @@
 # Implementation status
 
-Baseline v1.0. I1 foundation is implemented. I2 provider and worker gate verified. I3 is in progress. I4–I9 are pending. Mandatory acceptance scenarios remain 0 executed and 0 passed out of 40. Restic certification, runtime migrations, and process/storage crash recovery have no execution evidence.
+Baseline v1.0. I1–I3 milestone gates verified on Linux x86_64. I4–I9 are pending. The full 40-scenario release acceptance run and exact Restic binary certification remain pending. I3 crash and storage fixture evidence is recorded below.
 
 ## I1 foundation checklist
 
@@ -143,3 +143,23 @@ A4/A5/A12/D25/D82/D84/L3. A supervisor commits intent, creates a dedicated scope
 - The SQLite online backup helper now verifies the resulting database and writes an instance ID, generation, and SHA-256 manifest. It refuses to overwrite an existing backup. Upgrade integration and operator restore remain pending.
 - Handoff validation, source and wheel builds, wheel installation, and the 54-test installed-wheel regression exited 0. The user-scope fixture exited 0 outside the sandbox. It exercised cancellation from a second process and verified the canceled operation reached durable termination. Driver tests cover worker-versus-physical mismatch, cancellation with no mount, and release reservation after a completed acquisition races cancellation.
 - I3 gate remains open. Job-facing admission and independent lifecycle dispatch, execution of a reserved cleanup with its own release budget, operator reconciliation of unresolved launches and upgrades from existing state still need end-to-end coverage. Restic certification remains pending.
+
+### I3 gate closeout
+
+Completed SQLite migrations and verified backups, cross-process storage and repository claims, independently dispatched resource lifecycle, owner fencing, durable process supervision, and evidence-based recovery for interrupted owners and storage. I3 adds public state backup and explicit storage recovery. Restic-dependent operation compatibility, repository validation, job orchestration, and full state restore remain in their designated later milestones. Native Restic locks are untouched. D106 remains paused.
+
+| Command or evidence | Exit | Observed assertion |
+|---|---:|---|
+| `/tmp/bm-dev/bin/python tools/validate_handoff.py` | 0 | Static references, schemas, example files, DDL, requirements and scenario inventory validated. |
+| `/tmp/bm-dev/bin/python -m build --no-isolation --outdir /tmp/bm-i3-dist` | 0 | Built source distribution and wheel. |
+| `/tmp/bm-dev/bin/python -m pip --disable-pip-version-check install --no-deps --force-reinstall /tmp/bm-i3-dist/*.whl` | 0 | Installed the built wheel. |
+| `/tmp/bm-dev/bin/python -m unittest discover -s tests/unit -q` | 0 | 59 passed. Includes confirmed-generation backup, upgrade rollback, last-waiter race, preservation of orphaned mounts, and storage-before-repository enforcement. |
+| `/tmp/bm-dev/bin/python tests/experiments/linux_atomic_claims.py` | 0 | Reverse-ordered processes yielded one busy result and one entire claim set. |
+| `/tmp/bm-dev/bin/python tests/experiments/linux_launch_boundaries.py` | 0 | Exits after intent, after scope preparation and after exec before receipt never recorded success. Command side effect was observed only after exec. |
+| `/tmp/bm-dev/bin/python tests/experiments/linux_crash_fencing.py` | 0 | SIGKILL of an owner left a live child fenced. Explicit fixture scope termination allowed evidence-based recovery and relinquishment. |
+| `/tmp/bm-dev/bin/python tests/experiments/linux_shared_storage.py` | 0 | Independent processes shared one acquisition, a single participant withdrew, last-waiter cancellation completed, a new request retried, final release was independent, and the external fixture mount was preserved. |
+| `/tmp/bm-dev/bin/python tests/experiments/linux_journaled_supervisor.py` | 0 | Durable scope and process observations, duplicate launch rejection, private stdin, detached descendant cleanup, cancellation, and uncertain timeout verified. |
+| `/tmp/bm-dev/bin/python tests/experiments/linux_lifecycle_mountinfo.py` | 0 | Real mount topology checks and cleanup using private tmpfs mounts. |
+| `tests/experiments/linux_loop_lifecycle.py` in the I2 disposable test image described above | 0 | Real ext4 loop identity before and after acquisition, independent verification, verified release, preservation of an external mount, and complete fixture cleanup. |
+
+Verified 2026-11-21 UTC on Linux 6.12.101+deb13-amd64 x86_64 and CPython 3.13.5. Final tested wheel SHA-256 `1bad08c1b89944256fb3df08b111f85c99e59d4ed96450711081953eebc0f956`. The supervisor uses verified user systemd scopes and keeps work fenced when the scope or its recovery evidence cannot be verified. Cross-process coordination tests used a marker-file provider; physical block mount tests ran separately in the private loop-device container. These results establish the I3 milestone on the tested platform. The release acceptance run and I4 binary certification are separate gates.

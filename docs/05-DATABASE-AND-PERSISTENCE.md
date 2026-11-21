@@ -21,3 +21,9 @@ On uncertain launch assume possibly started; block conflicting claims until defi
 ## I3 initialization checkpoint
 
 The shipped first migration runs only during explicit state initialization. The configured database parent directory must already exist, be owned by the invoking account, and be protected against writes by other users. Initialization enables WAL and records the migration checksum and initial instance identity. The required state.anchor_path points to an independent generation witness. Its parent directory must be outside the database directory tree. Operators must also exclude it from every recovery, backup, and snapshot rollback that can rewind the database. A database and witness restored together cannot establish their own freshness. Read-only state checks currently refuse SQLite sidecars pending supervised reconciliation.
+
+## I3 migration and recovery procedures
+
+The runtime packages independent SQL migrations and checks every applied version and checksum. Fresh initialization applies the full chain in one transaction. The upgrade routine backs up an idle old generation with the SQLite online backup API, verifies the copy, and writes an identity and SHA-256 manifest before reserving the next generation and applying pending SQL. Stop external admissions before an upgrade. Live owners, unresolved executions, and active claims prevent it. On migration failure, preserve the database, witness, and backup. The checker reports recovery required until the instance is reconciled.
+
+Use the supported CLI form `backup-manager --config PATH state backup OUTPUT_PATH` to make a read-only snapshot of the current database with its manifest. Provision the output parent beforehand. The saved database and manifest are separate files. Keep the live generation witness outside any restore of the database or snapshot.

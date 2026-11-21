@@ -85,7 +85,19 @@ class LinuxFilesystem:
                 os.close(fd)
 
     async def resolve_identity(self, config, context):
-        return (await self.inspect(config, context)).identity
+        inspection = await self.inspect(config, context)
+        if inspection.state is not StorageState.UNAVAILABLE or inspection.details.get("mount_count") != "0":
+            return inspection.identity
+        # Consult the udev UUID mapping before acquisition. The mounted
+        # filesystem must independently match this identity afterward.
+        try:
+            details = (Path("/dev/disk/by-uuid") / config["filesystem_uuid"]).stat()
+        except OSError:
+            return inspection.identity
+        if not stat.S_ISBLK(details.st_mode):
+            return inspection.identity
+        coordination = inspection.identity.coordination_id
+        return StorageIdentity(coordination, coordination, {}, True)
 
     async def acquire(self, config, context, commands):
         before = await self.inspect(config, context)

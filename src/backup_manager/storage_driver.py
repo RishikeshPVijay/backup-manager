@@ -29,7 +29,7 @@ def verified_reply(result, inspection):
 
 
 def fence_operation(path, anchor, operation_id):
-    with state_write(path, anchor) as database:
+    with state_write(path, anchor, wait=5) as database:
         database.execute(
             """UPDATE storage_operations SET state = 'RECOVERY_REQUIRED'
                WHERE operation_id = ? AND state IN ('ACQUIRING', 'CANCEL_REQUESTED', 'RELEASING')""",
@@ -56,7 +56,7 @@ def drive_lifecycle(path, anchor, plan, owner_id, provider, config, context, *, 
         absent = absent and physical.details.get("mount_count") == "0"
 
     if plan.kind == "release":
-        with state_write(path, anchor) as database:
+        with state_write(path, anchor, wait=5) as database:
             released = complete_release(
                 database, plan.operation_id,
                 physical_release_confirmed=bool(receipt and absent and receipt["changed_physical_state"]),
@@ -72,7 +72,7 @@ def drive_lifecycle(path, anchor, plan, owner_id, provider, config, context, *, 
     ):
         fence_operation(path, anchor, plan.operation_id)
         raise StateUnsafe("Acquisition result does not match fresh physical evidence.")
-    with state_write(path, anchor) as database:
+    with state_write(path, anchor, wait=5) as database:
         row = database.execute(
             """SELECT operation.state, resource.coordination_id, resource.expected_identity
                FROM storage_operations AS operation JOIN storage_resources AS resource USING (resource_id)
@@ -93,7 +93,7 @@ def drive_lifecycle(path, anchor, plan, owner_id, provider, config, context, *, 
         complete_acquisition(
             database, plan.operation_id, available=bool(receipt and available),
             ownership_evidence=evidence if result.exit_code == 0 else {},
-            cancelled_clean=absent,
+            absence_confirmed=absent,
         )
         # Reserve cleanup atomically before another claimant can reuse the mount.
         cleanup = plan_release(database, coordination, owner_id) if prior == "CANCEL_REQUESTED" and evidence else None

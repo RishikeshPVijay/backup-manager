@@ -32,6 +32,15 @@ def main():
             deadline=monotonic() + 10, stdin_payload=b"disposable worker payload",
         )
         assert received.exit_code == 0 and received.stdout == b"disposable worker payload"
+        try:
+            run_journaled(
+                db, anchor, "stdin", owner, (sys.executable, "-c", "raise AssertionError"),
+                deadline=monotonic() + 10,
+            )
+        except SupervisionUncertain:
+            pass
+        else:
+            raise AssertionError("A recorded operation was authorized for a second launch.")
         marker = root / "child.identity"
         script = """
 from dataclasses import asdict
