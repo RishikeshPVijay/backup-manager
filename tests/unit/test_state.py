@@ -121,3 +121,19 @@ with state_write(*(Path(item) for item in sys.argv[1:])):
             self.assertEqual(database.execute("SELECT name FROM sqlite_master").fetchall(), [])
         with self.assertRaises(StateUnsafe):
             check(self.path, self.anchor)
+
+    def test_online_backup_contains_matching_identity_and_integrity_manifest(self):
+        import hashlib
+        from backup_manager.state import backup_state
+
+        record = initialize(self.path, self.anchor)
+        destination = self.path.parent / "copy.db"
+        manifest = backup_state(self.path, self.anchor, destination)
+        self.assertEqual(manifest["instance_id"], record["instance_id"])
+        self.assertEqual(manifest["generation"], record["generation"])
+        self.assertEqual(manifest["sha256"], hashlib.sha256(destination.read_bytes()).hexdigest())
+        self.assertEqual(json.loads(destination.with_name("copy.db.manifest.json").read_text()), manifest)
+        with closing(sqlite3.connect(destination)) as backup:
+            self.assertEqual(backup.execute("SELECT generation FROM instance_state").fetchone(), (1,))
+        with self.assertRaises(StateUnsafe):
+            backup_state(self.path, self.anchor, destination)

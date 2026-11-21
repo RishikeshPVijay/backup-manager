@@ -18,6 +18,10 @@ class StateUnsafe(Exception):
     """Database state cannot be safely used."""
 
 
+class StateBusy(StateUnsafe):
+    """Another process is holding the generation lock."""
+
+
 LOCAL_FILESYSTEMS = {
     b"btrfs", b"ext2", b"ext3", b"ext4", b"f2fs", b"tmpfs", b"xfs", b"zfs",
 }
@@ -56,10 +60,11 @@ def state_lock(path, anchor, *, exclusive):
         raise StateUnsafe("Database and witness must use separate directory trees.")
     fd = os.open(anchor.parent, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
     try:
-        fcntl.flock(fd, (fcntl.LOCK_EX if exclusive else fcntl.LOCK_SH) | fcntl.LOCK_NB)
+        try:
+            fcntl.flock(fd, (fcntl.LOCK_EX if exclusive else fcntl.LOCK_SH) | fcntl.LOCK_NB)
+        except BlockingIOError as error:
+            raise StateBusy("State witness directory is busy.") from error
         yield
-    except BlockingIOError as error:
-        raise StateUnsafe("State witness directory is busy.") from error
     finally:
         os.close(fd)
 
@@ -187,3 +192,51 @@ def state_write(path, anchor):
                     yield database
     except (OSError, sqlite3.Error, StopIteration, ValueError) as error:
         raise StateUnsafe("State write failed. Explicit recovery may be required.") from error
+
+
+@contextmanager
+def state_read(path, anchor):
+    """Hold a shared generation lock for a read-only coordination query."""
+    try:
+        with state_lock(path, anchor, exclusive=False):
+            checked_record(path, anchor)
+            with closing(connect(path, "ro&immutable=1")) as database:
+                yield database
+    except (OSError, sqlite3.Error, StopIteration, ValueError) as error:
+        raise StateUnsafe("State could not be read safely.") from error
+
+
+def backup_state(path, anchor, output):
+    """Write a consistent SQLite backup and integrity manifest without overwriting."""
+    manifest = output.with_name(output.name + ".manifest.json")
+    try:
+        require_local_directory(output.parent)
+        with state_read(path, anchor) as source:
+            record = source.execute(
+                "SELECT instance_id, generation FROM instance_state WHERE singleton = 1",
+            ).fetchone()
+            if os.path.lexists(manifest):
+                raise StateUnsafe("The output manifest already exists.")
+            descriptor = os.open(output, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+            os.close(descriptor)
+            with closing(connect(output, "rw")) as destination:
+                source.backup(destination)
+                if destination.execute("PRAGMA integrity_check").fetchall() != [("ok",)]:
+                    raise StateUnsafe("SQLite backup failed integrity verification.")
+                if destination.execute("PRAGMA foreign_key_check").fetchone() is not None:
+                    raise StateUnsafe("SQLite backup contains invalid foreign keys.")
+            with output.open("rb") as stream:
+                os.fsync(stream.fileno())
+                metadata = {
+                    "schema_version": 1, "instance_id": record[0], "generation": record[1],
+                    "sha256": hashlib.file_digest(stream, "sha256").hexdigest(),
+                }
+            descriptor = os.open(manifest, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+            with os.fdopen(descriptor, "w", encoding="utf-8") as stream:
+                json.dump(metadata, stream)
+                stream.flush()
+                os.fsync(stream.fileno())
+            sync_directory(output.parent)
+        return metadata
+    except (OSError, sqlite3.Error, StopIteration, ValueError) as error:
+        raise StateUnsafe("State backup failed. Verify any incomplete backup files.") from error

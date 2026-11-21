@@ -5,6 +5,7 @@ import json
 import sys
 from time import monotonic_ns
 
+from .state import StateBusy, state_read
 from .supervisor import run_journaled
 
 
@@ -29,9 +30,20 @@ def execute_lifecycle(path, anchor, plan, owner_id, provider, config, context, o
         expected = "ACQUIRING" if plan.kind == "acquire" else "RELEASING"
         return row == (plan.kind, owner_id, expected)
 
+    def cancelled():
+        try:
+            with state_read(path, anchor) as database:
+                row = database.execute(
+                    "SELECT state FROM storage_operations WHERE operation_id = ?", (plan.operation_id,),
+                ).fetchone()
+        except StateBusy:
+            return False
+        return row == ("CANCEL_REQUESTED",)
+
     return run_journaled(
         path, anchor, plan.operation_id, owner_id,
         (sys.executable, "-m", "backup_manager.lifecycle_worker"),
         deadline=context.deadline_monotonic_ns / 1_000_000_000,
         stdin_payload=request, authorize=authorize,
+        cancelled=cancelled if plan.kind == "acquire" else None,
     )

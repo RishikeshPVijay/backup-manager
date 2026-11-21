@@ -5,13 +5,14 @@ import json
 import os
 from pathlib import Path
 import sqlite3
+import subprocess
 import sys
 from tempfile import TemporaryDirectory
 from time import monotonic
 
 from backup_manager.launch_journal import register_owner
 from backup_manager.process_identity import Presence, ProcessIdentity
-from backup_manager.state import initialize, state_write
+from backup_manager.state import initialize, state_read, state_write
 from backup_manager.supervisor import SupervisionUncertain, run_journaled
 
 
@@ -48,6 +49,19 @@ print("fixture output")
         assert result.exit_code == 0 and result.stdout == b"fixture output\n"
         child = ProcessIdentity(**json.loads(marker.read_text()))
         assert child.presence() is Presence.GONE
+        event = root / "cancel"
+        trigger = "import pathlib,sys,time; time.sleep(0.4); pathlib.Path(sys.argv[1]).touch()"
+        with subprocess.Popen([sys.executable, "-c", trigger, str(event)]) as sibling:
+            def cancel_requested():
+                with state_read(db, anchor):
+                    return event.exists()
+
+            stopped = run_journaled(
+                db, anchor, "cancel", owner, (sys.executable, "-c", "import time; time.sleep(45)"),
+                deadline=monotonic() + 10, cancelled=cancel_requested,
+            )
+            assert stopped.exit_code is None
+            assert sibling.wait(timeout=5) == 0
         try:
             run_journaled(
                 db, anchor, "timeout", owner, (sys.executable, "-c", "import time; time.sleep(45)"),
@@ -61,8 +75,11 @@ print("fixture output")
             rows = database.execute(
                 "SELECT operation_id, state, exit_code FROM command_executions ORDER BY operation_id",
             ).fetchall()
-        assert rows == [("stdin", "TERMINATED", 0), ("success", "TERMINATED", 0), ("timeout", "LAUNCH_UNCERTAIN", None)]
-    print("Installed-wheel scope, detached descendant, durable receipt and timeout passed.")
+        assert rows == [
+            ("cancel", "TERMINATED", None), ("stdin", "TERMINATED", 0),
+            ("success", "TERMINATED", 0), ("timeout", "LAUNCH_UNCERTAIN", None),
+        ]
+    print("Installed-wheel scope, detached descendant, durable receipt, cross-process cancellation and timeout passed.")
 
 
 if __name__ == "__main__":

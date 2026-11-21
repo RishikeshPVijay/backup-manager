@@ -21,13 +21,17 @@ FRAME_LIMIT = 4 * OUTPUT_LIMIT
 STOP_TIMEOUT = 8
 
 
+class ScopeCancellation(Exception):
+    """The coordinator requested the scoped operation stop."""
+
+
 class SupervisionUncertain(Exception):
     """The caller must retain claims and reconcile the durable launch intent."""
 
 
 @dataclass(frozen=True)
 class ScopedResult:
-    exit_code: int
+    exit_code: int | None
     stdout: bytes
     stderr: bytes
     truncated: bool
@@ -39,13 +43,18 @@ class Frames:
         self.stream = stream
         self.pending = bytearray()
 
-    def read(self, deadline):
+    def read(self, deadline, cancelled=None):
         with selectors.DefaultSelector() as selector:
             selector.register(self.stream, selectors.EVENT_READ)
             while b"\n" not in self.pending:
                 remaining = deadline - monotonic()
-                if remaining <= 0 or not selector.select(remaining):
+                if remaining <= 0:
                     raise TimeoutError
+                if cancelled is not None and cancelled():
+                    raise ScopeCancellation
+                wait = min(remaining, 0.1) if cancelled is not None else remaining
+                if not selector.select(wait):
+                    continue
                 chunk = os.read(self.stream.fileno(), 8192)
                 if not chunk or len(self.pending) + len(chunk) > FRAME_LIMIT:
                     raise SupervisionUncertain("Worker frame was missing or exceeded its limit.")
@@ -92,7 +101,7 @@ def stop_scope(unit):
         return False
 
 
-def execute(intent, argv, *, deadline, on_launch, cwd=None, env=None, stdin_payload=None):
+def execute(intent, argv, *, deadline, on_launch, cwd=None, env=None, stdin_payload=None, cancelled=None):
     """Run after the caller commits intent. The callback must durably record the receipt."""
     unit = f"backup-manager-{UUID(intent.execution_id).hex}.scope"
     request = json.dumps({
@@ -122,12 +131,15 @@ def execute(intent, argv, *, deadline, on_launch, cwd=None, env=None, stdin_payl
         if process.boot_id != worker.boot_id or process.pid_namespace != worker.pid_namespace:
             raise SupervisionUncertain("The launched process identity differs from the scoped worker.")
         on_launch(LaunchReceipt(intent.supervisor_id, str(location.relative_to(CGROUP_ROOT)), process))
-        result = frames.read(deadline)
+        result = frames.read(deadline, cancelled)
         return_value = ScopedResult(
             int(result["exit_code"]), base64.b64decode(result["stdout"], validate=True),
             base64.b64decode(result["stderr"], validate=True), bool(result["truncated"]),
             str(location.relative_to(CGROUP_ROOT)),
         )
+    except ScopeCancellation:
+        # The finally block verifies containment termination before returning it.
+        return_value = ScopedResult(None, b"", b"", False, str(location.relative_to(CGROUP_ROOT)))
     except (OSError, TimeoutError, ValueError, TypeError, KeyError) as error:
         raise SupervisionUncertain("Scope command did not return a verified result.") from error
     finally:
@@ -146,7 +158,7 @@ def execute(intent, argv, *, deadline, on_launch, cwd=None, env=None, stdin_payl
     return return_value
 
 
-def run_journaled(path, anchor, operation_id, owner_id, argv, *, deadline, cwd=None, env=None, stdin_payload=None, authorize=None):
+def run_journaled(path, anchor, operation_id, owner_id, argv, *, deadline, cwd=None, env=None, stdin_payload=None, authorize=None, cancelled=None):
     """Run a declared operation and durably journal the supervised transitions."""
     with state_write(path, anchor) as database:
         authorized = authorize is None or authorize(database)
@@ -161,7 +173,7 @@ def run_journaled(path, anchor, operation_id, owner_id, argv, *, deadline, cwd=N
     try:
         result = execute(
             intent, argv, deadline=deadline, on_launch=persist, cwd=cwd, env=env,
-            stdin_payload=stdin_payload,
+            stdin_payload=stdin_payload, cancelled=cancelled,
         )
     except SupervisionUncertain:
         with state_write(path, anchor) as database:
