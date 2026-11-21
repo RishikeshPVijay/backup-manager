@@ -6,8 +6,9 @@ from tempfile import TemporaryDirectory
 import unittest
 
 from backup_manager.claims import RepositoryClaim, admit_repository_claims
-from backup_manager.launch_journal import LaunchReceipt, fence_uncertain, record_intent, record_launched, register_owner
+from backup_manager.launch_journal import LaunchReceipt, fence_uncertain, record_intent, record_launched, record_terminated, register_owner
 from backup_manager.process_identity import ProcessIdentity
+from backup_manager.supervisor import ScopedResult
 from backup_manager.state import StateUnsafe, initialize, state_write
 
 
@@ -33,6 +34,7 @@ from pathlib import Path
 import sys
 from backup_manager.launch_journal import record_intent, register_owner
 from backup_manager.process_identity import ProcessIdentity
+from backup_manager.supervisor import ScopedResult
 from backup_manager.state import state_write
 with state_write(*(Path(item) for item in sys.argv[1:])) as database:
     owner = register_owner(database, ProcessIdentity.capture(os.getpid()), "fixture-supervisor")
@@ -90,3 +92,19 @@ os._exit(32)
             self.assertIsNone(admit_repository_claims(database, "op2", other, request, compatible))
             record_launched(database, intent, LaunchReceipt("supervisor", "fixture-scope", self.identity))
             self.assertIsNotNone(admit_repository_claims(database, "op2", other, request, compatible))
+
+    def test_termination_must_match_scope_and_cannot_be_rewritten(self):
+        with self.write() as database:
+            owner = register_owner(database, self.identity, "supervisor")
+            intent = record_intent(database, "op", owner)
+            record_launched(database, intent, LaunchReceipt("supervisor", "fixture-scope", self.identity))
+            with self.assertRaises(StateUnsafe):
+                record_terminated(database, intent, ScopedResult(0, b"", b"", False, "other-scope"))
+            result = ScopedResult(1, b"", b"", False, "fixture-scope")
+            record_terminated(database, intent, result)
+            with self.assertRaises(StateUnsafe):
+                record_terminated(database, intent, result)
+            self.assertEqual(
+                database.execute("SELECT state, exit_code FROM command_executions").fetchone(),
+                ("TERMINATED", 1),
+            )

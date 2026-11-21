@@ -120,3 +120,19 @@ def fence_uncertain(database, intent):
         (intent.owner_id,),
     )
     event(database, intent.execution_id, "launch_uncertain")
+
+
+def record_terminated(database, intent, result):
+    state, payload, _, _, owner_state = execution(database, intent)
+    if state != "LAUNCHED" or owner_state != "ACTIVE":
+        raise StateUnsafe("Execution lacks an active launch receipt.")
+    receipt = json.loads(payload)
+    if not result.containment or receipt["containment_id"] != result.containment:
+        raise StateUnsafe("Termination evidence does not match the launch containment.")
+    evidence = {"containment_id": result.containment, "observation": "empty_cgroup"}
+    database.execute(
+        """UPDATE command_executions SET state = 'TERMINATED', exit_code = ?, termination_evidence = ?
+           WHERE execution_id = ?""",
+        (result.exit_code, json.dumps(evidence), intent.execution_id),
+    )
+    event(database, intent.execution_id, "terminated")

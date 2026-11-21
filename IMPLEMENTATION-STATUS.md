@@ -120,3 +120,11 @@ The frozen configuration defines only the state database path. Whole-state rollb
 - `/tmp/bm-dev/bin/python -m build --no-isolation --outdir /tmp/bm-i3-dist` and installed-wheel regression exited 0. `/tmp/bm-dev/bin/python -m unittest discover -s tests/unit -q` passed 43 tests. `/tmp/bm-dev/bin/python tools/validate_handoff.py` exited 0.
 - The crash fixture deliberately exited 32 after committing intent and before writing any receipt. Another process verified the persisted intent and absence of launch confirmation. Other tests verify supervisor binding, recovery fencing, and prevention of new conflicting claims.
 - I3 remains open for the production supervisor, durable termination attestations, shared storage lifecycle transitions and crash reconciliation. The CLI cannot launch backup, copy, or mount operations. Restic certification and mandatory acceptance remain pending.
+
+### I3 journaled Linux scope supervisor checkpoint
+
+A4/A5/A12/D25/D82/D84/L3. A supervisor commits intent, creates a dedicated scope, verifies worker identity and cgroup membership, then sends the command over a pipe. It separately commits the command's launch receipt and terminal exit. It drains bounded stdout/stderr and stops the scope. A timeout or missing reply records uncertainty and holds claims. The successful terminal transition requires confirmed empty containment and the same scope receipt. The supervisor still needs the storage coordinator and explicit crash recovery integration.
+
+- Source/wheel build and installation exited 0. Installed-wheel suite exited 0 with 44 tests. Static handoff validator exited 0.
+- Outside the sandbox, `/tmp/bm-dev/bin/python tests/experiments/linux_journaled_supervisor.py` exited 0. A disposable command launched a new-session child. Scope shutdown removed it. SQLite recorded an ordinary exit as TERMINATED and a separate deadline case as LAUNCH_UNCERTAIN. Only test commands were used.
+- I3 remains open for lifecycle integration, owner crash reconciliation and explicit recovery. The CLI still holds production commands unavailable. I4–I9, Restic certification and mandatory acceptance remain pending.

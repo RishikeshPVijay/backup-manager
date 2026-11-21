@@ -9,3 +9,5 @@ Crash recovery reconciles SQLite journal, OS process/supervisor state, actual mo
 ## Fairness and deadlines
 
 D106 strict repository fairness remains paused. Implement cancellation-aware bounded wait with progress checks and starvation diagnostics; no strict FIFO guarantee. Global admitted-job limit counts waiting. Effective operation deadline min(job, per-operation) except separately bounded cleanup and release safety budgets. Persist timeout/termination uncertainties; do not assume resource released on timeout.
+
+The I3 supervisor checkpoint uses a dedicated transient user systemd scope. It journals intent first and checks worker identity and cgroup membership before sending the command. It records launch and exit with separate durable transitions. An absent or invalid reply fences the owner; confirmed empty containment and command exit are required for a normal terminal record. On systems without usable scope containment this path fails closed. Storage claim release and recovery are separate coordinator steps.
