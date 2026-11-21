@@ -20,4 +20,6 @@ Required: `inspect(config, context) -> Inspection` (current accessibility, mount
 
 See `examples/custom-storage-plugin/` for a minimal reference provider. It is intentionally non-mutating and not suitable for mounting devices.
 
-The Python provider types are available from `backup_manager.plugin_api`. Storage and secret discovery validate installed provider manifests and capabilities. The built-in `linux_filesystem` provider currently supports read-only inspection. The disposable namespace experiment and the release gate are documented in [implementation status](../IMPLEMENTATION-STATUS.md).
+The Python provider types are available from `backup_manager.plugin_api`. Storage and secret discovery validate installed provider manifests and capabilities. The disposable namespace experiments and the release gate are documented in [implementation status](../IMPLEMENTATION-STATUS.md).
+
+The approved dedicated-mountpoint rule permits Linux lifecycle operations through the injected executor after coordinator authorization. Release requires fresh matching mount, boot, namespace, and filesystem evidence and refuses stacked or nested mounts. The provider's acquisition result supplies evidence for the coordinator to persist. Reuse of an existing mount supplies no ownership evidence. The coordinator must enforce exclusive lifecycle admission and durable process supervision before wiring these methods into CLI execution.

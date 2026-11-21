@@ -63,3 +63,17 @@ Ran `python3 tests/experiments/linux_move_mount_identity.py` on the same Linux b
 | External child mounted under manager mount | Success | Manager mount moved to staging with the external child. |
 
 The command exited 0 after reproducing all observations and removing fixture mounts. Its assertions reproduce the failure modes, so this is evidence against using this release mechanism. A post-move identity check would occur after the external mount was already moved. No production lifecycle changes were made. The original unmount experiment, static handoff validator, and 14 installed-wheel unit tests also exited 0. I2 stays blocked on D92/D94.
+
+### Approved dedicated-mountpoint implementation
+
+The user approved the dedicated `on_demand` mountpoint restriction recorded in docs/14. Under that operating policy, the Linux provider can reuse a verified existing mount without claiming ownership, acquire at a dedicated empty mountpoint, and release only with fresh matching ownership and exactly one mount at or below the path. The worker protocol runs lifecycle methods in a separate session through a bounded command executor. Worker exit and worker replies are advisory until the core supervisor confirms termination of the containment. Public CLI mutation remains disabled.
+
+| Command | Exit | Observation |
+|---|---:|---|
+| `/tmp/bm-dev/bin/python tools/validate_handoff.py` | 0 | Static handoff passed. |
+| `/tmp/bm-dev/bin/python -m build --no-isolation --outdir /tmp/bm-i2-dist` | 0 | Built source and wheel packages. |
+| `/tmp/bm-dev/bin/python -m pip --disable-pip-version-check install --no-deps --force-reinstall /tmp/bm-i2-dist/*.whl` | 0 | Installed the rebuilt wheel. |
+| `/tmp/bm-dev/bin/python -m unittest discover -s tests/unit -q` | 0 | 20 tests passed. Lifecycle tests use simulated device observations and command results. Worker tests exercise bounded child output and unsafe request rejection. |
+| `/tmp/bm-dev/bin/python tests/experiments/linux_lifecycle_mountinfo.py` | 0 | Private-namespace tmpfs fixture confirmed unmounted, mounted-but-unverified, nested, and cleanly removed observations. |
+
+Kernel 6.12.101+deb13-amd64, Linux x86_64, Python 3.13.5. Required positive block-device lifecycle evidence is pending. This environment exposes neither a disposable loop device nor a loop-control node. Existing disk devices were excluded from the fixture. The user systemd scope bus also refused access. I2 remains open pending end-to-end verification on a disposable block filesystem and supervised termination evidence. No acceptance scenarios or Restic certification were run.

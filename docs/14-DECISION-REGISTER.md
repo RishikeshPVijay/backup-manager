@@ -23,3 +23,7 @@ Assistant-selected handoff defaults (user authorized choosing recommended option
 - D56/D79/D80. Per-job timeout overrides may shorten job and operation budgets. Acquisition, cleanup, and release budgets remain independently configured at the global level.
 - D52. History limits apply per job. A record is eligible for deletion once it exceeds either configured limit, by age or by count.
 - D22/R3/G6. `retention.prune` is an explicit boolean opt-in, defaulting to false. It applies uniformly to all destinations after convergence.
+
+## Confirmed dedicated mountpoint restriction
+
+For the built-in Linux provider, an `on_demand` mountpoint is dedicated to Backup Manager while it owns the mount. Automounters and administrators must avoid mounting, unmounting, or adding nested mounts at that path during manager ownership. External mounts remain eligible for verified reuse and are preserved. The restriction applies to the configured mountpoint and its subtree.
