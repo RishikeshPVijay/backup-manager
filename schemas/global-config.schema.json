@@ -17,10 +17,15 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "path"
+        "path",
+        "anchor_path"
       ],
       "properties": {
         "path": {
+          "type": "string",
+          "pattern": "^/"
+        },
+        "anchor_path": {
           "type": "string",
           "pattern": "^/"
         }

@@ -1,6 +1,7 @@
 schema_version = 1
 [state]
 path = "/var/lib/backup-manager/state.sqlite3"
+anchor_path = "/var/lib/backup-manager-witness/state.identity"
 [restic]
 executable = "restic"
 [execution]

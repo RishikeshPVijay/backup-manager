@@ -128,10 +128,14 @@ class FoundationTests(unittest.TestCase):
         self.assertEqual([item["code"] for item in payload["errors"]], ["UNKNOWN_STORAGE_PROVIDER"])
 
     def test_state_init_requires_confirmation_and_state_check_is_safe(self):
-        database = self.root / "state.sqlite3"
+        db_dir = self.root / "state"
+        db_dir.mkdir(mode=0o700)
+        witness_dir = self.root / "witness"
+        witness_dir.mkdir(mode=0o700)
+        database = db_dir / "state.sqlite3"
         self.global_path.write_text(self.global_path.read_text().replace(
             "/var/lib/backup-manager/state.sqlite3", str(database),
-        ))
+        ).replace("/var/lib/backup-manager-witness/state.identity", str(witness_dir / "state.identity")))
         self.assertEqual(self.cli("state", "check", exit_code=8)["status"], "unsafe")
         self.assertEqual(self.cli("state", "init", exit_code=4)["status"], "invalid")
         self.assertFalse(database.exists())

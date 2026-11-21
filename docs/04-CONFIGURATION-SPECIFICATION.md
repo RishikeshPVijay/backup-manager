@@ -27,3 +27,5 @@ A job may specify `timeouts.job_timeout_seconds` and `timeouts.operation_timeout
 `logging.history_days` and `logging.history_count` are optional positive integer limits applied to each job's history. A run becomes eligible for deletion when it exceeds either configured limit. When neither limit is configured, neither triggers deletion.
 
 `retention.prune` is a boolean and defaults to false. A policy must contain at least one keep selector. When enabled, prune is a separate operation under the shared job policy and follows forget.
+
+State configuration requires both `state.path` and `state.anchor_path`. Provision their parent directories before initialization, under the service account on supported local filesystems and protected from other writers. Keep the witness in a separate directory tree and outside every database restore or snapshot rollback scope. If either component is lost or generations disagree, stop scheduled admissions and preserve both components for recovery.

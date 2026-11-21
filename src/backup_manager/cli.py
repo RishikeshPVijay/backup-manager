@@ -149,6 +149,7 @@ def dispatch(args):
         if config.errors:
             return Result(Status.INVALID, errors=config.errors)
         path = Path(config.data["state"]["path"])
+        anchor = Path(config.data["state"]["anchor_path"])
         if args.action == "init" and not args.yes:
             if not sys.stdin.isatty():
                 raise InvalidInvocation
@@ -156,7 +157,7 @@ def dispatch(args):
             if sys.stdin.readline().rstrip("\n") != str(path):
                 raise InvalidInvocation
         try:
-            data = state.initialize(path) if args.action == "init" else state.check(path)
+            data = state.initialize(path, anchor) if args.action == "init" else state.check(path, anchor)
         except state.StateUnsafe as error:
             return Result(Status.UNSAFE, errors=(Diagnostic("STATE_UNSAFE", str(error)),))
         return Result(data=data)

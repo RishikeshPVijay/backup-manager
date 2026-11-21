@@ -2,29 +2,35 @@ from contextlib import closing
 import json
 from pathlib import Path
 import sqlite3
+import subprocess
+import sys
 from tempfile import TemporaryDirectory
 import unittest
 
-from backup_manager.state import StateUnsafe, anchor_path, check, initialize
+from backup_manager.state import StateUnsafe, check, initialize, state_write
 
 
 class StateTests(unittest.TestCase):
     def setUp(self):
         temporary = TemporaryDirectory()
         self.addCleanup(temporary.cleanup)
-        self.path = Path(temporary.name) / "manager.sqlite3"
+        root = Path(temporary.name)
+        self.path = root / "database" / "manager.sqlite3"
+        self.anchor = root / "witness" / "manager.identity"
+        self.path.parent.mkdir(mode=0o700)
+        self.anchor.parent.mkdir(mode=0o700)
 
     def test_missing_state_does_not_create_database_or_anchor(self):
         with self.assertRaises(StateUnsafe):
-            check(self.path)
+            check(self.path, self.anchor)
         self.assertEqual(list(self.path.parent.iterdir()), [])
 
     def test_initialize_migrates_once_and_check_is_read_only(self):
-        record = initialize(self.path)
+        record = initialize(self.path, self.anchor)
         before = {p.name: p.read_bytes() for p in self.path.parent.iterdir()}
-        self.assertEqual(check(self.path), record)
+        self.assertEqual(check(self.path, self.anchor), record)
         with self.assertRaises(StateUnsafe):
-            initialize(self.path)
+            initialize(self.path, self.anchor)
         self.assertEqual(
             {p.name: p.read_bytes() for p in self.path.parent.iterdir()}, before,
         )
@@ -33,29 +39,73 @@ class StateTests(unittest.TestCase):
             self.assertEqual(database.execute("SELECT version FROM schema_migrations").fetchall(), [(1,)])
 
     def test_identity_and_generation_mismatch_is_unsafe(self):
-        record = initialize(self.path)
+        record = initialize(self.path, self.anchor)
         record["generation"] = 2
-        anchor_path(self.path).write_text(json.dumps(record))
+        self.anchor.write_text(json.dumps(record))
         with self.assertRaises(StateUnsafe):
-            check(self.path)
+            check(self.path, self.anchor)
 
     def test_corruption_is_unsafe(self):
-        initialize(self.path)
+        initialize(self.path, self.anchor)
         self.path.write_bytes(b"unreadable database")
         with self.assertRaises(StateUnsafe):
-            check(self.path)
+            check(self.path, self.anchor)
 
     def test_migration_history_mismatch_is_unsafe(self):
-        initialize(self.path)
+        initialize(self.path, self.anchor)
         with closing(sqlite3.connect(self.path)) as database, database:
             database.execute("UPDATE schema_migrations SET checksum = 'wrong'")
         with self.assertRaises(StateUnsafe):
-            check(self.path)
+            check(self.path, self.anchor)
 
     def test_orphaned_wal_is_unsafe(self):
-        initialize(self.path)
+        initialize(self.path, self.anchor)
         wal = self.path.with_name(self.path.name + "-wal")
         wal.write_bytes(b"unreconciled")
         with self.assertRaises(StateUnsafe):
-            check(self.path)
+            check(self.path, self.anchor)
         self.assertEqual(wal.read_bytes(), b"unreconciled")
+
+    def test_restore_database_directory_does_not_restore_witness(self):
+        old = initialize(self.path, self.anchor)
+        previous = self.path.read_bytes()
+        with state_write(self.path, self.anchor):
+            pass
+        self.assertEqual(check(self.path, self.anchor)["generation"], old["generation"] + 1)
+        self.path.write_bytes(previous)
+        with self.assertRaisesRegex(StateUnsafe, "generation"):
+            check(self.path, self.anchor)
+
+    def test_interrupted_write_reservation_blocks_state(self):
+        initialize(self.path, self.anchor)
+        with self.assertRaises(RuntimeError):
+            with state_write(self.path, self.anchor):
+                raise RuntimeError("injected transaction failure")
+        with self.assertRaisesRegex(StateUnsafe, "generation"):
+            check(self.path, self.anchor)
+
+    def test_refuses_witness_in_database_tree(self):
+        nested = self.path.parent / "inner"
+        nested.mkdir(mode=0o700)
+        with self.assertRaisesRegex(StateUnsafe, "separate directory trees"):
+            initialize(self.path, nested / "manager.identity")
+        self.assertFalse(self.path.exists())
+
+    def test_process_death_after_generation_reservation_blocks_state(self):
+        initialize(self.path, self.anchor)
+        script = """
+import os
+from pathlib import Path
+import sys
+from backup_manager.state import state_write
+with state_write(*(Path(item) for item in sys.argv[1:])):
+    os._exit(31)
+"""
+        process = subprocess.run(
+            [sys.executable, "-c", script, str(self.path), str(self.anchor)],
+            check=False, timeout=10,
+        )
+        self.assertEqual(process.returncode, 31)
+        self.assertEqual(json.loads(self.anchor.read_text())["generation"], 2)
+        with self.assertRaises(StateUnsafe):
+            check(self.path, self.anchor)
