@@ -59,14 +59,14 @@ def main():
         views = [identities(fixture, name) for name in repos]
         assert views[0] == views[1] == views[2]
         assert expected < views[0] and len(views[0]) == len(expected) + 1
-        # The three primary revisions share a path and host, so keep-last=2
-        # would remove one if replication filtered retention candidates.
+        # The three primary revisions share a path and host. A keep-last of two
+        # would remove one after convergence.
         assert len([item for item in inventory(fixture, "secondary")
                     if item.paths == (str(fixture.root / "seed-primary"),)]) == 3
         summary = second["data"]["phases"]
         assert any(row["phase"] == "replication" and row["target_id"] is None and row["status"] == "succeeded" for row in summary)
         assert any(row["phase"] == "convergence" and row["target_id"] is None and row["status"] == "succeeded" for row in summary)
-        assert summary[-1]["error_code"] == "RETENTION_PENDING"
+        assert summary[-1]["phase"] == "retention" and summary[-1]["status"] == "succeeded"
         assert fixture.seen(["post-failed", "cleanup"])
         cleanup_index = next(index for index, row in enumerate(summary) if row["phase"] == "cleanup")
         replication_index = next(index for index, row in enumerate(summary) if row["phase"] == "replication")

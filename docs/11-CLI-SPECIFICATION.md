@@ -16,7 +16,7 @@ Initialize the application state explicitly. Create the Restic repository throug
 
 `job run JOB_ID` admits a job immediately or returns busy. `batch run JOB_ID ...` freezes all requested job files before admission, waits for global job slots in invocation order, and reports per-job results. Same-job overlaps return busy in either mode. `operation list --active-only` reports active job run IDs. `operation cancel RUN_ID --yes` requests cancellation of an active job. The invocation stops new ordinary work and attempts bounded cleanup after preparation. `history list` and `history show RUN_ID` expose the independently recorded phase outcomes.
 
-Backup runs through the certified Restic profile. Retention, dry-run, and operational preflight remain deferred until I7.
+Backup runs through the certified Restic profile. Retention follows replication and convergence. Dry-run evaluates configuration alone. Operational preflight may acquire storage to verify registered repositories.
 
 ## I6 multi-destination outcomes
 

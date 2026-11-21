@@ -87,10 +87,10 @@ class FoundationTests(unittest.TestCase):
             with self.subTest(args=args):
                 self.assertEqual(self.cli(*args, exit_code=4)["status"], "invalid")
 
-    def test_unimplemented_mutation_fails_without_side_effects(self):
+    def test_init_requires_existing_safe_state_without_creating_files(self):
         files_before = set(self.root.rglob("*"))
-        payload = self.cli("repository", "init", "immich", "primary", "--yes", exit_code=7)
-        self.assertEqual(payload["status"], "unsupported")
+        payload = self.cli("repository", "init", "immich", "primary", "--yes", exit_code=8)
+        self.assertEqual(payload["status"], "unsafe")
         self.assertEqual(set(self.root.rglob("*")), files_before)
 
     def test_version(self):

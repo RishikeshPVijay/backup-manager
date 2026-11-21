@@ -255,7 +255,7 @@ class Replication:
                         return False
 
 
-def run_replication(runner, adapter):
+def run_replication(runner, adapter, *, after=None):
     """Run both required phases, holding storage claims until all copies settle."""
     replication = Replication(runner, adapter)
     try:
@@ -266,6 +266,18 @@ def run_replication(runner, adapter):
         runner.move("CONVERGENCE")
         converged = replication.convergence()
         runner.record("convergence", "succeeded" if converged else "incomplete")
+        if after is not None:
+            try:
+                after(runner, adapter, {
+                    name: repo for name, repo in replication.repos.items() if name not in replication.unavailable
+                })
+            except JobStopped:
+                runner.record("retention", "incomplete", code="RETENTION_INTERRUPTED")
+                if runner.cancelled():
+                    raise
+            except (StateUnsafe, SupervisionUncertain, OSError):
+                runner.fenced = True
+                runner.record("retention", "uncertain", code="RETENTION_STATE_UNSAFE")
         return normal and converged
     except SupervisionUncertain:
         runner.fenced = True

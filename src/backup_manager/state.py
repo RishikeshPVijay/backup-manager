@@ -73,7 +73,7 @@ def state_lock(path, anchor, *, exclusive, wait=0):
                 if remaining <= 0:
                     raise StateBusy("State witness directory is busy.") from error
                 sleep(min(remaining, 0.02))
-        yield
+        yield fd
     finally:
         os.close(fd)
 
@@ -86,7 +86,7 @@ def sync_directory(path):
         os.close(directory)
 
 
-MIGRATIONS = ("001_initial.sql", "002_coordination_indexes.sql", "003_job_execution.sql", "004_replication.sql")
+MIGRATIONS = ("001_initial.sql", "002_coordination_indexes.sql", "003_job_execution.sql", "004_replication.sql", "005_operations.sql")
 
 
 def migration(name):

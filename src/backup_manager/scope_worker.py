@@ -73,6 +73,8 @@ def repository_argv(argv, repository, flag="--repo"):
     try:
         if directory_identity(descriptor) != repository["identity"]:
             raise ValueError("Verified repository directory changed before launch.")
+        if repository.get("empty") and any(Path(f"/proc/self/fd/{descriptor}").iterdir()):
+            raise ValueError("Repository initialization requires an empty directory.")
         command = list(argv)
         command[index] = f"/proc/self/fd/{descriptor}"
         yield command, (descriptor,)

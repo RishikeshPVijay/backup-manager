@@ -1,5 +1,6 @@
 """Run the storage coordinator across independent CLI-like fixture processes."""
 
+import json
 import os
 from pathlib import Path
 import shutil
@@ -29,7 +30,11 @@ def client(root, mode):
     db, anchor = paths(root)
     coordinator = StorageCoordinator(db, anchor, {
         "disk": {"provider": "fixture_storage", "lifecycle": "on_demand", "config": {"root": str(root)}},
-    }, acquire_seconds=6, release_seconds=6)
+    }, acquire_seconds=6, release_seconds=6, notifications=({
+        "executable": sys.executable,
+        "args": ["-c", "import os,pathlib,sys;pathlib.Path(sys.argv[1]).write_text(os.environ['BACKUP_MANAGER_EVENT_JSON'])",
+                 str(root / "release-notice")],
+    },))
     try:
         lease = coordinator.acquire(
             "disk", deadline=monotonic_ns() + 8_000_000_000,
@@ -101,6 +106,17 @@ def main():
                     first.kill()
         assert not (root / "mounted").exists()
         assert (root / "actions").read_text().splitlines() == ["acquire", "release"]
+        def notification_settled():
+            with state_read(db, anchor, wait=2) as database:
+                return database.execute("SELECT status FROM notification_attempts").fetchall() == [("succeeded",)]
+
+        poll(notification_settled)
+        notice = json.loads((root / "release-notice").read_text())
+        assert notice["resource_id"] == "disk" and notice["status"] == "succeeded"
+        with state_read(db, anchor, wait=2) as database:
+            assert database.execute(
+                "SELECT state FROM storage_operations WHERE operation_id = ?", (notice["operation_id"],),
+            ).fetchone() == ("TERMINATED",)
         # An externally created mount is reused and preserved.
         (root / "mounted").touch()
         (root / "acquired").unlink()
@@ -133,6 +149,12 @@ def main():
             "acquire", "release", "acquire", "acquire", "release",
         ] and not (root / "mounted").exists())
         poll(lambda: all_terminal(db, anchor))
+
+        def two_notifications_complete():
+            with state_read(db, anchor, wait=2) as database:
+                return database.execute("SELECT status FROM notification_attempts").fetchall() == [("succeeded",)] * 2
+
+        poll(two_notifications_complete)
     print("Verified shared acquisition, independent release, external preservation, final-waiter cancellation and fresh retry.")
 
 

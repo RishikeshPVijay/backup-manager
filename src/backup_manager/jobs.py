@@ -73,6 +73,7 @@ class JobRunner:
             Path(config["state"]["path"]), Path(config["state"]["anchor_path"]), config["storage"],
             acquire_seconds=self.budgets["acquire_timeout_seconds"],
             release_seconds=self.budgets["release_timeout_seconds"],
+            notifications=config.get("notifications", {}).get("storage", ()),
         )
         self.secrets = discover("secrets")
 
@@ -132,7 +133,7 @@ class JobRunner:
         installed_profile(binary)
         return Restic.certified(binary, self.run_command(Restic.version(binary), deadline=self.operation_deadline()))
 
-    def get_destination(self, adapter, name, target, *, access_mode="BACKUP"):
+    def get_destination(self, adapter, name, target, *, access_mode="BACKUP", expected_id=None):
         with self.storage.read() as database:
             expected = registration(database, self.job_id, name)
         path = Path(target["repository"])
@@ -168,7 +169,7 @@ class JobRunner:
                 claimed = True
             except (StorageUnavailable, TimeoutError, StateBusy):
                 raise DestinationRejected("REPOSITORY_BUSY") from None
-            self.verify_identity(adapter, selected)
+            self.verify_identity(adapter, selected, expected_id=expected_id)
             return selected
         except SupervisionUncertain:
             self.fenced = True
@@ -179,7 +180,7 @@ class JobRunner:
             self.storage.release(lease)
             raise
 
-    def verify_identity(self, adapter, selected):
+    def verify_identity(self, adapter, selected, *, expected_id=None):
         self.check_running()
         try:
             actual = inspect_repository(self.storage, selected.lease, selected.repository.path, self.operation_deadline())
@@ -197,7 +198,7 @@ class JobRunner:
             self.record("repository_identity", "failed", target=selected.destination,
                         code="REPOSITORY_IDENTITY_UNAVAILABLE", data=diagnostics)
             raise DestinationRejected("REPOSITORY_IDENTITY_UNAVAILABLE") from None
-        if identity.id != selected.registration.restic_id:
+        if identity.id != (expected_id or selected.registration.restic_id):
             raise DestinationRejected("REPOSITORY_ID_MISMATCH")
         return identity
 
@@ -385,13 +386,14 @@ class JobRunner:
                     self.record("cleanup", "deferred", code="CLEANUP_EXECUTION_FENCED")
                 if status is Status.FULL and len(tuple(destinations(self.job))) > 1:
                     from .replication import run_replication
+                    from .maintenance import integrated_retention
 
                     status = Status.PARTIAL
                     if not self.fenced:
                         try:
                             self.storage.release_repositories(self.selected.claim_id)
                             backup_claim_released = True
-                            if run_replication(self, adapter):
+                            if run_replication(self, adapter, after=integrated_retention):
                                 status = Status.FULL
                         except JobStopped:
                             if self.cancelled():
@@ -405,8 +407,20 @@ class JobRunner:
                             self.record("transfer", "uncertain", code="TRANSFER_INTERNAL_ERROR")
                     if status is Status.PARTIAL:
                         errors.append(Diagnostic("TRANSFER_INCOMPLETE", "Required replication or convergence is incomplete."))
-                if status in {Status.FULL, Status.PARTIAL}:
-                    self.record("retention", "deferred", code="RETENTION_PENDING")
+                if status is Status.FULL and len(tuple(destinations(self.job))) == 1 and not self.fenced:
+                    from .maintenance import integrated_retention
+
+                    try:
+                        self.storage.release_repositories(self.selected.claim_id)
+                        backup_claim_released = True
+                        integrated_retention(self, adapter, {self.selected.destination: self.selected})
+                    except JobStopped:
+                        if self.cancelled():
+                            status = Status.CANCELLED
+                        self.record("retention", "incomplete", code="RETENTION_INTERRUPTED")
+                    except (StateUnsafe, SupervisionUncertain, OSError):
+                        self.fenced = True
+                        self.record("retention", "uncertain", code="RETENTION_STATE_UNSAFE")
                 if self.selected is not None and not self.fenced:
                     try:
                         if not backup_claim_released:
@@ -433,6 +447,19 @@ class JobRunner:
                     finish(database, self.run_id, status.value[0], self.backup_status,
                            self.selected.destination if self.selected else None, self.snapshot, fenced=self.fenced)
                     prune_history(database, self.job_id, self.config.get("logging", {}), self.run_id)
+                if not self.fenced:
+                    from .notifications import notify
+
+                    try:
+                        notify(
+                            self.storage.path, self.storage.anchor, self.storage.owner,
+                            self.config.get("notifications", {}).get("job", ()), "job", self.run_id,
+                            {"run_id": self.run_id, "job_id": self.job_id, "status": status.value[0],
+                             "backup": self.backup_status, "snapshot_id": self.snapshot},
+                            self.budgets["operation_timeout_seconds"],
+                        )
+                    except (StateUnsafe, OSError):
+                        pass
             if not self.fenced:
                 with self.storage.write() as database:
                     database.execute(
@@ -457,10 +484,11 @@ class JobRunner:
         }, tuple(errors), self.run_id)
 
 
-def register_destination(config, job, destination_id, *, timeout=None, interrupted=lambda: False):
+def register_destination(config, job, destination_id, *, timeout=None, interrupted=lambda: False, initialize=False):
     runner = JobRunner(config, job, timeout=timeout, interrupted=interrupted)
     target = dict(destinations(job))[destination_id]
     lease = None
+    reservation = None
     uncertain = False
     try:
         adapter = runner.load_restic()
@@ -470,7 +498,7 @@ def register_destination(config, job, destination_id, *, timeout=None, interrupt
                    FROM repository_registrations WHERE job_id = ? AND destination_id = ?""",
                 (runner.job_id, destination_id),
             ).fetchone()
-        if legacy is not None and legacy[2:] != (None, None):
+        if legacy is not None and (initialize or legacy[2:] != (None, None)):
             raise DestinationRejected("REPOSITORY_ALREADY_REGISTERED")
         password = repository_password(runner.secrets, target["password"], runner.operation_deadline())
         repo = Repository(Path(target["repository"]), password)
@@ -479,6 +507,11 @@ def register_destination(config, job, destination_id, *, timeout=None, interrupt
             deadline=min(runner.deadline, seconds_deadline(runner.budgets["acquire_timeout_seconds"])),
             cancelled=runner.cancelled,
         )
+        if initialize:
+            from .repository_admin import initialize_repository
+
+            reservation = (lease.coordination_id, str(repo.path))
+            initialize_repository(runner, adapter, lease, repo)
         directory = inspect_repository(runner.storage, lease, repo.path, runner.operation_deadline())
         invocation = adapter.identity(repo)
         result = run_journaled(
@@ -492,6 +525,13 @@ def register_destination(config, job, destination_id, *, timeout=None, interrupt
             raise StateUnsafe("Repository directory changed during registration.")
         key = legacy[0] if legacy is not None else str(uuid4())
         with runner.storage.write() as database:
+            initialization = database.execute(
+                """SELECT 1 FROM repository_initializations
+                   WHERE coordination_id = ? AND repository_path = ? AND owner_id != ?""",
+                (lease.coordination_id, str(repo.path), runner.storage.owner),
+            ).fetchone()
+            if initialization is not None:
+                raise StateUnsafe("Repository initialization is still fenced.")
             duplicate = database.execute(
                 """SELECT 1 FROM repository_registrations WHERE repository_key != ? AND (
                        (job_id = ? AND destination_id = ?) OR restic_repository_id = ?
@@ -534,6 +574,11 @@ def register_destination(config, job, destination_id, *, timeout=None, interrupt
             if lease is not None:
                 runner.storage.release(lease)
             with runner.storage.write() as database:
+                if reservation is not None:
+                    database.execute(
+                        "DELETE FROM repository_initializations WHERE coordination_id = ? AND repository_path = ? AND owner_id = ?",
+                        (*reservation, runner.storage.owner),
+                    )
                 database.execute(
                     "UPDATE process_owners SET state = 'TERMINATED' WHERE owner_id = ? AND state = 'ACTIVE'",
                     (runner.storage.owner,),

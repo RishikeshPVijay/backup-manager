@@ -6,6 +6,8 @@ from contextlib import contextmanager
 from importlib.metadata import version
 import json
 import signal
+import sqlite3
+import subprocess
 from pathlib import Path
 import sys
 from threading import Event
@@ -162,6 +164,31 @@ def dispatch(args):
         return Result(data={"version": version("backup-manager")})
     if args.group == "config":
         return config_validate(args)
+    if args.group == "state" and args.action == "recover":
+        from .recovery import recover
+        from .restic import ResticEvidenceError, ResticUnsupported
+        from .secrets import SecretUnavailable
+
+        config_path = getattr(args, "config", DEFAULT_CONFIG)
+        document = load_global(config_path)
+        if document.errors:
+            return Result(Status.INVALID, errors=document.errors)
+        confirm(args, str(args.path.absolute()))
+        try:
+            jobs = {}
+            for file in job_files(config_path):
+                job = load_job(file, document)
+                if not job.errors:
+                    jobs[file.stem] = job.data
+            return Result(data=recover(document.data, args.path.absolute(), jobs,
+                                       timeout=getattr(args, "timeout_seconds", None)))
+        except ResticUnsupported:
+            return Result(Status.UNSUPPORTED, errors=(Diagnostic("RESTIC_UNSUPPORTED", "Recovery needs certified Restic."),))
+        except (state.StateUnsafe, OSError, sqlite3.Error, ValueError, TypeError, KeyError, TimeoutError,
+                ResticEvidenceError, SecretUnavailable, subprocess.TimeoutExpired):
+            return Result(Status.UNSAFE, errors=(Diagnostic("RECOVERY_UNVERIFIED", "Backup or current safety evidence cannot authorize recovery."),))
+    if args.group in {"storage", "doctor"} and getattr(args, "action", None) != "recover":
+        return inspection_command(args)
     if args.group == "state" and args.action in {"init", "check", "backup"}:
         config = load_global(getattr(args, "config", DEFAULT_CONFIG))
         if config.errors:
@@ -207,9 +234,8 @@ def dispatch(args):
     if getattr(args, "limit", None) and args.limit > 1000:
         raise InvalidInvocation
     if (
-        args.group == "job" or args.group in {"history", "operation"}
-        or args.group == "batch" or (args.group, getattr(args, "action", None)) == ("repository", "register")
-    ) and not (getattr(args, "dry_run", False) or getattr(args, "preflight", False)):
+        args.group in {"job", "history", "operation", "batch", "repository", "retention", "verify"}
+    ):
         return job_command(args)
     return Result(Status.UNSUPPORTED, errors=(
         Diagnostic("NOT_IMPLEMENTED", "Command is unavailable in the current milestone."),
@@ -309,6 +335,22 @@ def job_command(args):
         if not documents or len({item[0] for item in documents}) != len(documents):
             raise InvalidInvocation
         with cancellation_signals() as interrupted:
+            if args.dry_run or args.preflight:
+                from .inspection import dry_run
+                from .maintenance import run_maintenance
+
+                results = []
+                for name, item in documents:
+                    if item.errors:
+                        result = Result(Status.INVALID, errors=item.errors)
+                    elif args.dry_run:
+                        result = dry_run(item.data)
+                    else:
+                        result = run_maintenance(config, item.data, "preflight", None, timeout=timeout,
+                                                 interrupted=interrupted)
+                    results.append({"job_id": name, **result.payload("job run")})
+                return Result(Status.FAILED if any(row["status"] != "full" for row in results) else Status.FULL,
+                              data={"jobs": results})
             return execute_batch(config, documents, timeout=timeout, interrupted=interrupted)
     job = load_job(path.parent / "jobs" / f"{args.job}.toml", global_document)
     if job.errors:
@@ -319,17 +361,100 @@ def job_command(args):
             "destination_ids": [name for name, _ in destinations(job.data)],
             "source_count": len(job.data["sources"]),
         })
-    if args.group == "repository":
-        if args.destination not in dict(destinations(job.data)):
-            raise InvalidInvocation
-        confirm(args, f"{args.job}/{args.destination}")
-        with cancellation_signals() as interrupted:
-            try:
-                return register_destination(config, job.data, args.destination, timeout=timeout, interrupted=interrupted)
-            except (state.StateUnsafe, OSError):
-                return Result(Status.UNSAFE, errors=(Diagnostic("STATE_UNSAFE", "Registration requires safe state."),))
+    from .inspection import dry_run, inspect_repositories
+    from .maintenance import run_maintenance
+    from .repository_admin import approve_replacement
+
+    target = getattr(args, "destination", None)
+    if target is not None and target not in dict(destinations(job.data)):
+        raise InvalidInvocation
     with cancellation_signals() as interrupted:
-        return execute_job(config, job, wait=False, timeout=timeout, interrupted=interrupted)
+        try:
+            if args.group == "repository":
+                if args.action == "inspect":
+                    if args.preflight:
+                        return run_maintenance(config, job.data, "preflight", target, timeout=timeout, interrupted=interrupted)
+                    return inspect_repositories(config, job.data, "inspect", target, timeout)
+                confirm(args, f"{args.job}/{target}")
+                if args.action in {"register", "init"}:
+                    return register_destination(
+                        config, job.data, target, timeout=timeout, interrupted=interrupted,
+                        initialize=args.action == "init",
+                    )
+                if args.action == "approve-replacement":
+                    return approve_replacement(config, job.data, target, args.expected_id,
+                                               timeout=timeout, interrupted=interrupted)
+                return run_maintenance(config, job.data, "unlock", target, timeout=timeout, interrupted=interrupted)
+            if args.group in {"verify", "retention"}:
+                if args.action == "preview":
+                    return inspect_repositories(config, job.data, "preview", target, timeout)
+                return run_maintenance(config, job.data, args.group, target, timeout=timeout, interrupted=interrupted)
+            if args.dry_run:
+                return dry_run(job.data)
+            if args.preflight:
+                return run_maintenance(config, job.data, "preflight", None, timeout=timeout, interrupted=interrupted)
+            return execute_job(config, job, wait=False, timeout=timeout, interrupted=interrupted)
+        except (state.StateUnsafe, OSError):
+            return Result(Status.UNSAFE, errors=(Diagnostic("STATE_UNSAFE", "Operation requires safe verified state."),))
+
+
+def inspection_command(args):
+    from .inspection import MountedInspector, doctor
+    from .maintenance import run_maintenance
+    from .jobs import seconds_deadline, JobStopped
+    from .storage_coordinator import StorageUnavailable
+
+    config_path = getattr(args, "config", DEFAULT_CONFIG)
+    document = load_global(config_path)
+    if document.errors:
+        return Result(Status.INVALID, errors=document.errors)
+    config = document.data
+    timeout = getattr(args, "timeout_seconds", None)
+    if args.group == "doctor":
+        baseline = doctor(config, timeout)
+        if not args.preflight or baseline.status is not Status.FULL:
+            return baseline
+        results = []
+        with cancellation_signals() as interrupted:
+            for file in job_files(config_path):
+                job = load_job(file, document)
+                result = Result(Status.INVALID, errors=job.errors) if job.errors else run_maintenance(
+                    config, job.data, "preflight", None, timeout=timeout, interrupted=interrupted,
+                )
+                results.append({"job_id": file.stem, **result.payload("job run")})
+        return Result(Status.FULL if all(row["status"] == "full" for row in results) else Status.FAILED,
+                      data={**baseline.data, "jobs": results})
+    if args.action == "list":
+        return Result(data={"storage": [
+            {"storage_id": name, "provider": item["provider"], "lifecycle": item["lifecycle"]}
+            for name, item in config["storage"].items()
+        ]})
+    if args.storage not in config["storage"]:
+        raise InvalidInvocation
+    execution = {**EXECUTION_DEFAULTS, **config.get("execution", {})}
+    deadline = seconds_deadline(min(timeout or float("inf"), execution["acquire_timeout_seconds"]))
+    lease = None
+    coordinator = None
+    try:
+        with cancellation_signals() as interrupted:
+            if args.preflight:
+                coordinator = StorageCoordinator(
+                    *state_locations(config), config["storage"],
+                    acquire_seconds=execution["acquire_timeout_seconds"],
+                    release_seconds=execution["release_timeout_seconds"],
+                    notifications=config.get("notifications", {}).get("storage", ()),
+                )
+                lease = coordinator.acquire(args.storage, deadline=deadline, cancelled=interrupted)
+            inspected, identity = MountedInspector(config).observe(args.storage, deadline)
+            return Result(Status.FULL if inspected.state.value == "available" else Status.FAILED, data={
+                "storage_id": args.storage, "state": inspected.state.value, "mounted": inspected.mounted,
+                "verified_physical": identity.verified_physical, "mountpoint": inspected.mountpoint,
+            })
+    except (state.StateUnsafe, StorageUnavailable, OSError, TimeoutError, JobStopped):
+        return Result(Status.UNSAFE, errors=(Diagnostic("STORAGE_UNVERIFIED", "Storage inspection could not be verified."),))
+    finally:
+        if lease is not None:
+            coordinator.release(lease)
 
 
 def history_command(args, config):
@@ -342,7 +467,21 @@ def history_command(args, config):
             if not accepted:
                 return Result(Status.INVALID, errors=(Diagnostic("INACTIVE_OPERATION", "No active job matches this operation."),))
             return Result(data={"cancel_requested": True}, operation_id=args.operation_id)
-        run_id = getattr(args, "run_id", getattr(args, "operation_id", None))
+        if args.group == "operation":
+            from .operation_history import operation_rows
+
+            operation_id = getattr(args, "operation_id", None)
+            with state.state_read(path, anchor, wait=5) as database:
+                active_only = getattr(args, "active_only", False)
+                rows = operation_rows(database, operation_id=operation_id, active_only=active_only)
+                runs = run_rows(database, run_id=operation_id, active_only=active_only)
+                if operation_id is not None and runs:
+                    runs[0]["phases"] = phase_rows(database, operation_id)
+            if operation_id is not None and not rows:
+                return Result(Status.INVALID, errors=(Diagnostic("OPERATION_NOT_FOUND", "The operation does not exist."),))
+            legacy = (runs[0] if runs else {}) if operation_id is not None else {"runs": runs}
+            return Result(data={**legacy, "operations": rows}, operation_id=operation_id)
+        run_id = getattr(args, "run_id", None)
         with state.state_read(path, anchor, wait=5) as database:
             rows = run_rows(
                 database, job_id=getattr(args, "job", None), run_id=run_id,
@@ -358,7 +497,10 @@ def history_command(args, config):
 
 
 def print_human(result):
-    if "runs" in result.data:
+    if "operations" in result.data:
+        for row in result.data["operations"]:
+            print(row["id"], row["kind"], row["subject_id"], row["state"])
+    elif "runs" in result.data:
         for row in result.data["runs"]:
             print(row["run_id"], row["job_id"], row["state"], row["overall_outcome"] or "-")
     elif "job_id" in result.data and ("backup" in result.data or "state" in result.data):

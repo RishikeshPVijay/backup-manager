@@ -34,12 +34,13 @@ def context(deadline):
 
 
 class StorageCoordinator:
-    def __init__(self, path, anchor, resources, *, acquire_seconds, release_seconds):
+    def __init__(self, path, anchor, resources, *, acquire_seconds, release_seconds, notifications=()):
         self.path = path
         self.anchor = anchor
         self.resources = resources
         self.acquire_seconds = acquire_seconds
         self.release_seconds = release_seconds
+        self.notifications = notifications
         self.providers = discover("storage")
         self.dispatches = []
         reconcile_crashed_owners(path, anchor)
@@ -77,7 +78,7 @@ class StorageCoordinator:
         try:
             process = start_dispatch(
                 self.path, self.anchor, plan, self.owner, settings["provider"], settings["config"],
-                context(deadline), self.release_seconds, evidence,
+                context(deadline), self.release_seconds, evidence, notifications=self.notifications,
             )
         except (OSError, StateUnsafe):
             fence_operation(self.path, self.anchor, plan.operation_id)

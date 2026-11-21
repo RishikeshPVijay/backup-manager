@@ -226,3 +226,30 @@ Multi-destination backup jobs explicitly report partial while replication and co
 Normal replication uses up to four target workers per job. I6 model and lifecycle tests ran on Linux x86_64, Python 3.13.5, user systemd scopes, the certified Restic binary, and disposable repositories. I4 certification and its original report remain unchanged. Supplemental comparison evidence and the affected test assertions are indexed in the requirements traceability table.
 
 I6 gate complete. The final installed-wheel regression ran `linux_i5_job.py`, `linux_crash_fencing.py`, `linux_launch_boundaries.py`, and `linux_scoped_restic.py` with exit 0 each. A provisional I5 regression required a later replica to contain the fallback backup despite the fixture's partial overall result. The I5 assertion now verifies that the later replica never took its own backup. The dedicated I6 fixture verifies confirmed fallback replication separately. No real backup repositories or mounts were used in these tests. I7 retention and operator commands, I8 hardening, and I9 release acceptance remain pending.
+
+## I7 operations and recovery
+
+- D7/D21–D24/R3/G6. Integrated and standalone retention use each registered destination's exclusive claim. Integrated retention starts after normal replication and convergence. Forget and opt-in prune are separate journaled commands. Verification is separately scheduled or invoked.
+- D6/D41–D45/A6/A7. Repository commands require the certified Restic profile and registered identity checks where applicable. Explicit init reserves the verified storage/path and checks for emptiness at launch. Approval verifies the full replacement ID and advances the registration generation. Explicit unlock uses Restic stale-lock handling.
+- D51/D53–D55. Added durable operation listing and inspection, preserving the job records expected by existing callers. Operator cancellation remains available for jobs. Dry-run only plans. Preflight can acquire storage and verifies registered repository identities. Doctor defaults to read-only state and Restic checks.
+- D19/D20/D57–D59/L2. Job and shared-storage release notifications use separate scoped attempts and persistent outcomes. Job notification follows durable job completion and claim relinquishment.
+- Engineering contract 16 and operations contract 19. Recovery verifies the independent witness, manifest, migration checksums, SQLite integrity and registered repository identities. It rebuilds visible snapshot inventory and resets inherited release authority. An older backup with no usable live ledger is refused because newer process termination cannot be proved. The operations guide documents the manual registration path.
+
+| Command or fixture | Exit | Evidence |
+|---|---:|---|
+| `/tmp/bm-dev/bin/python tools/validate_handoff.py` | 0 | Validated handoff schema, examples, 140 requirement rows, 40 scenario specifications and the exact I4 Restic profile reference. |
+| `/tmp/bm-dev/bin/python -m build --no-isolation --outdir /tmp/bm-i7-dist` and wheel install | 0 each | Built sdist and installed wheel SHA-256 `5b400773591dd254a6e27e1311aea702f89eb28298d6bd7fcc6f60ed3f6ad95d`. Migration 005 is packaged. |
+| `/tmp/bm-dev/bin/python -m unittest discover -s tests/unit -q` | 0 | 80 passed. |
+| `/tmp/bm-dev/bin/python tests/experiments/linux_i6_replication.py` | 0 | Convergence and normal replication regression, with a nonremoving fixture policy. |
+| `/tmp/bm-dev/bin/python tests/experiments/linux_i6_faults.py` | 0 | Real started-copy failure, fresh source-loss verification and alternate-source prelaunch replanning regressions. |
+| `/tmp/bm-dev/bin/python tests/experiments/linux_shared_storage.py` | 0 | Independent release and notification completion after the last claimant, two successful scoped notification attempts, no release or notification for externally held storage. |
+| `/tmp/bm-dev/bin/python tests/experiments/linux_i6_native_equivalence.py` | 0 | Verified destination-local lineage and reordered tag behavior for disposable repository formats 1 and 2 using certified Restic 0.18.0, SHA-256 `7135345e471b64fe43356f8cc665d33d9e52fb042ba39e5cff77310c46d46857`. |
+| `/tmp/bm-dev/bin/python tests/experiments/linux_i5_job.py` | 0 | Job admission, operator cancellation, cleanup, crash recovery, batch and history regression. An earlier run exposed the missing legacy `runs` field. The final wheel preserves it. |
+| `/tmp/bm-dev/bin/python tests/experiments/linux_i7_operations.py` | 0 | Frozen four-snapshot copies before retention, two surviving snapshots per destination, injected primary forget failure with successful independent peers and job outcome, opt-in prune, check, explicit unlock, wrong-ID replacement refusal, nonempty-init refusal, read-only dry-run and preview, failed job notification, older recovery refusal and same-generation recovery with four verified repositories. |
+
+The I7 implementation and scoped regression gate passed on Linux x86-64 with
+CPython 3.13.5 and user systemd scopes. Fixtures used disposable Restic
+repositories and marker-backed storage. No production repository or mount was
+modified. Operator cancellation addresses job runs. Unsettled process evidence
+continues to require explicit reconciliation. I8 hardening and I9 release
+acceptance remain pending.

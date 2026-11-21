@@ -90,7 +90,7 @@ root = {quote(self.storage)}
             env=environment, capture_output=True, text=True, check=True, timeout=20,
         ).stdout
 
-    def job(self, *, secondary=False, sources=None, hooks=(), job_id="fixture", primary_repo="primary"):
+    def job(self, *, secondary=False, sources=None, hooks=(), job_id="fixture", primary_repo="primary", keep_last=100):
         sources = sources if sources is not None else [(self.source, True)]
         content = f"""
 schema_version = 1
@@ -132,7 +132,7 @@ repository = {quote(self.storage / "third")}
 provider = "environment"
 variable = "THIRD_SECRET"
 """
-        content += "\n[retention]\nkeep_last = 2\n"
+        content += f"\n[retention]\nkeep_last = {keep_last}\n"
         for phase, label, exit_code, delay in hooks:
             command = (
                 "import os,pathlib,sys,time;"
