@@ -63,6 +63,10 @@ def record_intent(database, operation_id, owner_id, *, scope_gate=False, claim_o
         (execution_id, operation_id, owner_id, now(),
          json.dumps({"supervisor_id": owner[0], "scope_gate": scope_gate}), claim_operation_id),
     )
+    database.execute(
+        "UPDATE copy_attempts SET state = 'LAUNCH_INTENT', execution_id = ? WHERE attempt_id = ? AND state = 'PLANNED'",
+        (execution_id, operation_id),
+    )
     event(database, execution_id, "launch_intent")
     return LaunchIntent(execution_id, operation_id, owner_id, owner[0])
 
@@ -117,6 +121,10 @@ def record_launched(database, intent, receipt):
            WHERE execution_id = ?""",
         (now(), json.dumps(asdict(receipt)), intent.execution_id),
     )
+    database.execute(
+        "UPDATE copy_attempts SET state = 'RUNNING', launched = 1 WHERE execution_id = ? AND state = 'LAUNCH_INTENT'",
+        (intent.execution_id,),
+    )
     event(database, intent.execution_id, "launched")
 
 
@@ -143,6 +151,19 @@ def fence_uncertain(database, intent):
         """UPDATE storage_claims SET state = 'RECOVERY_REQUIRED'
            WHERE owner_id = ? AND state != 'RELEASED'""",
         (intent.owner_id,),
+    )
+    database.execute(
+        "UPDATE copy_attempts SET state = 'LAUNCH_UNCERTAIN', error_code = 'TERMINATION_UNCERTAIN' WHERE execution_id = ?",
+        (intent.execution_id,),
+    )
+    database.execute(
+        """UPDATE transfer_requirements SET state = 'BLOCKED'
+           WHERE (run_id, requirement_id) IN (
+               SELECT attempt.run_id, assigned.value
+               FROM copy_attempts AS attempt, json_each(attempt.requirement_ids_json) AS assigned
+               WHERE attempt.execution_id = ?
+           )""",
+        (intent.execution_id,),
     )
     event(database, intent.execution_id, "launch_uncertain")
 

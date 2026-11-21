@@ -8,20 +8,20 @@ D6,confirmed,AT-012;AT-014;AT-024,not_executed,Domain mapping is provisional; re
 D7,confirmed,AT-012;AT-014;AT-024,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D8,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,linux_i5_job.py isolates incorrect primary credentials and selects the second configured repository
 D9,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,linux_i5_job.py verifies the first usable secondary receives backup while a later registered secondary remains empty
-D10,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D11,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D12,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D10,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,linux_i6_replication.py verifies unavailable primary during fallback and normal verification after the primary returns
+D11,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,linux_i6_replication.py verifies both normal attempts use the backup repository and identical frozen source sets
+D12,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,linux_i6_faults.py proves one replication destination fails while an independent destination still receives the snapshot
 D13,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,linux_i5_job.py proves Restic exit 3 leaves the backup failed and never switches the selected repository
 D14,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,linux_i5_job.py verifies successful live backup and history snapshot ID; I4 certifies strict expected-path evidence
-D15,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D16,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D15,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,linux_i6_replication.py asserts cleanup is recorded before the first replication phase entry
+D16,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,linux_i6_replication.py records a failing post hook and still completes replication and convergence
 D17,confirmed,AT-015;AT-016;AT-018,not_executed,linux_i5_job.py verifies failed pre-hook suppresses backup and later pre-hook still runs
 D18,confirmed,AT-015;AT-016;AT-018,not_executed,linux_i5_job.py asserts ordered pre-hook markers even after failure and confirmed timeout
 D19,confirmed,AT-015;AT-016;AT-018,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D20,confirmed,AT-015;AT-016;AT-018,not_executed,linux_shared_storage.py asserts release after final claimant and independent dispatcher completion
 D21,confirmed,AT-015;AT-016;AT-018,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D22,confirmed,AT-015;AT-016;AT-018,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D23,confirmed,AT-015;AT-016;AT-018,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D23,confirmed,AT-015;AT-016;AT-018,not_executed,linux_i6_replication.py verifies complete frozen normal history including three revisions in the same keep-last retention group
 D24,confirmed,AT-015;AT-016;AT-018,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D25,confirmed,AT-019;AT-023;AT-029,not_executed,linux_i5_job.py uses SIGKILL to verify admission remains fenced until scope termination and later run has a new ID
 D26,confirmed,AT-019;AT-023;AT-029,not_executed,linux_i5_job.py asserts same-job overlap returns exit 5
@@ -31,12 +31,12 @@ D29,confirmed,AT-019;AT-023;AT-029,not_executed,linux_i5_job.py exercises indivi
 D30,confirmed,AT-019;AT-023;AT-029,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D31,confirmed,AT-019;AT-023;AT-029,not_executed,linux_i5_job.py asserts invalid batch TOML does not prevent both valid jobs succeeding
 D32,confirmed,AT-019;AT-023;AT-029,not_executed,linux_i5_job.py asserts aggregate exit 3 for a batch containing invalid and successful jobs
-D33,confirmed,AT-019;AT-023;AT-029,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D33,confirmed,AT-019;AT-023;AT-029,not_executed,linux_i6_replication.py observes partial after fallback and full after successful rejoin and convergence
 D34,confirmed,AT-019;AT-023;AT-029,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D35,confirmed,AT-019;AT-023;AT-029,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D36,confirmed,AT-019;AT-023;AT-029,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D37,confirmed,AT-012;AT-013;AT-014;AT-036,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D38,confirmed,AT-012;AT-013;AT-014;AT-036,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D38,confirmed,AT-012;AT-013;AT-014;AT-036,not_executed,ReplicationRuntimeTests verifies failed or reduced fixed-source baseline does not switch sources
 D39,confirmed,AT-012;AT-013;AT-014;AT-036,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D40,confirmed,AT-012;AT-013;AT-014;AT-036,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D41,confirmed,AT-012;AT-013;AT-014;AT-036,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
@@ -104,23 +104,23 @@ D102,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provis
 D103,confirmed,AT-005;AT-039,not_executed,linux_atomic_claims.py asserts cross-process exclusive repository claim admission; operation matrix certification pending
 D104,confirmed,AT-005;AT-039,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D105,confirmed,AT-005;AT-039,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-R1,confirmed,AT-003;AT-004;AT-010;AT-011;AT-029;AT-030,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-R2,confirmed,AT-003;AT-004;AT-010;AT-011;AT-029;AT-030,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+R1,confirmed,AT-003;AT-004;AT-010;AT-011;AT-029;AT-030,not_executed,linux_i6_replication.py verifies every independent original and rewritten variant persists throughout additive copying
+R2,confirmed,AT-003;AT-004;AT-010;AT-011;AT-029;AT-030,not_executed,linux_i6_replication.py verifies fallback-origin history later reaches the restored primary
 R3,confirmed,AT-003;AT-004;AT-010;AT-011;AT-029;AT-030,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-R4,confirmed,AT-003;AT-004;AT-010;AT-011;AT-029;AT-030,not_executed,identity-json-lineage confirms explicit copies via destination inventory and observes exit zero without representation for a deleted source
-R5,confirmed,AT-003;AT-004;AT-010;AT-011;AT-029;AT-030,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-R6,confirmed,AT-003;AT-004;AT-010;AT-011;AT-029;AT-030,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+R4,confirmed,AT-003;AT-004;AT-010;AT-011;AT-029;AT-030,not_executed,linux_i6_faults.py proves a real copy exit zero and destination snapshot cannot verify a disappeared source
+R5,confirmed,AT-003;AT-004;AT-010;AT-011;AT-029;AT-030,not_executed,linux_i6_faults.py verifies no retry after a started copy failure and preserves a copied destination snapshot after verification failure
+R6,confirmed,AT-003;AT-004;AT-010;AT-011;AT-029;AT-030,not_executed,linux_i6_replication.py compares the complete frozen explicit source ID lists across normal attempts
 R7,confirmed,AT-003;AT-004;AT-010;AT-011;AT-029;AT-030,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-R8,confirmed,AT-003;AT-004;AT-010;AT-011;AT-029;AT-030,not_executed,identity-json-lineage confirms different chunker polynomials and successful copy; runtime warning presentation pending
-R9,confirmed,AT-003;AT-004;AT-010;AT-011;AT-029;AT-030,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-R10,confirmed,AT-003;AT-004;AT-010;AT-011;AT-029;AT-030,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-G1,confirmed,AT-003;AT-007;AT-008;AT-009;AT-015;AT-040,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+R8,confirmed,AT-003;AT-004;AT-010;AT-011;AT-029;AT-030,not_executed,linux_i6_replication.py asserts chunker mismatch warning alongside successful transfers
+R9,confirmed,AT-003;AT-004;AT-010;AT-011;AT-029;AT-030,not_executed,ReplicationRuntimeTests asserts incomplete source enumeration cannot schedule transfers and TransferStateTests preserves complete provenance
+R10,confirmed,AT-003;AT-004;AT-010;AT-011;AT-029;AT-030,not_executed,linux_i6_faults.py removes the expected source after copy in a disposable repository and asserts UNVERIFIED with no success evidence
+G1,confirmed,AT-003;AT-007;AT-008;AT-009;AT-015;AT-040,not_executed,linux_i6_replication.py verifies distinct fixed-source replication and additive peer convergence outcomes
 G2,superseded_by_shared_retention_policy,AT-003;AT-007;AT-008;AT-009;AT-015;AT-040,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-G3,confirmed,AT-003;AT-007;AT-008;AT-009;AT-015;AT-040,not_executed,identity-json-lineage asserts distinct lineage for identical independently created metadata and validates transitive and rewritten variants; production resolver pending
-G4,confirmed,AT-003;AT-007;AT-008;AT-009;AT-015;AT-040,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+G3,confirmed,AT-003;AT-007;AT-008;AT-009;AT-015;AT-040,not_executed,linux_i6_native_equivalence.py verifies destination-local lineage aliases and unordered tags on exact Restic v1/v2; ConvergenceTests rejects unrelated metadata matches
+G4,confirmed,AT-003;AT-007;AT-008;AT-009;AT-015;AT-040,not_executed,linux_i6_faults.py proves independent verified transfers persist after an unrelated started failure
 G5,confirmed,AT-003;AT-007;AT-008;AT-009;AT-015;AT-040,not_executed,linux_atomic_claims.py asserts reverse-ordered requests admit only one complete claim set
-G6,confirmed,AT-003;AT-007;AT-008;AT-009;AT-015;AT-040,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-G7,confirmed,AT-003;AT-007;AT-008;AT-009;AT-015;AT-040,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+G6,confirmed,AT-003;AT-007;AT-008;AT-009;AT-015;AT-040,not_executed,linux_i6_replication.py confirms all three same-group revisions copy under keep-last=2; operational retention follows in I7
+G7,confirmed,AT-003;AT-007;AT-008;AT-009;AT-015;AT-040,not_executed,linux_i6_replication.py and linux_i6_faults.py assert partial after successful backup with unavailable or failed required transfers
 L1,confirmed,AT-017;AT-018;AT-021;AT-022,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 L2,confirmed,AT-017;AT-018;AT-021;AT-022,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 L3,confirmed,AT-017;AT-018;AT-021;AT-022,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
@@ -134,8 +134,8 @@ A4,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,linux_journaled_supervisor
 A5,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,linux_shared_storage.py asserts independent lifecycle dispatch through a scoped fixture provider
 A6,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,tools/certify_restic.py records exact version and SHA-256 plus repository formats 1 and 2; ResticTests rejects altered fingerprint or version
 A7,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,linux_scoped_restic.py uses the configured system binary through the installed fingerprint profile
-A8,confirmed,AT-007;AT-008;AT-009;AT-030;AT-031,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-A9,confirmed,AT-007;AT-008;AT-009;AT-030;AT-031,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-A10,confirmed,AT-007;AT-008;AT-009;AT-030;AT-031,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-A11,confirmed,AT-007;AT-008;AT-009;AT-030;AT-031,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-A12,confirmed,AT-007;AT-008;AT-009;AT-030;AT-031,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+A8,confirmed,AT-007;AT-008;AT-009;AT-030;AT-031,not_executed,TransferStateTests verifies a failed enumeration preserves fresh provenance and linux_i6_replication.py checks the current per-repository index
+A9,confirmed,AT-007;AT-008;AT-009;AT-030;AT-031,not_executed,linux_atomic_claims.py checks cross-process exclusion and test_conflict_does_not_admit_part_of_claim_set checks same-target exclusion even with a compatible pair
+A10,confirmed,AT-007;AT-008;AT-009;AT-030;AT-031,not_executed,linux_i6_faults.py proves an unstarted failed attempt replans to a validated peer and preserves the pending requirement
+A11,confirmed,AT-007;AT-008;AT-009;AT-030;AT-031,not_executed,linux_i6_faults.py verifies a native started failure is not replaced within the run even with a peer representation
+A12,confirmed,AT-007;AT-008;AT-009;AT-030;AT-031,not_executed,TransferStateTests asserts launch receipt state and uncertainty blocking; linux_launch_boundaries.py exercises the actual crash boundaries

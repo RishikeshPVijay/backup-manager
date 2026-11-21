@@ -107,16 +107,18 @@ class JobRunner:
         with self.storage.write() as database:
             transition(database, self.run_id, name)
 
-    def run_command(self, invocation, *, deadline, selection=None, observe_cancel=True, user=None, group=None, cwd=None):
+    def run_command(self, invocation, *, deadline, selection=None, observe_cancel=True, user=None, group=None,
+                    cwd=None, operation_id=None, source_repository=None):
         if observe_cancel:
             self.check_running()
         if monotonic_ns() >= deadline:
             raise JobStopped
         claim = selection.claim_id if selection is not None else None
         result = run_journaled(
-            self.storage.path, self.storage.anchor, str(uuid4()), self.storage.owner,
+            self.storage.path, self.storage.anchor, operation_id or str(uuid4()), self.storage.owner,
             invocation.argv, deadline=deadline / NANOSECONDS, env=invocation.env, cwd=cwd,
             user=user, group=group, repository=selection.directory if selection else None,
+            source_repository=source_repository,
             claim_operation_id=claim,
             authorize=(lambda database: repository_authorized(database, claim, self.storage.owner)) if claim else None,
             cancelled=self.cancelled if observe_cancel else None,
@@ -130,7 +132,7 @@ class JobRunner:
         installed_profile(binary)
         return Restic.certified(binary, self.run_command(Restic.version(binary), deadline=self.operation_deadline()))
 
-    def get_destination(self, adapter, name, target):
+    def get_destination(self, adapter, name, target, *, access_mode="BACKUP"):
         with self.storage.read() as database:
             expected = registration(database, self.job_id, name)
         path = Path(target["repository"])
@@ -159,7 +161,7 @@ class JobRunner:
             selected = Selected(name, expected, lease, repo, claim, directory)
             try:
                 self.storage.reserve_repositories(
-                    claim, [RepositoryClaim(expected.key, expected.generation, "BACKUP")], [lease],
+                    claim, [RepositoryClaim(expected.key, expected.generation, access_mode)], [lease],
                     deadline=self.operation_deadline(), cancelled=self.cancelled,
                     compatible_pairs=adapter.profile.native_overlap,
                 )
@@ -197,6 +199,7 @@ class JobRunner:
             raise DestinationRejected("REPOSITORY_IDENTITY_UNAVAILABLE") from None
         if identity.id != selected.registration.restic_id:
             raise DestinationRejected("REPOSITORY_ID_MISMATCH")
+        return identity
 
     def select(self, adapter):
         self.move("SELECTING_SOURCE")
@@ -318,6 +321,7 @@ class JobRunner:
         errors = []
         status = Status.FAILED
         prepared = False
+        backup_claim_released = False
         try:
             try:
                 busy = self.acquire_slot(wait)
@@ -339,9 +343,6 @@ class JobRunner:
             self.hooks("post")
             self.check_running()
             status = Status.FULL
-            if len(tuple(destinations(self.job))) > 1:
-                status = Status.PARTIAL
-                errors.append(Diagnostic("REPLICATION_PENDING", "Required replication and convergence have not run."))
         except JobStopped:
             status = Status.CANCELLED if self.cancelled() else Status.FAILED
             errors.append(Diagnostic("JOB_CANCELLED" if status is Status.CANCELLED else "JOB_TIMEOUT",
@@ -382,14 +383,34 @@ class JobRunner:
                         self.record("cleanup", "uncertain", code="CLEANUP_UNCERTAIN")
                 elif prepared:
                     self.record("cleanup", "deferred", code="CLEANUP_EXECUTION_FENCED")
-                if status in {Status.FULL, Status.PARTIAL} and self.backup_status == "succeeded":
+                if status is Status.FULL and len(tuple(destinations(self.job))) > 1:
+                    from .replication import run_replication
+
+                    status = Status.PARTIAL
+                    if not self.fenced:
+                        try:
+                            self.storage.release_repositories(self.selected.claim_id)
+                            backup_claim_released = True
+                            if run_replication(self, adapter):
+                                status = Status.FULL
+                        except JobStopped:
+                            if self.cancelled():
+                                status = Status.CANCELLED
+                            self.record("transfer", "incomplete", code="TRANSFER_INTERRUPTED")
+                        except (StateUnsafe, SupervisionUncertain, OSError):
+                            self.fenced = True
+                            self.record("transfer", "uncertain", code="TRANSFER_STATE_UNSAFE")
+                        except Exception:
+                            self.fenced = True
+                            self.record("transfer", "uncertain", code="TRANSFER_INTERNAL_ERROR")
                     if status is Status.PARTIAL:
-                        self.record("replication", "incomplete", code="REPLICATION_PENDING")
-                        self.record("convergence", "incomplete", code="CONVERGENCE_PENDING")
+                        errors.append(Diagnostic("TRANSFER_INCOMPLETE", "Required replication or convergence is incomplete."))
+                if status in {Status.FULL, Status.PARTIAL}:
                     self.record("retention", "deferred", code="RETENTION_PENDING")
                 if self.selected is not None and not self.fenced:
                     try:
-                        self.storage.release_repositories(self.selected.claim_id)
+                        if not backup_claim_released:
+                            self.storage.release_repositories(self.selected.claim_id)
                         self.storage.release(self.selected.lease)
                     except (StateUnsafe, OSError):
                         self.fenced = True

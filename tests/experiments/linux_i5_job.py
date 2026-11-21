@@ -215,7 +215,9 @@ def main():
         fixture.job(secondary=True)
         fallback = fixture.cli("job", "run", "fixture", expected=2, overrides={"PRIMARY_SECRET": "wrong-fixture"})
         assert fallback["data"]["backup"] == "succeeded" and fallback["data"]["destination_id"] == "secondary"
-        assert not json.loads(fixture.restic("third", "snapshots", "--json"))
+        # An I6 copy may appear here. The I5 selection invariant is that
+        # this later secondary never receives its own backup snapshot.
+        assert all(item.get("original") for item in json.loads(fixture.restic("third", "snapshots", "--json")))
         assert len(json.loads(fixture.restic("primary", "snapshots", "--json"))) == originals
 
         primary = fixture.storage / "primary"

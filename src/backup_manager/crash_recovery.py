@@ -55,6 +55,13 @@ def reconcile_owner(database, observation):
            WHERE worker_identity = ? AND state != 'TERMINATED'""",
         (observation.owner_id,),
     )
+    if not uncertain:
+        database.execute(
+            """UPDATE copy_attempts SET state = 'INTERRUPTED', error_code = 'TRANSFER_INTERRUPTED'
+               WHERE run_id IN (SELECT run_id FROM job_runs WHERE owner_id = ? AND finished_at IS NULL)
+               AND state IN ('PLANNED', 'LAUNCH_INTENT', 'RUNNING', 'LAUNCH_UNCERTAIN')""",
+            (observation.owner_id,),
+        )
     return not uncertain
 
 
@@ -113,6 +120,11 @@ def record_interruption(database, owner, scope):
         """UPDATE command_executions SET state = 'TERMINATED', termination_evidence = ?
            WHERE execution_id = ?""",
         (json.dumps({"interrupted": True, "observation": scope.proof}), scope.execution_id),
+    )
+    database.execute(
+        """UPDATE copy_attempts SET state = 'INTERRUPTED', error_code = 'TRANSFER_INTERRUPTED'
+           WHERE execution_id = ? AND state IN ('LAUNCH_INTENT', 'RUNNING', 'LAUNCH_UNCERTAIN')""",
+        (scope.execution_id,),
     )
     event(database, scope.execution_id, "interrupted")
     return True

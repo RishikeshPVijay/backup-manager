@@ -87,9 +87,13 @@ def prune_history(database, job_id, logging, keep_run=None):
     for index, (run_id, ended) in enumerate(runs):
         if run_id == keep_run or not ((cutoff and ended < cutoff) or (count and index >= count)):
             continue
-        # Provenance and transfer audit objects are durable beyond I5 history.
-        if database.execute("SELECT 1 FROM copy_attempts WHERE run_id = ?", (run_id,)).fetchone():
-            continue
+        # The current provenance index is independent of a job's history limit.
+        database.execute(
+            "DELETE FROM copy_evidence WHERE attempt_id IN (SELECT attempt_id FROM copy_attempts WHERE run_id = ?)",
+            (run_id,),
+        )
+        database.execute("DELETE FROM copy_attempts WHERE run_id = ?", (run_id,))
+        database.execute("DELETE FROM transfer_requirements WHERE run_id = ?", (run_id,))
         database.execute("DELETE FROM phase_results WHERE run_id = ?", (run_id,))
         database.execute("DELETE FROM job_runs WHERE run_id = ?", (run_id,))
 

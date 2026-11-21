@@ -36,7 +36,7 @@ class StateTests(unittest.TestCase):
         )
         with closing(sqlite3.connect(self.path)) as database:
             self.assertEqual(database.execute("PRAGMA journal_mode").fetchone(), ("wal",))
-            self.assertEqual(database.execute("SELECT version FROM schema_migrations").fetchall(), [(1,), (2,), (3,)])
+            self.assertEqual(database.execute("SELECT version FROM schema_migrations").fetchall(), [(1,), (2,), (3,), (4,)])
 
     def test_identity_and_generation_mismatch_is_unsafe(self):
         record = initialize(self.path, self.anchor)

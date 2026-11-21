@@ -1,6 +1,6 @@
 # Implementation status
 
-Baseline v1.0. I1–I5 milestone gates verified on Linux x86_64. I6–I9 are pending. Restic 0.18.0 Linux amd64 is certified only for the exact recorded binary fingerprint and repository formats 1 and 2. The full 40-scenario release acceptance run remains pending.
+Baseline v1.0. I1–I6 milestone gates verified on Linux x86_64. I7–I9 are pending. Restic 0.18.0 Linux amd64 is certified only for the exact recorded binary fingerprint and repository formats 1 and 2. The full 40-scenario release acceptance run remains pending.
 
 ## I1 foundation checklist
 
@@ -206,3 +206,23 @@ During fixture development, a crash test left a direct SQLite connection open an
 Verified on Linux x86_64 and CPython 3.13.5 with user systemd scopes. I5 used a marker-file storage provider for its multi-process orchestration fixture, real Restic repositories, and the installed exact binary profile. Actual block-mount verification remains covered by the separate I2/I3 loop fixture. Hook execution as the invoking identity was exercised. Switching to a different user or group requires deployment privileges.
 
 Multi-destination backup jobs explicitly report partial while replication and convergence await I6. Retention, admin initialization, full operation administration, and dry-run/preflight remain scheduled for I7. Release acceptance remains pending.
+
+## I6 replication and convergence
+
+- D10–D12/D15/D16/D23/D33/D37–D39/R1–R10/G1/G3–G7. Normal replication freezes one complete inventory of the backup-receiving repository. Convergence follows cleanup and normal replication, accumulates the union of complete fresh observations, and preserves destination-only history. The phase records unavailable destinations, chunker mismatch warnings, and independent attempt outcomes. Retention remains deferred to I7 and never filters this phase.
+- A8–A12/G5. Migration 004 adds a generation- and profile-scoped provenance index, frozen transfer metadata, and durable requirement outcomes. The launch journal links an attempt before dispatch and records the started boundary with the execution receipt. Only an unstarted pending requirement can select a replacement source. Failed started attempts remain blocked and verified successes remain immutable. Both repository directories stay pinned through the scoped copy. Repository claim sets serialize a common destination and allow tested shared-source overlap for independent destinations.
+- A disposable exact-binary probe disproved the initial lineage-plus-ordered-tags comparison. Native copy accepts a destination-local snapshot ID as a lineage reference even when the destination itself has a different original ID. Native copy also treats reordered tags as a match. The initial comparison was replaced before I6 signoff. The corrected comparison preserves full native metadata and determines target representation separately from the lineage propagated by a source. See `tests/experiments/linux_i6_native_equivalence.py` and the linked upstream comparator in docs/08.
+
+| Command or fixture | Exit | Evidence |
+|---|---:|---|
+| `/tmp/bm-dev/bin/python tools/validate_handoff.py` | 0 | Static handoff and installed I4 profile report reference validated. |
+| `/tmp/bm-dev/bin/python -m build --no-isolation --outdir /tmp/bm-i6-dist` and final wheel install | 0 each | Built sdist and installed the wheel. Final tested wheel SHA-256 `d346b719637fbb2cabe2b301ecdc5b3bc1335b019c0689461e308ec226f35956`. |
+| `/tmp/bm-dev/bin/python -m unittest discover -s tests/unit -q` | 0 | 80 passed, including normal copy scheduling, fixed-source and incomplete-enumeration failures, native comparison, generation-scoped provenance, and failure fencing. |
+| `/tmp/bm-dev/bin/python tests/experiments/linux_i6_native_equivalence.py` | 0 | Both formats passed the disposable alias and tag-order cases. Exact binary and observations are in `tests/certification/restic-0.18.0-i6-native-equivalence.json`. |
+| `/tmp/bm-dev/bin/python tests/experiments/linux_i6_replication.py` | 0 | Fixed full-history source, primary catch-up after fallback, divergent history, rewritten tags, independent post-hook failure, cleanup ordering, chunker warnings, and retention-independent replication. |
+| `/tmp/bm-dev/bin/python tests/experiments/linux_i6_faults.py` | 0 | A real started copy failure was isolated and stayed blocked. A successful copy exit followed by lost source evidence was unverified, preserving target data. A prelaunch failure could use a different verified source. |
+| `/tmp/bm-dev/bin/python tests/experiments/linux_atomic_claims.py` | 0 | Reverse-ordered claims from independent processes produced one complete set and one busy result. |
+
+Normal replication uses up to four target workers per job. I6 model and lifecycle tests ran on Linux x86_64, Python 3.13.5, user systemd scopes, the certified Restic binary, and disposable repositories. I4 certification and its original report remain unchanged. Supplemental comparison evidence and the affected test assertions are indexed in the requirements traceability table.
+
+I6 gate complete. The final installed-wheel regression ran `linux_i5_job.py`, `linux_crash_fencing.py`, `linux_launch_boundaries.py`, and `linux_scoped_restic.py` with exit 0 each. A provisional I5 regression required a later replica to contain the fallback backup despite the fixture's partial overall result. The I5 assertion now verifies that the later replica never took its own backup. The dedicated I6 fixture verifies confirmed fallback replication separately. No real backup repositories or mounts were used in these tests. I7 retention and operator commands, I8 hardening, and I9 release acceptance remain pending.

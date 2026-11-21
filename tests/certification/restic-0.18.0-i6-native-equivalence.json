@@ -1,0 +1,23 @@
+{
+  "test_id": "I6_NATIVE_EQUIVALENCE",
+  "git_commit": "3fd2e71ef01e34d138d31d7c798245e124277fa8",
+  "environment": "Linux-6.12.101+deb13-amd64-x86_64-with-glibc2.41",
+  "restic_version": "restic 0.18.0 compiled with go1.24.4 on linux/amd64",
+  "restic_binary_sha256": "7135345e471b64fe43356f8cc665d33d9e52fb042ba39e5cff77310c46d46857",
+  "command": [
+    "/tmp/bm-dev/bin/python",
+    "tests/experiments/linux_i6_native_equivalence.py"
+  ],
+  "fixture_sha256": "0854857e40ba5ddbd022239aa2bead896a5b5a5c4ec51763ffabc47abba768ef",
+  "expected": "The exact binary recognizes a destination-local ID alias and matching tag membership in both repository formats.",
+  "observed": [
+    "restic 0.18.0 compiled with go1.24.4 on linux/amd64 7135345e471b64fe43356f8cc665d33d9e52fb042ba39e5cff77310c46d46857",
+    "format 1: native destination-local lineage and tag-order behavior verified; fixtures removed.",
+    "format 2: native destination-local lineage and tag-order behavior verified; fixtures removed."
+  ],
+  "exit_code": 0,
+  "report_paths": [
+    "tests/certification/restic-0.18.0-i6-native-equivalence.json"
+  ],
+  "passed": true
+}

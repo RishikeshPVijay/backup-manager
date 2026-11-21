@@ -1,6 +1,6 @@
 """Internal scoped worker. It waits for its supervisor before executing a command."""
 
-from contextlib import contextmanager
+from contextlib import ExitStack, contextmanager
 from dataclasses import asdict
 import base64
 import json
@@ -62,11 +62,11 @@ def directory_identity(descriptor):
 
 
 @contextmanager
-def repository_argv(argv, repository):
+def repository_argv(argv, repository, flag="--repo"):
     if repository is None:
         yield argv, ()
         return
-    index = argv.index("--repo") + 1
+    index = argv.index(flag) + 1
     if argv[index] != repository["path"]:
         raise ValueError("Repository argument differs from the verified directory.")
     descriptor = os.open(repository["path"], os.O_PATH | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC)
@@ -104,11 +104,13 @@ def main():
         data = json.loads(request)
         with child_input(data.get("stdin")) as command_input:
             try:
-                with repository_argv(data["argv"], data.get("repository")) as (argv, descriptors):
+                with ExitStack() as stack:
+                    argv, descriptors = stack.enter_context(repository_argv(data["argv"], data.get("repository")))
+                    argv, source = stack.enter_context(repository_argv(argv, data.get("source_repository"), "--from-repo"))
                     command = subprocess.Popen(
                         argv, cwd=data["cwd"], env=data.get("env"), stdin=command_input,
                         stdout=subprocess.PIPE, stderr=subprocess.PIPE, start_new_session=True,
-                        pass_fds=descriptors, **credentials(data.get("user"), data.get("group")),
+                        pass_fds=(*descriptors, *source), **credentials(data.get("user"), data.get("group")),
                     )
             except (OSError, ValueError, TypeError, KeyError, IndexError, StopIteration):
                 reply({"not_started": True})
