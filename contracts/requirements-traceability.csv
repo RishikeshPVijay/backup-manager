@@ -12,7 +12,7 @@ D10,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,Domain mapping is provisi
 D11,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D12,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D13,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D14,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D14,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,identity-json-lineage certifies successful summary and fresh new snapshot with expected paths and rejects a skipped requested source
 D15,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D16,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D17,confirmed,AT-015;AT-016;AT-018,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
@@ -61,7 +61,7 @@ D59,confirmed,AT-025;AT-035,not_executed,Domain mapping is provisional; refine t
 D60,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D61,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D62,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D63,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D63,confirmed,AT-017;AT-033;AT-034,not_executed,identity-json-lineage observes real exit 3 on unreadable source and rejects it as a successful backup
 D64,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D65,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D66,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
@@ -107,16 +107,16 @@ D105,confirmed,AT-005;AT-039,not_executed,Domain mapping is provisional; refine 
 R1,confirmed,AT-003;AT-004;AT-010;AT-011;AT-029;AT-030,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 R2,confirmed,AT-003;AT-004;AT-010;AT-011;AT-029;AT-030,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 R3,confirmed,AT-003;AT-004;AT-010;AT-011;AT-029;AT-030,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-R4,confirmed,AT-003;AT-004;AT-010;AT-011;AT-029;AT-030,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+R4,confirmed,AT-003;AT-004;AT-010;AT-011;AT-029;AT-030,not_executed,identity-json-lineage confirms explicit copies via destination inventory and observes exit zero without representation for a deleted source
 R5,confirmed,AT-003;AT-004;AT-010;AT-011;AT-029;AT-030,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 R6,confirmed,AT-003;AT-004;AT-010;AT-011;AT-029;AT-030,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 R7,confirmed,AT-003;AT-004;AT-010;AT-011;AT-029;AT-030,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-R8,confirmed,AT-003;AT-004;AT-010;AT-011;AT-029;AT-030,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+R8,confirmed,AT-003;AT-004;AT-010;AT-011;AT-029;AT-030,not_executed,identity-json-lineage confirms different chunker polynomials and successful copy; runtime warning presentation pending
 R9,confirmed,AT-003;AT-004;AT-010;AT-011;AT-029;AT-030,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 R10,confirmed,AT-003;AT-004;AT-010;AT-011;AT-029;AT-030,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 G1,confirmed,AT-003;AT-007;AT-008;AT-009;AT-015;AT-040,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 G2,superseded_by_shared_retention_policy,AT-003;AT-007;AT-008;AT-009;AT-015;AT-040,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-G3,confirmed,AT-003;AT-007;AT-008;AT-009;AT-015;AT-040,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+G3,confirmed,AT-003;AT-007;AT-008;AT-009;AT-015;AT-040,not_executed,identity-json-lineage asserts distinct lineage for identical independently created metadata and validates transitive and rewritten variants; production resolver pending
 G4,confirmed,AT-003;AT-007;AT-008;AT-009;AT-015;AT-040,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 G5,confirmed,AT-003;AT-007;AT-008;AT-009;AT-015;AT-040,not_executed,linux_atomic_claims.py asserts reverse-ordered requests admit only one complete claim set
 G6,confirmed,AT-003;AT-007;AT-008;AT-009;AT-015;AT-040,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
@@ -132,8 +132,8 @@ A2,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,Domain mapping is provisio
 A3,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,linux_atomic_claims.py asserts one complete ordered set and one busy outcome across two processes
 A4,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,linux_journaled_supervisor.py asserts scope verification and timed containment shutdown
 A5,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,linux_shared_storage.py asserts independent lifecycle dispatch through a scoped fixture provider
-A6,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-A7,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+A6,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,tools/certify_restic.py records exact version and SHA-256 plus repository formats 1 and 2; ResticTests rejects altered fingerprint or version
+A7,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,linux_scoped_restic.py uses the configured system binary through the installed fingerprint profile
 A8,confirmed,AT-007;AT-008;AT-009;AT-030;AT-031,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 A9,confirmed,AT-007;AT-008;AT-009;AT-030;AT-031,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 A10,confirmed,AT-007;AT-008;AT-009;AT-030;AT-031,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release

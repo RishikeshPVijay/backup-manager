@@ -32,6 +32,12 @@ def main():
             deadline=monotonic() + 10, stdin_payload=b"disposable worker payload",
         )
         assert received.exit_code == 0 and received.stdout == b"disposable worker payload"
+        large = run_journaled(
+            db, anchor, "large", owner,
+            (sys.executable, "-c", "import sys; sys.stdout.buffer.write(sys.stdin.buffer.read() * 20)"),
+            deadline=monotonic() + 10, stdin_payload=b"x" * 8192,
+        )
+        assert large.stdout == b"x" * 163840 and not large.truncated
         try:
             run_journaled(
                 db, anchor, "stdin", owner, (sys.executable, "-c", "raise AssertionError"),
@@ -85,7 +91,7 @@ print("fixture output")
                 "SELECT operation_id, state, exit_code FROM command_executions ORDER BY operation_id",
             ).fetchall()
         assert rows == [
-            ("cancel", "TERMINATED", None), ("stdin", "TERMINATED", 0),
+            ("cancel", "TERMINATED", None), ("large", "TERMINATED", 0), ("stdin", "TERMINATED", 0),
             ("success", "TERMINATED", 0), ("timeout", "LAUNCH_UNCERTAIN", None),
         ]
     print("Installed-wheel scope, detached descendant, durable receipt, cross-process cancellation and timeout passed.")

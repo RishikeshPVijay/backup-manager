@@ -1,0 +1,2341 @@
+{
+  "schema_version": 1,
+  "git_commit": "45a9da9357634858b49cc64d80042afcd7e96380",
+  "runner_sha256": "1243c6fe0bff2ffe2cd21f569418bd5dad3b02033d09f8a7e91e08700b9fd04e",
+  "adapter_sha256": "cf2b47485731e10dcb3a67495c401ebc84992d3d764accc1724912d74fdcc416",
+  "command": [
+    "/tmp/bm-dev/bin/python",
+    "tools/certify_restic.py",
+    "--restic",
+    "/usr/bin/restic",
+    "--report",
+    "tests/certification/restic-0.18.0-linux-amd64.json"
+  ],
+  "environment": "Linux-6.12.101+deb13-amd64-x86_64-with-glibc2.41",
+  "restic_version": "restic 0.18.0 compiled with go1.24.4 on linux/amd64",
+  "restic_binary_sha256": "7135345e471b64fe43356f8cc665d33d9e52fb042ba39e5cff77310c46d46857",
+  "cases": [
+    {
+      "test_id": "identity-json-lineage",
+      "repository_format": 1,
+      "fixture_removed": true,
+      "status": "pass",
+      "observations": {
+        "initial": {
+          "id": "a50f95aa37fcb5b8778ca0e306901f87e060f41e3af9f15e5bdb5d0380e5f61c",
+          "original": null,
+          "tree": "a015e6e0223d6ecc49f5b9b255aef8403a9d48c774e9b8bb261f029e320e7db7",
+          "time": "2025-01-01T00:00:00+05:30",
+          "hostname": "fixture",
+          "paths": [
+            "/tmp/bm-restic-cert-fx6kseu_/data"
+          ],
+          "tags": [
+            "old"
+          ]
+        },
+        "copied": {
+          "id": "d5295035c12fcb943de4ca4b4923f0a888ee377ff3a685b36ecefc5b7ada99bd",
+          "original": "a50f95aa37fcb5b8778ca0e306901f87e060f41e3af9f15e5bdb5d0380e5f61c",
+          "tree": "a015e6e0223d6ecc49f5b9b255aef8403a9d48c774e9b8bb261f029e320e7db7",
+          "time": "2025-01-01T00:00:00+05:30",
+          "hostname": "fixture",
+          "paths": [
+            "/tmp/bm-restic-cert-fx6kseu_/data"
+          ],
+          "tags": [
+            "old"
+          ]
+        },
+        "transitive": {
+          "id": "84cab75fd9b5a9201adc7f8b4b603916528a15dc61513391b48bda4bd79b4cdd",
+          "original": "a50f95aa37fcb5b8778ca0e306901f87e060f41e3af9f15e5bdb5d0380e5f61c",
+          "tree": "a015e6e0223d6ecc49f5b9b255aef8403a9d48c774e9b8bb261f029e320e7db7",
+          "time": "2025-01-01T00:00:00+05:30",
+          "hostname": "fixture",
+          "paths": [
+            "/tmp/bm-restic-cert-fx6kseu_/data"
+          ],
+          "tags": [
+            "old"
+          ]
+        },
+        "rewritten": {
+          "id": "24ea872ee90e392d4fafc1d7d3f4d60b4caef83c2e2cdf6f327820b2edfe651d",
+          "original": "a50f95aa37fcb5b8778ca0e306901f87e060f41e3af9f15e5bdb5d0380e5f61c",
+          "tree": "a015e6e0223d6ecc49f5b9b255aef8403a9d48c774e9b8bb261f029e320e7db7",
+          "time": "2025-01-01T00:00:00+05:30",
+          "hostname": "fixture",
+          "paths": [
+            "/tmp/bm-restic-cert-fx6kseu_/data"
+          ],
+          "tags": [
+            "rewritten"
+          ]
+        },
+        "deleted_source_exit": 0,
+        "repository_identities": [
+          {
+            "id": "7da49466c11dd1bee8fdbc647264072ae665a82a18ee4da8ee345c0fb2c25306",
+            "version": 1,
+            "chunker_polynomial": "23314dbffc5d9b"
+          },
+          {
+            "id": "9c315f3c616f6da49a9afd2a5cd36cc55df551fecc65f64058bcffb451fef095",
+            "version": 1,
+            "chunker_polynomial": "2b8676f9de6531"
+          },
+          {
+            "id": "034ea52d4de83989196c950dbea8222628cbb27cc43f86019543189de9b1c6ca",
+            "version": 1,
+            "chunker_polynomial": "20b6ac4fbb7141"
+          }
+        ],
+        "identical_metadata_independent_ids": [
+          "89a929b6190fd954911f1a97ddadb64aaf8e1dca92422c9c3b8183735b95a43c",
+          "0a097ab92a2ea75a4bf15f95ebd471197115a4d1902a19be2358a2a0e5b9eb85"
+        ],
+        "missing_requested_source_exit": 0,
+        "unreadable_source_exit": 3
+      },
+      "commands": [
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "init",
+            "--repository-version",
+            "1"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository 7da49466c1 at [fixture]/a\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "init",
+            "--repository-version",
+            "1"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository 9c315f3c61 at [fixture]/b\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "init",
+            "--repository-version",
+            "1"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository 034ea52d4d at [fixture]/c\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "cat",
+            "config"
+          ],
+          "exit": 0,
+          "stdout": "{\n  \"version\": 1,\n  \"id\": \"7da49466c11dd1bee8fdbc647264072ae665a82a18ee4da8ee345c0fb2c25306\",\n  \"chunker_polynomial\": \"23314dbffc5d9b\"\n}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "cat",
+            "config"
+          ],
+          "exit": 0,
+          "stdout": "{\n  \"version\": 1,\n  \"id\": \"9c315f3c616f6da49a9afd2a5cd36cc55df551fecc65f64058bcffb451fef095\",\n  \"chunker_polynomial\": \"2b8676f9de6531\"\n}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "cat",
+            "config"
+          ],
+          "exit": 0,
+          "stdout": "{\n  \"version\": 1,\n  \"id\": \"034ea52d4de83989196c950dbea8222628cbb27cc43f86019543189de9b1c6ca\",\n  \"chunker_polynomial\": \"20b6ac4fbb7141\"\n}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "cat",
+            "config"
+          ],
+          "exit": 12,
+          "stdout": "",
+          "stderr": "Fatal: wrong password or no key found\n"
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "backup",
+            "--json",
+            "--time",
+            "2025-01-01 00:00:00",
+            "--host",
+            "fixture",
+            "--tag",
+            "old",
+            "--",
+            "[fixture]/data"
+          ],
+          "exit": 0,
+          "stdout": "{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1158,\"data_added_packed\":1434,\"total_files_processed\":1,\"total_bytes_processed\":13,\"total_duration\":0.718861699,\"backup_start\":\"2026-11-21T23:56:38.461503518+05:30\",\"backup_end\":\"2026-11-21T23:56:39.180365207+05:30\",\"snapshot_id\":\"a50f95aa37fcb5b8778ca0e306901f87e060f41e3af9f15e5bdb5d0380e5f61c\"}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"a015e6e0223d6ecc49f5b9b255aef8403a9d48c774e9b8bb261f029e320e7db7\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:38.461503518+05:30\",\"backup_end\":\"2026-11-21T23:56:39.180365207+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1158,\"data_added_packed\":1434,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"a50f95aa37fcb5b8778ca0e306901f87e060f41e3af9f15e5bdb5d0380e5f61c\",\"short_id\":\"a50f95aa\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"a015e6e0223d6ecc49f5b9b255aef8403a9d48c774e9b8bb261f029e320e7db7\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:38.461503518+05:30\",\"backup_end\":\"2026-11-21T23:56:39.180365207+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1158,\"data_added_packed\":1434,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"a50f95aa37fcb5b8778ca0e306901f87e060f41e3af9f15e5bdb5d0380e5f61c\",\"short_id\":\"a50f95aa\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "backup",
+            "--json",
+            "--time",
+            "2025-01-01 00:00:00",
+            "--host",
+            "fixture",
+            "--tag",
+            "old",
+            "--",
+            "[fixture]/data"
+          ],
+          "exit": 0,
+          "stdout": "{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1164,\"data_added_packed\":1440,\"total_files_processed\":1,\"total_bytes_processed\":19,\"total_duration\":0.665531856,\"backup_start\":\"2026-11-21T23:56:41.234309606+05:30\",\"backup_end\":\"2026-11-21T23:56:41.899841461+05:30\",\"snapshot_id\":\"ae5262a19b1eb4eee285f8d608ac4ec1b4341d040c03a1a4eba9bb3d799d8af9\"}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"330943e3080e0041b270e71ec29059094562659b48e3c041a891f68d87e1c580\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:41.234309606+05:30\",\"backup_end\":\"2026-11-21T23:56:41.899841461+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1164,\"data_added_packed\":1440,\"total_files_processed\":1,\"total_bytes_processed\":19},\"id\":\"ae5262a19b1eb4eee285f8d608ac4ec1b4341d040c03a1a4eba9bb3d799d8af9\",\"short_id\":\"ae5262a1\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "a50f95aa37fcb5b8778ca0e306901f87e060f41e3af9f15e5bdb5d0380e5f61c"
+          ],
+          "exit": 0,
+          "stdout": "\nsnapshot a50f95aa of [[fixture]/data] at 2025-01-01 00:00:00 +0530 IST by neutrino@fixture\n  copy started, this may take a while...\n[0:00] 100.00%  2 / 2 packs copied\n\nsnapshot d5295035 saved\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"330943e3080e0041b270e71ec29059094562659b48e3c041a891f68d87e1c580\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:41.234309606+05:30\",\"backup_end\":\"2026-11-21T23:56:41.899841461+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1164,\"data_added_packed\":1440,\"total_files_processed\":1,\"total_bytes_processed\":19},\"id\":\"ae5262a19b1eb4eee285f8d608ac4ec1b4341d040c03a1a4eba9bb3d799d8af9\",\"short_id\":\"ae5262a1\"},{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"a015e6e0223d6ecc49f5b9b255aef8403a9d48c774e9b8bb261f029e320e7db7\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"original\":\"a50f95aa37fcb5b8778ca0e306901f87e060f41e3af9f15e5bdb5d0380e5f61c\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:38.461503518+05:30\",\"backup_end\":\"2026-11-21T23:56:39.180365207+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1158,\"data_added_packed\":1434,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"d5295035c12fcb943de4ca4b4923f0a888ee377ff3a685b36ecefc5b7ada99bd\",\"short_id\":\"d5295035\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "a50f95aa37fcb5b8778ca0e306901f87e060f41e3af9f15e5bdb5d0380e5f61c"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"330943e3080e0041b270e71ec29059094562659b48e3c041a891f68d87e1c580\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:41.234309606+05:30\",\"backup_end\":\"2026-11-21T23:56:41.899841461+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1164,\"data_added_packed\":1440,\"total_files_processed\":1,\"total_bytes_processed\":19},\"id\":\"ae5262a19b1eb4eee285f8d608ac4ec1b4341d040c03a1a4eba9bb3d799d8af9\",\"short_id\":\"ae5262a1\"},{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"a015e6e0223d6ecc49f5b9b255aef8403a9d48c774e9b8bb261f029e320e7db7\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"original\":\"a50f95aa37fcb5b8778ca0e306901f87e060f41e3af9f15e5bdb5d0380e5f61c\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:38.461503518+05:30\",\"backup_end\":\"2026-11-21T23:56:39.180365207+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1158,\"data_added_packed\":1434,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"d5295035c12fcb943de4ca4b4923f0a888ee377ff3a685b36ecefc5b7ada99bd\",\"short_id\":\"d5295035\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "copy",
+            "--from-repo",
+            "[fixture]/b",
+            "--",
+            "d5295035c12fcb943de4ca4b4923f0a888ee377ff3a685b36ecefc5b7ada99bd"
+          ],
+          "exit": 0,
+          "stdout": "\nsnapshot d5295035 of [[fixture]/data] at 2025-01-01 00:00:00 +0530 IST by neutrino@fixture\n  copy started, this may take a while...\n[0:00] 100.00%  2 / 2 packs copied\n\nsnapshot 84cab75f saved\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"a015e6e0223d6ecc49f5b9b255aef8403a9d48c774e9b8bb261f029e320e7db7\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"original\":\"a50f95aa37fcb5b8778ca0e306901f87e060f41e3af9f15e5bdb5d0380e5f61c\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:38.461503518+05:30\",\"backup_end\":\"2026-11-21T23:56:39.180365207+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1158,\"data_added_packed\":1434,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"84cab75fd9b5a9201adc7f8b4b603916528a15dc61513391b48bda4bd79b4cdd\",\"short_id\":\"84cab75f\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "tag",
+            "--set",
+            "rewritten",
+            "d5295035c12fcb943de4ca4b4923f0a888ee377ff3a685b36ecefc5b7ada99bd"
+          ],
+          "exit": 0,
+          "stdout": "create exclusive lock for repository\nmodified 1 snapshots\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"330943e3080e0041b270e71ec29059094562659b48e3c041a891f68d87e1c580\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:41.234309606+05:30\",\"backup_end\":\"2026-11-21T23:56:41.899841461+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1164,\"data_added_packed\":1440,\"total_files_processed\":1,\"total_bytes_processed\":19},\"id\":\"ae5262a19b1eb4eee285f8d608ac4ec1b4341d040c03a1a4eba9bb3d799d8af9\",\"short_id\":\"ae5262a1\"},{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"a015e6e0223d6ecc49f5b9b255aef8403a9d48c774e9b8bb261f029e320e7db7\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"rewritten\"],\"original\":\"a50f95aa37fcb5b8778ca0e306901f87e060f41e3af9f15e5bdb5d0380e5f61c\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:38.461503518+05:30\",\"backup_end\":\"2026-11-21T23:56:39.180365207+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1158,\"data_added_packed\":1434,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"24ea872ee90e392d4fafc1d7d3f4d60b4caef83c2e2cdf6f327820b2edfe651d\",\"short_id\":\"24ea872e\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "copy",
+            "--from-repo",
+            "[fixture]/b",
+            "--",
+            "24ea872ee90e392d4fafc1d7d3f4d60b4caef83c2e2cdf6f327820b2edfe651d"
+          ],
+          "exit": 0,
+          "stdout": "\nsnapshot 24ea872e of [[fixture]/data] at 2025-01-01 00:00:00 +0530 IST by neutrino@fixture\n  copy started, this may take a while...\n[0:00]          0 packs copied\n\nsnapshot 6d760e88 saved\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"a015e6e0223d6ecc49f5b9b255aef8403a9d48c774e9b8bb261f029e320e7db7\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"original\":\"a50f95aa37fcb5b8778ca0e306901f87e060f41e3af9f15e5bdb5d0380e5f61c\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:38.461503518+05:30\",\"backup_end\":\"2026-11-21T23:56:39.180365207+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1158,\"data_added_packed\":1434,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"84cab75fd9b5a9201adc7f8b4b603916528a15dc61513391b48bda4bd79b4cdd\",\"short_id\":\"84cab75f\"},{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"a015e6e0223d6ecc49f5b9b255aef8403a9d48c774e9b8bb261f029e320e7db7\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"rewritten\"],\"original\":\"a50f95aa37fcb5b8778ca0e306901f87e060f41e3af9f15e5bdb5d0380e5f61c\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:38.461503518+05:30\",\"backup_end\":\"2026-11-21T23:56:39.180365207+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1158,\"data_added_packed\":1434,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"6d760e88cd0f303fee188d49066f39f00ed43a585dd07a76943027c9cfb776a8\",\"short_id\":\"6d760e88\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "forget",
+            "--json",
+            "--keep-last",
+            "1",
+            "--dry-run"
+          ],
+          "exit": 0,
+          "stdout": "[{\"tags\":null,\"host\":\"fixture\",\"paths\":[\"[fixture]/data\"],\"keep\":[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"a015e6e0223d6ecc49f5b9b255aef8403a9d48c774e9b8bb261f029e320e7db7\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"original\":\"a50f95aa37fcb5b8778ca0e306901f87e060f41e3af9f15e5bdb5d0380e5f61c\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:38.461503518+05:30\",\"backup_end\":\"2026-11-21T23:56:39.180365207+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1158,\"data_added_packed\":1434,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"84cab75fd9b5a9201adc7f8b4b603916528a15dc61513391b48bda4bd79b4cdd\",\"short_id\":\"84cab75f\"}],\"remove\":[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"a015e6e0223d6ecc49f5b9b255aef8403a9d48c774e9b8bb261f029e320e7db7\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"rewritten\"],\"original\":\"a50f95aa37fcb5b8778ca0e306901f87e060f41e3af9f15e5bdb5d0380e5f61c\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:38.461503518+05:30\",\"backup_end\":\"2026-11-21T23:56:39.180365207+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1158,\"data_added_packed\":1434,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"6d760e88cd0f303fee188d49066f39f00ed43a585dd07a76943027c9cfb776a8\",\"short_id\":\"6d760e88\"}],\"reasons\":[{\"snapshot\":{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"a015e6e0223d6ecc49f5b9b255aef8403a9d48c774e9b8bb261f029e320e7db7\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"original\":\"a50f95aa37fcb5b8778ca0e306901f87e060f41e3af9f15e5bdb5d0380e5f61c\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:38.461503518+05:30\",\"backup_end\":\"2026-11-21T23:56:39.180365207+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1158,\"data_added_packed\":1434,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"84cab75fd9b5a9201adc7f8b4b603916528a15dc61513391b48bda4bd79b4cdd\",\"short_id\":\"84cab75f\"},\"matches\":[\"last snapshot\"]}]}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"a015e6e0223d6ecc49f5b9b255aef8403a9d48c774e9b8bb261f029e320e7db7\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"rewritten\"],\"original\":\"a50f95aa37fcb5b8778ca0e306901f87e060f41e3af9f15e5bdb5d0380e5f61c\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:38.461503518+05:30\",\"backup_end\":\"2026-11-21T23:56:39.180365207+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1158,\"data_added_packed\":1434,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"6d760e88cd0f303fee188d49066f39f00ed43a585dd07a76943027c9cfb776a8\",\"short_id\":\"6d760e88\"},{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"a015e6e0223d6ecc49f5b9b255aef8403a9d48c774e9b8bb261f029e320e7db7\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"original\":\"a50f95aa37fcb5b8778ca0e306901f87e060f41e3af9f15e5bdb5d0380e5f61c\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:38.461503518+05:30\",\"backup_end\":\"2026-11-21T23:56:39.180365207+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1158,\"data_added_packed\":1434,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"84cab75fd9b5a9201adc7f8b4b603916528a15dc61513391b48bda4bd79b4cdd\",\"short_id\":\"84cab75f\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "forget",
+            "a50f95aa37fcb5b8778ca0e306901f87e060f41e3af9f15e5bdb5d0380e5f61c"
+          ],
+          "exit": 0,
+          "stdout": "[0:00] 100.00%  1 / 1 files deleted\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"330943e3080e0041b270e71ec29059094562659b48e3c041a891f68d87e1c580\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:41.234309606+05:30\",\"backup_end\":\"2026-11-21T23:56:41.899841461+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1164,\"data_added_packed\":1440,\"total_files_processed\":1,\"total_bytes_processed\":19},\"id\":\"ae5262a19b1eb4eee285f8d608ac4ec1b4341d040c03a1a4eba9bb3d799d8af9\",\"short_id\":\"ae5262a1\"},{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"a015e6e0223d6ecc49f5b9b255aef8403a9d48c774e9b8bb261f029e320e7db7\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"rewritten\"],\"original\":\"a50f95aa37fcb5b8778ca0e306901f87e060f41e3af9f15e5bdb5d0380e5f61c\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:38.461503518+05:30\",\"backup_end\":\"2026-11-21T23:56:39.180365207+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1158,\"data_added_packed\":1434,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"24ea872ee90e392d4fafc1d7d3f4d60b4caef83c2e2cdf6f327820b2edfe651d\",\"short_id\":\"24ea872e\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "a50f95aa37fcb5b8778ca0e306901f87e060f41e3af9f15e5bdb5d0380e5f61c"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Load(<snapshot/a50f95aa37>, 0, 0) failed: open [fixture]/a/snapshots/a50f95aa37fcb5b8778ca0e306901f87e060f41e3af9f15e5bdb5d0380e5f61c: no such file or directory\nLoad(<snapshot/a50f95aa37>, 0, 0) failed: open [fixture]/a/snapshots/a50f95aa37fcb5b8778ca0e306901f87e060f41e3af9f15e5bdb5d0380e5f61c: no such file or directory\nIgnoring \"a50f95aa37fcb5b8778ca0e306901f87e060f41e3af9f15e5bdb5d0380e5f61c\": failed to load snapshot a50f95aa: open [fixture]/a/snapshots/a50f95aa37fcb5b8778ca0e306901f87e060f41e3af9f15e5bdb5d0380e5f61c: no such file or directory\n"
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"330943e3080e0041b270e71ec29059094562659b48e3c041a891f68d87e1c580\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:41.234309606+05:30\",\"backup_end\":\"2026-11-21T23:56:41.899841461+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1164,\"data_added_packed\":1440,\"total_files_processed\":1,\"total_bytes_processed\":19},\"id\":\"ae5262a19b1eb4eee285f8d608ac4ec1b4341d040c03a1a4eba9bb3d799d8af9\",\"short_id\":\"ae5262a1\"},{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"a015e6e0223d6ecc49f5b9b255aef8403a9d48c774e9b8bb261f029e320e7db7\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"rewritten\"],\"original\":\"a50f95aa37fcb5b8778ca0e306901f87e060f41e3af9f15e5bdb5d0380e5f61c\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:38.461503518+05:30\",\"backup_end\":\"2026-11-21T23:56:39.180365207+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1158,\"data_added_packed\":1434,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"24ea872ee90e392d4fafc1d7d3f4d60b4caef83c2e2cdf6f327820b2edfe651d\",\"short_id\":\"24ea872e\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/identical",
+            "init",
+            "--repository-version",
+            "1"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository 6679ef071d at [fixture]/identical\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "backup",
+            "--json",
+            "--time",
+            "2025-01-01 00:00:00",
+            "--host",
+            "fixture",
+            "--tag",
+            "old",
+            "--stdin",
+            "--stdin-filename",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":0,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":1,\"data_added\":288,\"data_added_packed\":426,\"total_files_processed\":1,\"total_bytes_processed\":13,\"total_duration\":0.714542138,\"backup_start\":\"2026-11-21T23:56:58.698132624+05:30\",\"backup_end\":\"2026-11-21T23:56:59.412674763+05:30\",\"snapshot_id\":\"89a929b6190fd954911f1a97ddadb64aaf8e1dca92422c9c3b8183735b95a43c\"}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/identical",
+            "backup",
+            "--json",
+            "--time",
+            "2025-01-01 00:00:00",
+            "--host",
+            "fixture",
+            "--tag",
+            "old",
+            "--stdin",
+            "--stdin-filename",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":0,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":1,\"data_added\":288,\"data_added_packed\":426,\"total_files_processed\":1,\"total_bytes_processed\":13,\"total_duration\":0.678407841,\"backup_start\":\"2026-11-21T23:56:59.422411901+05:30\",\"backup_end\":\"2026-11-21T23:57:00.100819744+05:30\",\"snapshot_id\":\"0a097ab92a2ea75a4bf15f95ebd471197115a4d1902a19be2358a2a0e5b9eb85\"}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"29a518c3c45689565965da3f00dca05d128ff1b5d244a81f6bdf85ef7ad8d620\",\"paths\":[\"/fixture\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:58.698132624+05:30\",\"backup_end\":\"2026-11-21T23:56:59.412674763+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":0,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":1,\"data_added\":288,\"data_added_packed\":426,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"89a929b6190fd954911f1a97ddadb64aaf8e1dca92422c9c3b8183735b95a43c\",\"short_id\":\"89a929b6\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/identical",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"29a518c3c45689565965da3f00dca05d128ff1b5d244a81f6bdf85ef7ad8d620\",\"paths\":[\"/fixture\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:59.422411901+05:30\",\"backup_end\":\"2026-11-21T23:57:00.100819744+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":0,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":1,\"data_added\":288,\"data_added_packed\":426,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"0a097ab92a2ea75a4bf15f95ebd471197115a4d1902a19be2358a2a0e5b9eb85\",\"short_id\":\"0a097ab9\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/identical",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "89a929b6190fd954911f1a97ddadb64aaf8e1dca92422c9c3b8183735b95a43c"
+          ],
+          "exit": 0,
+          "stdout": "\nsnapshot 89a929b6 of [/fixture] at 2025-01-01 00:00:00 +0530 IST by neutrino@fixture\n  copy started, this may take a while...\n[0:00]          0 packs copied\n\nsnapshot b5e7c186 saved\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/identical",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"29a518c3c45689565965da3f00dca05d128ff1b5d244a81f6bdf85ef7ad8d620\",\"paths\":[\"/fixture\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"original\":\"89a929b6190fd954911f1a97ddadb64aaf8e1dca92422c9c3b8183735b95a43c\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:58.698132624+05:30\",\"backup_end\":\"2026-11-21T23:56:59.412674763+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":0,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":1,\"data_added\":288,\"data_added_packed\":426,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"b5e7c186b3e8d6a2e972fd32ccda7de1d3310710dbea79047592be9078f4b4bf\",\"short_id\":\"b5e7c186\"},{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"29a518c3c45689565965da3f00dca05d128ff1b5d244a81f6bdf85ef7ad8d620\",\"paths\":[\"/fixture\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:59.422411901+05:30\",\"backup_end\":\"2026-11-21T23:57:00.100819744+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":0,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":1,\"data_added\":288,\"data_added_packed\":426,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"0a097ab92a2ea75a4bf15f95ebd471197115a4d1902a19be2358a2a0e5b9eb85\",\"short_id\":\"0a097ab9\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"29a518c3c45689565965da3f00dca05d128ff1b5d244a81f6bdf85ef7ad8d620\",\"paths\":[\"/fixture\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:58.698132624+05:30\",\"backup_end\":\"2026-11-21T23:56:59.412674763+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":0,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":1,\"data_added\":288,\"data_added_packed\":426,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"89a929b6190fd954911f1a97ddadb64aaf8e1dca92422c9c3b8183735b95a43c\",\"short_id\":\"89a929b6\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "backup",
+            "--json",
+            "--",
+            "[fixture]/unavailable",
+            "[fixture]/data"
+          ],
+          "exit": 0,
+          "stdout": "{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1164,\"data_added_packed\":1440,\"total_files_processed\":1,\"total_bytes_processed\":19,\"total_duration\":0.670682708,\"backup_start\":\"2026-11-21T23:57:04.278663096+05:30\",\"backup_end\":\"2026-11-21T23:57:04.949345802+05:30\",\"snapshot_id\":\"f201e223dd9e67214ddb430a6fa6901e702dff5245fae0b86322b8313b45d73f\"}\n",
+          "stderr": "[fixture]/unavailable does not exist, skipping\n"
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"29a518c3c45689565965da3f00dca05d128ff1b5d244a81f6bdf85ef7ad8d620\",\"paths\":[\"/fixture\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:58.698132624+05:30\",\"backup_end\":\"2026-11-21T23:56:59.412674763+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":0,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":1,\"data_added\":288,\"data_added_packed\":426,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"89a929b6190fd954911f1a97ddadb64aaf8e1dca92422c9c3b8183735b95a43c\",\"short_id\":\"89a929b6\"},{\"time\":\"2026-11-21T23:57:04.278663096+05:30\",\"tree\":\"cb7085873a4972f6dc65ffee8a6aeda5987e4b4862211a79d1cf815bc43c2dc3\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"Icebox\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:04.278663096+05:30\",\"backup_end\":\"2026-11-21T23:57:04.949345802+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1164,\"data_added_packed\":1440,\"total_files_processed\":1,\"total_bytes_processed\":19},\"id\":\"f201e223dd9e67214ddb430a6fa6901e702dff5245fae0b86322b8313b45d73f\",\"short_id\":\"f201e223\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "backup",
+            "--json",
+            "--",
+            "[fixture]/unreadable",
+            "[fixture]/data"
+          ],
+          "exit": 3,
+          "stdout": "{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":0,\"tree_blobs\":2,\"data_added\":761,\"data_added_packed\":899,\"total_files_processed\":1,\"total_bytes_processed\":19,\"total_duration\":0.662902982,\"backup_start\":\"2026-11-21T23:57:05.657588618+05:30\",\"backup_end\":\"2026-11-21T23:57:06.320491601+05:30\",\"snapshot_id\":\"205561270e65a9e454bc3d3d766053559b1baf221f89f4af243a6ee94d5bf29e\"}\n",
+          "stderr": "{\"message_type\":\"error\",\"error\":{\"message\":\"open [fixture]/unreadable: permission denied\"},\"during\":\"archival\",\"item\":\"[fixture]/unreadable\"}\n{\"message_type\":\"exit_error\",\"code\":3,\"message\":\"Warning: at least one source file could not be read\"}\n"
+        }
+      ]
+    },
+    {
+      "test_id": "native-locks-and-interruption",
+      "repository_format": 1,
+      "fixture_removed": true,
+      "status": "pass",
+      "observations": {
+        "backup_while_copy": "d726569fb6942e4caa130537a68ee4674396d2d29cc229cdf635eccc33404ca9",
+        "forget": 11,
+        "prune": 11,
+        "check": 11,
+        "same_destination_copy": 0,
+        "same_destination_representations": 1
+      },
+      "commands": [
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "init",
+            "--repository-version",
+            "1"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository 054c2cfbe8 at [fixture]/a\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "init",
+            "--repository-version",
+            "1"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository 8d242d7c61 at [fixture]/b\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "init",
+            "--repository-version",
+            "1"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository 6219e8608c at [fixture]/c\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/d",
+            "init",
+            "--repository-version",
+            "1"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository a9bd43f418 at [fixture]/d\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "backup",
+            "--json",
+            "--",
+            "[fixture]/large"
+          ],
+          "exit": 0,
+          "stdout": "{\"message_type\":\"status\",\"percent_done\":0.09659028053283691,\"total_files\":1,\"total_bytes\":12582912,\"bytes_done\":1215387,\"current_files\":[\"[fixture]/large\"]}\n{\"message_type\":\"status\",\"percent_done\":0.4145730336507161,\"total_files\":1,\"total_bytes\":12582912,\"bytes_done\":5216536,\"current_files\":[\"[fixture]/large\"]}\n{\"message_type\":\"status\",\"percent_done\":0.47801391283671063,\"total_files\":1,\"total_bytes\":12582912,\"bytes_done\":6014807,\"current_files\":[\"[fixture]/large\"]}\n{\"message_type\":\"status\",\"percent_done\":1,\"total_files\":1,\"total_bytes\":12582912,\"bytes_done\":12582912}\n{\"message_type\":\"status\",\"percent_done\":1,\"total_files\":1,\"total_bytes\":12582912,\"bytes_done\":12582912}\n{\"message_type\":\"status\",\"percent_done\":1,\"total_files\":1,\"files_done\":1,\"total_bytes\":12582912,\"bytes_done\":12582912}\n{\"message_type\":\"status\",\"percent_done\":1,\"total_files\":1,\"files_done\":1,\"total_bytes\":12582912,\"bytes_done\":12582912}\n{\"message_type\":\"status\",\"percent_done\":1,\"total_files\":1,\"files_done\":1,\"total_bytes\":12582912,\"bytes_done\":12582912}\n{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":9,\"tree_blobs\":3,\"data_added\":12584600,\"data_added_packed\":12585428,\"total_files_processed\":1,\"total_bytes_processed\":12582912,\"total_duration\":0.797923267,\"backup_start\":\"2026-11-21T23:56:38.23188237+05:30\",\"backup_end\":\"2026-11-21T23:56:39.029805637+05:30\",\"snapshot_id\":\"5b09828c69926d68f17d72404498e6cefb06995889109f312823d1f87482698f\"}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-21T23:56:38.23188237+05:30\",\"tree\":\"079b2e894d7f40e007eaf583cb42d5e9a2fc1828c86776304ba04fdcde2529b1\",\"paths\":[\"[fixture]/large\"],\"hostname\":\"Icebox\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:38.23188237+05:30\",\"backup_end\":\"2026-11-21T23:56:39.029805637+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":9,\"tree_blobs\":3,\"data_added\":12584600,\"data_added_packed\":12585428,\"total_files_processed\":1,\"total_bytes_processed\":12582912},\"id\":\"5b09828c69926d68f17d72404498e6cefb06995889109f312823d1f87482698f\",\"short_id\":\"5b09828c\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-21T23:56:38.23188237+05:30\",\"tree\":\"079b2e894d7f40e007eaf583cb42d5e9a2fc1828c86776304ba04fdcde2529b1\",\"paths\":[\"[fixture]/large\"],\"hostname\":\"Icebox\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:38.23188237+05:30\",\"backup_end\":\"2026-11-21T23:56:39.029805637+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":9,\"tree_blobs\":3,\"data_added\":12584600,\"data_added_packed\":12585428,\"total_files_processed\":1,\"total_bytes_processed\":12582912},\"id\":\"5b09828c69926d68f17d72404498e6cefb06995889109f312823d1f87482698f\",\"short_id\":\"5b09828c\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-21T23:56:38.23188237+05:30\",\"tree\":\"079b2e894d7f40e007eaf583cb42d5e9a2fc1828c86776304ba04fdcde2529b1\",\"paths\":[\"[fixture]/large\"],\"hostname\":\"Icebox\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:38.23188237+05:30\",\"backup_end\":\"2026-11-21T23:56:39.029805637+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":9,\"tree_blobs\":3,\"data_added\":12584600,\"data_added_packed\":12585428,\"total_files_processed\":1,\"total_bytes_processed\":12582912},\"id\":\"5b09828c69926d68f17d72404498e6cefb06995889109f312823d1f87482698f\",\"short_id\":\"5b09828c\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "backup",
+            "--json",
+            "--",
+            "[fixture]/extra"
+          ],
+          "exit": 0,
+          "stdout": "{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1161,\"data_added_packed\":1437,\"total_files_processed\":1,\"total_bytes_processed\":15,\"total_duration\":0.671767767,\"backup_start\":\"2026-11-21T23:56:42.461831932+05:30\",\"backup_end\":\"2026-11-21T23:56:43.133599693+05:30\",\"snapshot_id\":\"d726569fb6942e4caa130537a68ee4674396d2d29cc229cdf635eccc33404ca9\"}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-21T23:56:38.23188237+05:30\",\"tree\":\"079b2e894d7f40e007eaf583cb42d5e9a2fc1828c86776304ba04fdcde2529b1\",\"paths\":[\"[fixture]/large\"],\"hostname\":\"Icebox\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:38.23188237+05:30\",\"backup_end\":\"2026-11-21T23:56:39.029805637+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":9,\"tree_blobs\":3,\"data_added\":12584600,\"data_added_packed\":12585428,\"total_files_processed\":1,\"total_bytes_processed\":12582912},\"id\":\"5b09828c69926d68f17d72404498e6cefb06995889109f312823d1f87482698f\",\"short_id\":\"5b09828c\"},{\"time\":\"2026-11-21T23:56:42.461831932+05:30\",\"tree\":\"a81d8ae549c21b88498fb943c55265f28c22c83ed0c46ac360f5f131b023b318\",\"paths\":[\"[fixture]/extra\"],\"hostname\":\"Icebox\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:42.461831932+05:30\",\"backup_end\":\"2026-11-21T23:56:43.133599693+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1161,\"data_added_packed\":1437,\"total_files_processed\":1,\"total_bytes_processed\":15},\"id\":\"d726569fb6942e4caa130537a68ee4674396d2d29cc229cdf635eccc33404ca9\",\"short_id\":\"d726569f\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "5b09828c69926d68f17d72404498e6cefb06995889109f312823d1f87482698f"
+          ],
+          "exit": 0,
+          "stdout": "\nsnapshot 5b09828c of [[fixture]/large] at 2026-11-21 23:56:38.23188237 +0530 IST by neutrino@Icebox\n  copy started, this may take a while...\n[0:00] 100.00%  2 / 2 packs copied\n\nsnapshot a59a47ce saved\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-21T23:56:38.23188237+05:30\",\"tree\":\"079b2e894d7f40e007eaf583cb42d5e9a2fc1828c86776304ba04fdcde2529b1\",\"paths\":[\"[fixture]/large\"],\"hostname\":\"Icebox\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"original\":\"5b09828c69926d68f17d72404498e6cefb06995889109f312823d1f87482698f\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:38.23188237+05:30\",\"backup_end\":\"2026-11-21T23:56:39.029805637+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":9,\"tree_blobs\":3,\"data_added\":12584600,\"data_added_packed\":12585428,\"total_files_processed\":1,\"total_bytes_processed\":12582912},\"id\":\"a59a47ce4e21eb401dd7acb85ca5940363183237b90c58b072306b6155e162a9\",\"short_id\":\"a59a47ce\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "forget",
+            "--json",
+            "--keep-last",
+            "1"
+          ],
+          "exit": 11,
+          "stdout": "",
+          "stderr": "{\"message_type\":\"exit_error\",\"code\":11,\"message\":\"unable to create lock in backend: repository is already locked by PID 229 on Icebox by neutrino (UID 1000, GID 1000)\\nlock was created at 2026-11-21 23:56:40 (5.352630369s ago)\\nstorage ID 406d9141\\nthe `unlock` command can be used to remove stale locks\"}\n"
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "prune"
+          ],
+          "exit": 11,
+          "stdout": "repo already locked, waiting up to 0s for the lock\n",
+          "stderr": "unable to create lock in backend: repository is already locked by PID 229 on Icebox by neutrino (UID 1000, GID 1000)\nlock was created at 2026-11-21 23:56:40 (5.789163958s ago)\nstorage ID 406d9141\nthe `unlock` command can be used to remove stale locks\n"
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "check"
+          ],
+          "exit": 11,
+          "stdout": "create exclusive lock for repository\nrepo already locked, waiting up to 0s for the lock\n",
+          "stderr": "unable to create lock in backend: repository is already locked by PID 229 on Icebox by neutrino (UID 1000, GID 1000)\nlock was created at 2026-11-21 23:56:40 (6.23036506s ago)\nstorage ID 406d9141\nthe `unlock` command can be used to remove stale locks\n"
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--limit-upload",
+            "2048",
+            "--pack-size",
+            "4",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "5b09828c69926d68f17d72404498e6cefb06995889109f312823d1f87482698f"
+          ],
+          "exit": 1,
+          "stdout": "\nsnapshot 5b09828c of [[fixture]/large] at 2026-11-21 23:56:38.23188237 +0530 IST by neutrino@Icebox\n  copy started, this may take a while...\n[0:06] 50.00%  1 / 2 packs copied\n\n",
+          "stderr": "\u001b[2Ksignal interrupt received, cleaning up\nFatal: context canceled\n"
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "check"
+          ],
+          "exit": 0,
+          "stdout": "create exclusive lock for repository\nload indexes\ncheck all packs\n1 additional files were found in the repo, which likely contain duplicate data.\nThis is non-critical, you can run `restic prune` to correct this.\ncheck snapshots, trees and blobs\n[0:00]          0 snapshots\nno errors were found\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/d",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "5b09828c69926d68f17d72404498e6cefb06995889109f312823d1f87482698f"
+          ],
+          "exit": 0,
+          "stdout": "\nsnapshot 5b09828c of [[fixture]/large] at 2026-11-21 23:56:38.23188237 +0530 IST by neutrino@Icebox\n  copy started, this may take a while...\n[0:00] 100.00%  2 / 2 packs copied\n\nsnapshot 312684eb saved\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--limit-upload",
+            "2048",
+            "--pack-size",
+            "4",
+            "--no-cache",
+            "--repo",
+            "[fixture]/d",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "5b09828c69926d68f17d72404498e6cefb06995889109f312823d1f87482698f"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/d",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-21T23:56:38.23188237+05:30\",\"tree\":\"079b2e894d7f40e007eaf583cb42d5e9a2fc1828c86776304ba04fdcde2529b1\",\"paths\":[\"[fixture]/large\"],\"hostname\":\"Icebox\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"original\":\"5b09828c69926d68f17d72404498e6cefb06995889109f312823d1f87482698f\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:38.23188237+05:30\",\"backup_end\":\"2026-11-21T23:56:39.029805637+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":9,\"tree_blobs\":3,\"data_added\":12584600,\"data_added_packed\":12585428,\"total_files_processed\":1,\"total_bytes_processed\":12582912},\"id\":\"312684eb7024fef10962e76f181bef505dd0c328df2ff1a669f89bb8d7dbf892\",\"short_id\":\"312684eb\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "5b09828c69926d68f17d72404498e6cefb06995889109f312823d1f87482698f"
+          ],
+          "exit": 0,
+          "stdout": "\nsnapshot 5b09828c of [[fixture]/large] at 2026-11-21 23:56:38.23188237 +0530 IST by neutrino@Icebox\n  copy started, this may take a while...\n[0:00] 100.00%  2 / 2 packs copied\n\nsnapshot 1930c0ae saved\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-21T23:56:38.23188237+05:30\",\"tree\":\"079b2e894d7f40e007eaf583cb42d5e9a2fc1828c86776304ba04fdcde2529b1\",\"paths\":[\"[fixture]/large\"],\"hostname\":\"Icebox\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"original\":\"5b09828c69926d68f17d72404498e6cefb06995889109f312823d1f87482698f\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:56:38.23188237+05:30\",\"backup_end\":\"2026-11-21T23:56:39.029805637+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":9,\"tree_blobs\":3,\"data_added\":12584600,\"data_added_packed\":12585428,\"total_files_processed\":1,\"total_bytes_processed\":12582912},\"id\":\"1930c0ae3a4434d4c9c9202a6f9cc28837a3762a0154f352a6755a94c9b18f99\",\"short_id\":\"1930c0ae\"}]\n",
+          "stderr": ""
+        }
+      ]
+    },
+    {
+      "test_id": "identity-json-lineage",
+      "repository_format": 2,
+      "fixture_removed": true,
+      "status": "pass",
+      "observations": {
+        "initial": {
+          "id": "2152c5e475183924a7ce9040f893ce7c94a40b8135a6a1bb993e038fdafb109a",
+          "original": null,
+          "tree": "bf4eb0c5b165b969c13c86adc80aa86fad1fefb82af4556b72ee358a0359a3b1",
+          "time": "2025-01-01T00:00:00+05:30",
+          "hostname": "fixture",
+          "paths": [
+            "/tmp/bm-restic-cert-lctnl_nz/data"
+          ],
+          "tags": [
+            "old"
+          ]
+        },
+        "copied": {
+          "id": "3570e64c376661857d570ff7078e4ad0c145fa1b09a4f0ae59759dfe919c35fe",
+          "original": "2152c5e475183924a7ce9040f893ce7c94a40b8135a6a1bb993e038fdafb109a",
+          "tree": "bf4eb0c5b165b969c13c86adc80aa86fad1fefb82af4556b72ee358a0359a3b1",
+          "time": "2025-01-01T00:00:00+05:30",
+          "hostname": "fixture",
+          "paths": [
+            "/tmp/bm-restic-cert-lctnl_nz/data"
+          ],
+          "tags": [
+            "old"
+          ]
+        },
+        "transitive": {
+          "id": "e826f2aa2cf115cb0e31ee6e95f4933d9e982c28403115e0929cdd5aef67a7ed",
+          "original": "2152c5e475183924a7ce9040f893ce7c94a40b8135a6a1bb993e038fdafb109a",
+          "tree": "bf4eb0c5b165b969c13c86adc80aa86fad1fefb82af4556b72ee358a0359a3b1",
+          "time": "2025-01-01T00:00:00+05:30",
+          "hostname": "fixture",
+          "paths": [
+            "/tmp/bm-restic-cert-lctnl_nz/data"
+          ],
+          "tags": [
+            "old"
+          ]
+        },
+        "rewritten": {
+          "id": "ec2f993c0d0ea8cbfda1fe84db6ee441ab786290374a6b30a0db93b867a062c6",
+          "original": "2152c5e475183924a7ce9040f893ce7c94a40b8135a6a1bb993e038fdafb109a",
+          "tree": "bf4eb0c5b165b969c13c86adc80aa86fad1fefb82af4556b72ee358a0359a3b1",
+          "time": "2025-01-01T00:00:00+05:30",
+          "hostname": "fixture",
+          "paths": [
+            "/tmp/bm-restic-cert-lctnl_nz/data"
+          ],
+          "tags": [
+            "rewritten"
+          ]
+        },
+        "deleted_source_exit": 0,
+        "repository_identities": [
+          {
+            "id": "a801bef8cca5c6a91a791a21d60a000b326689af6f4cecbad406ce797d34226c",
+            "version": 2,
+            "chunker_polynomial": "2f43a2510d83fd"
+          },
+          {
+            "id": "0c181029c3c431f8495f670e20cc5a66806159aa09fc87ed6545635e208d5524",
+            "version": 2,
+            "chunker_polynomial": "3b79302395ad83"
+          },
+          {
+            "id": "529ed89219775cbf498584f399797b99b02f462da662d89b94cc8a69465bda8d",
+            "version": 2,
+            "chunker_polynomial": "29732bb10b7089"
+          }
+        ],
+        "identical_metadata_independent_ids": [
+          "1a76fb603ad593ebc6a039995821a604202ac5afd637a934b36633affc15a825",
+          "f943cae9b21a182042398b9ff123f196a89d749292923b87cdb0462a1038ea3c"
+        ],
+        "missing_requested_source_exit": 0,
+        "unreadable_source_exit": 3
+      },
+      "commands": [
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "init",
+            "--repository-version",
+            "2"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository a801bef8cc at [fixture]/a\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "init",
+            "--repository-version",
+            "2"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository 0c181029c3 at [fixture]/b\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "init",
+            "--repository-version",
+            "2"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository 529ed89219 at [fixture]/c\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "cat",
+            "config"
+          ],
+          "exit": 0,
+          "stdout": "{\n  \"version\": 2,\n  \"id\": \"a801bef8cca5c6a91a791a21d60a000b326689af6f4cecbad406ce797d34226c\",\n  \"chunker_polynomial\": \"2f43a2510d83fd\"\n}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "cat",
+            "config"
+          ],
+          "exit": 0,
+          "stdout": "{\n  \"version\": 2,\n  \"id\": \"0c181029c3c431f8495f670e20cc5a66806159aa09fc87ed6545635e208d5524\",\n  \"chunker_polynomial\": \"3b79302395ad83\"\n}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "cat",
+            "config"
+          ],
+          "exit": 0,
+          "stdout": "{\n  \"version\": 2,\n  \"id\": \"529ed89219775cbf498584f399797b99b02f462da662d89b94cc8a69465bda8d\",\n  \"chunker_polynomial\": \"29732bb10b7089\"\n}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "cat",
+            "config"
+          ],
+          "exit": 12,
+          "stdout": "",
+          "stderr": "Fatal: wrong password or no key found\n"
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "backup",
+            "--json",
+            "--time",
+            "2025-01-01 00:00:00",
+            "--host",
+            "fixture",
+            "--tag",
+            "old",
+            "--",
+            "[fixture]/data"
+          ],
+          "exit": 0,
+          "stdout": "{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1158,\"data_added_packed\":996,\"total_files_processed\":1,\"total_bytes_processed\":13,\"total_duration\":0.661356931,\"backup_start\":\"2026-11-21T23:57:04.056404642+05:30\",\"backup_end\":\"2026-11-21T23:57:04.717761573+05:30\",\"snapshot_id\":\"2152c5e475183924a7ce9040f893ce7c94a40b8135a6a1bb993e038fdafb109a\"}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"bf4eb0c5b165b969c13c86adc80aa86fad1fefb82af4556b72ee358a0359a3b1\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:04.056404642+05:30\",\"backup_end\":\"2026-11-21T23:57:04.717761573+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1158,\"data_added_packed\":996,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"2152c5e475183924a7ce9040f893ce7c94a40b8135a6a1bb993e038fdafb109a\",\"short_id\":\"2152c5e4\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"bf4eb0c5b165b969c13c86adc80aa86fad1fefb82af4556b72ee358a0359a3b1\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:04.056404642+05:30\",\"backup_end\":\"2026-11-21T23:57:04.717761573+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1158,\"data_added_packed\":996,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"2152c5e475183924a7ce9040f893ce7c94a40b8135a6a1bb993e038fdafb109a\",\"short_id\":\"2152c5e4\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "backup",
+            "--json",
+            "--time",
+            "2025-01-01 00:00:00",
+            "--host",
+            "fixture",
+            "--tag",
+            "old",
+            "--",
+            "[fixture]/data"
+          ],
+          "exit": 0,
+          "stdout": "{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1164,\"data_added_packed\":1001,\"total_files_processed\":1,\"total_bytes_processed\":19,\"total_duration\":0.679497713,\"backup_start\":\"2026-11-21T23:57:06.749354803+05:30\",\"backup_end\":\"2026-11-21T23:57:07.428852515+05:30\",\"snapshot_id\":\"6b4d587bb48dbf6d27647f403924c1684bfbbd1a70a64b1765dc20bbc02fcd73\"}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"f868af819bcfe32ca16d4b99bf859cf4d1b1296f9cc346fd998cb415dfdaca3d\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:06.749354803+05:30\",\"backup_end\":\"2026-11-21T23:57:07.428852515+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1164,\"data_added_packed\":1001,\"total_files_processed\":1,\"total_bytes_processed\":19},\"id\":\"6b4d587bb48dbf6d27647f403924c1684bfbbd1a70a64b1765dc20bbc02fcd73\",\"short_id\":\"6b4d587b\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "2152c5e475183924a7ce9040f893ce7c94a40b8135a6a1bb993e038fdafb109a"
+          ],
+          "exit": 0,
+          "stdout": "\nsnapshot 2152c5e4 of [[fixture]/data] at 2025-01-01 00:00:00 +0530 IST by neutrino@fixture\n  copy started, this may take a while...\n[0:00] 100.00%  2 / 2 packs copied\n\nsnapshot 3570e64c saved\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"f868af819bcfe32ca16d4b99bf859cf4d1b1296f9cc346fd998cb415dfdaca3d\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:06.749354803+05:30\",\"backup_end\":\"2026-11-21T23:57:07.428852515+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1164,\"data_added_packed\":1001,\"total_files_processed\":1,\"total_bytes_processed\":19},\"id\":\"6b4d587bb48dbf6d27647f403924c1684bfbbd1a70a64b1765dc20bbc02fcd73\",\"short_id\":\"6b4d587b\"},{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"bf4eb0c5b165b969c13c86adc80aa86fad1fefb82af4556b72ee358a0359a3b1\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"original\":\"2152c5e475183924a7ce9040f893ce7c94a40b8135a6a1bb993e038fdafb109a\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:04.056404642+05:30\",\"backup_end\":\"2026-11-21T23:57:04.717761573+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1158,\"data_added_packed\":996,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"3570e64c376661857d570ff7078e4ad0c145fa1b09a4f0ae59759dfe919c35fe\",\"short_id\":\"3570e64c\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "2152c5e475183924a7ce9040f893ce7c94a40b8135a6a1bb993e038fdafb109a"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"f868af819bcfe32ca16d4b99bf859cf4d1b1296f9cc346fd998cb415dfdaca3d\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:06.749354803+05:30\",\"backup_end\":\"2026-11-21T23:57:07.428852515+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1164,\"data_added_packed\":1001,\"total_files_processed\":1,\"total_bytes_processed\":19},\"id\":\"6b4d587bb48dbf6d27647f403924c1684bfbbd1a70a64b1765dc20bbc02fcd73\",\"short_id\":\"6b4d587b\"},{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"bf4eb0c5b165b969c13c86adc80aa86fad1fefb82af4556b72ee358a0359a3b1\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"original\":\"2152c5e475183924a7ce9040f893ce7c94a40b8135a6a1bb993e038fdafb109a\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:04.056404642+05:30\",\"backup_end\":\"2026-11-21T23:57:04.717761573+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1158,\"data_added_packed\":996,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"3570e64c376661857d570ff7078e4ad0c145fa1b09a4f0ae59759dfe919c35fe\",\"short_id\":\"3570e64c\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "copy",
+            "--from-repo",
+            "[fixture]/b",
+            "--",
+            "3570e64c376661857d570ff7078e4ad0c145fa1b09a4f0ae59759dfe919c35fe"
+          ],
+          "exit": 0,
+          "stdout": "\nsnapshot 3570e64c of [[fixture]/data] at 2025-01-01 00:00:00 +0530 IST by neutrino@fixture\n  copy started, this may take a while...\n[0:00] 100.00%  2 / 2 packs copied\n\nsnapshot e826f2aa saved\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"bf4eb0c5b165b969c13c86adc80aa86fad1fefb82af4556b72ee358a0359a3b1\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"original\":\"2152c5e475183924a7ce9040f893ce7c94a40b8135a6a1bb993e038fdafb109a\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:04.056404642+05:30\",\"backup_end\":\"2026-11-21T23:57:04.717761573+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1158,\"data_added_packed\":996,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"e826f2aa2cf115cb0e31ee6e95f4933d9e982c28403115e0929cdd5aef67a7ed\",\"short_id\":\"e826f2aa\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "tag",
+            "--set",
+            "rewritten",
+            "3570e64c376661857d570ff7078e4ad0c145fa1b09a4f0ae59759dfe919c35fe"
+          ],
+          "exit": 0,
+          "stdout": "create exclusive lock for repository\nmodified 1 snapshots\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"f868af819bcfe32ca16d4b99bf859cf4d1b1296f9cc346fd998cb415dfdaca3d\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:06.749354803+05:30\",\"backup_end\":\"2026-11-21T23:57:07.428852515+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1164,\"data_added_packed\":1001,\"total_files_processed\":1,\"total_bytes_processed\":19},\"id\":\"6b4d587bb48dbf6d27647f403924c1684bfbbd1a70a64b1765dc20bbc02fcd73\",\"short_id\":\"6b4d587b\"},{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"bf4eb0c5b165b969c13c86adc80aa86fad1fefb82af4556b72ee358a0359a3b1\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"rewritten\"],\"original\":\"2152c5e475183924a7ce9040f893ce7c94a40b8135a6a1bb993e038fdafb109a\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:04.056404642+05:30\",\"backup_end\":\"2026-11-21T23:57:04.717761573+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1158,\"data_added_packed\":996,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"ec2f993c0d0ea8cbfda1fe84db6ee441ab786290374a6b30a0db93b867a062c6\",\"short_id\":\"ec2f993c\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "copy",
+            "--from-repo",
+            "[fixture]/b",
+            "--",
+            "ec2f993c0d0ea8cbfda1fe84db6ee441ab786290374a6b30a0db93b867a062c6"
+          ],
+          "exit": 0,
+          "stdout": "\nsnapshot ec2f993c of [[fixture]/data] at 2025-01-01 00:00:00 +0530 IST by neutrino@fixture\n  copy started, this may take a while...\n[0:00]          0 packs copied\n\nsnapshot 112f9c6e saved\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"bf4eb0c5b165b969c13c86adc80aa86fad1fefb82af4556b72ee358a0359a3b1\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"original\":\"2152c5e475183924a7ce9040f893ce7c94a40b8135a6a1bb993e038fdafb109a\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:04.056404642+05:30\",\"backup_end\":\"2026-11-21T23:57:04.717761573+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1158,\"data_added_packed\":996,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"e826f2aa2cf115cb0e31ee6e95f4933d9e982c28403115e0929cdd5aef67a7ed\",\"short_id\":\"e826f2aa\"},{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"bf4eb0c5b165b969c13c86adc80aa86fad1fefb82af4556b72ee358a0359a3b1\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"rewritten\"],\"original\":\"2152c5e475183924a7ce9040f893ce7c94a40b8135a6a1bb993e038fdafb109a\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:04.056404642+05:30\",\"backup_end\":\"2026-11-21T23:57:04.717761573+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1158,\"data_added_packed\":996,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"112f9c6e6b7a6da8bcdd4ab505b48792824309eae42ff82ed8cb5ed6eb9e1caf\",\"short_id\":\"112f9c6e\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "forget",
+            "--json",
+            "--keep-last",
+            "1",
+            "--dry-run"
+          ],
+          "exit": 0,
+          "stdout": "[{\"tags\":null,\"host\":\"fixture\",\"paths\":[\"[fixture]/data\"],\"keep\":[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"bf4eb0c5b165b969c13c86adc80aa86fad1fefb82af4556b72ee358a0359a3b1\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"original\":\"2152c5e475183924a7ce9040f893ce7c94a40b8135a6a1bb993e038fdafb109a\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:04.056404642+05:30\",\"backup_end\":\"2026-11-21T23:57:04.717761573+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1158,\"data_added_packed\":996,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"e826f2aa2cf115cb0e31ee6e95f4933d9e982c28403115e0929cdd5aef67a7ed\",\"short_id\":\"e826f2aa\"}],\"remove\":[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"bf4eb0c5b165b969c13c86adc80aa86fad1fefb82af4556b72ee358a0359a3b1\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"rewritten\"],\"original\":\"2152c5e475183924a7ce9040f893ce7c94a40b8135a6a1bb993e038fdafb109a\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:04.056404642+05:30\",\"backup_end\":\"2026-11-21T23:57:04.717761573+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1158,\"data_added_packed\":996,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"112f9c6e6b7a6da8bcdd4ab505b48792824309eae42ff82ed8cb5ed6eb9e1caf\",\"short_id\":\"112f9c6e\"}],\"reasons\":[{\"snapshot\":{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"bf4eb0c5b165b969c13c86adc80aa86fad1fefb82af4556b72ee358a0359a3b1\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"original\":\"2152c5e475183924a7ce9040f893ce7c94a40b8135a6a1bb993e038fdafb109a\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:04.056404642+05:30\",\"backup_end\":\"2026-11-21T23:57:04.717761573+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1158,\"data_added_packed\":996,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"e826f2aa2cf115cb0e31ee6e95f4933d9e982c28403115e0929cdd5aef67a7ed\",\"short_id\":\"e826f2aa\"},\"matches\":[\"last snapshot\"]}]}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"bf4eb0c5b165b969c13c86adc80aa86fad1fefb82af4556b72ee358a0359a3b1\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"rewritten\"],\"original\":\"2152c5e475183924a7ce9040f893ce7c94a40b8135a6a1bb993e038fdafb109a\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:04.056404642+05:30\",\"backup_end\":\"2026-11-21T23:57:04.717761573+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1158,\"data_added_packed\":996,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"112f9c6e6b7a6da8bcdd4ab505b48792824309eae42ff82ed8cb5ed6eb9e1caf\",\"short_id\":\"112f9c6e\"},{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"bf4eb0c5b165b969c13c86adc80aa86fad1fefb82af4556b72ee358a0359a3b1\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"original\":\"2152c5e475183924a7ce9040f893ce7c94a40b8135a6a1bb993e038fdafb109a\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:04.056404642+05:30\",\"backup_end\":\"2026-11-21T23:57:04.717761573+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1158,\"data_added_packed\":996,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"e826f2aa2cf115cb0e31ee6e95f4933d9e982c28403115e0929cdd5aef67a7ed\",\"short_id\":\"e826f2aa\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "forget",
+            "2152c5e475183924a7ce9040f893ce7c94a40b8135a6a1bb993e038fdafb109a"
+          ],
+          "exit": 0,
+          "stdout": "[0:00] 100.00%  1 / 1 files deleted\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"f868af819bcfe32ca16d4b99bf859cf4d1b1296f9cc346fd998cb415dfdaca3d\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:06.749354803+05:30\",\"backup_end\":\"2026-11-21T23:57:07.428852515+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1164,\"data_added_packed\":1001,\"total_files_processed\":1,\"total_bytes_processed\":19},\"id\":\"6b4d587bb48dbf6d27647f403924c1684bfbbd1a70a64b1765dc20bbc02fcd73\",\"short_id\":\"6b4d587b\"},{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"bf4eb0c5b165b969c13c86adc80aa86fad1fefb82af4556b72ee358a0359a3b1\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"rewritten\"],\"original\":\"2152c5e475183924a7ce9040f893ce7c94a40b8135a6a1bb993e038fdafb109a\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:04.056404642+05:30\",\"backup_end\":\"2026-11-21T23:57:04.717761573+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1158,\"data_added_packed\":996,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"ec2f993c0d0ea8cbfda1fe84db6ee441ab786290374a6b30a0db93b867a062c6\",\"short_id\":\"ec2f993c\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "2152c5e475183924a7ce9040f893ce7c94a40b8135a6a1bb993e038fdafb109a"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Load(<snapshot/2152c5e475>, 0, 0) failed: open [fixture]/a/snapshots/2152c5e475183924a7ce9040f893ce7c94a40b8135a6a1bb993e038fdafb109a: no such file or directory\nLoad(<snapshot/2152c5e475>, 0, 0) failed: open [fixture]/a/snapshots/2152c5e475183924a7ce9040f893ce7c94a40b8135a6a1bb993e038fdafb109a: no such file or directory\nIgnoring \"2152c5e475183924a7ce9040f893ce7c94a40b8135a6a1bb993e038fdafb109a\": failed to load snapshot 2152c5e4: open [fixture]/a/snapshots/2152c5e475183924a7ce9040f893ce7c94a40b8135a6a1bb993e038fdafb109a: no such file or directory\n"
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"bf4eb0c5b165b969c13c86adc80aa86fad1fefb82af4556b72ee358a0359a3b1\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"rewritten\"],\"original\":\"2152c5e475183924a7ce9040f893ce7c94a40b8135a6a1bb993e038fdafb109a\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:04.056404642+05:30\",\"backup_end\":\"2026-11-21T23:57:04.717761573+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1158,\"data_added_packed\":996,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"ec2f993c0d0ea8cbfda1fe84db6ee441ab786290374a6b30a0db93b867a062c6\",\"short_id\":\"ec2f993c\"},{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"f868af819bcfe32ca16d4b99bf859cf4d1b1296f9cc346fd998cb415dfdaca3d\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:06.749354803+05:30\",\"backup_end\":\"2026-11-21T23:57:07.428852515+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1164,\"data_added_packed\":1001,\"total_files_processed\":1,\"total_bytes_processed\":19},\"id\":\"6b4d587bb48dbf6d27647f403924c1684bfbbd1a70a64b1765dc20bbc02fcd73\",\"short_id\":\"6b4d587b\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/identical",
+            "init",
+            "--repository-version",
+            "2"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository ebe15cc48f at [fixture]/identical\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "backup",
+            "--json",
+            "--time",
+            "2025-01-01 00:00:00",
+            "--host",
+            "fixture",
+            "--tag",
+            "old",
+            "--stdin",
+            "--stdin-filename",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":0,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":1,\"data_added\":288,\"data_added_packed\":340,\"total_files_processed\":1,\"total_bytes_processed\":13,\"total_duration\":0.687116326,\"backup_start\":\"2026-11-21T23:57:25.930399953+05:30\",\"backup_end\":\"2026-11-21T23:57:26.617516274+05:30\",\"snapshot_id\":\"1a76fb603ad593ebc6a039995821a604202ac5afd637a934b36633affc15a825\"}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/identical",
+            "backup",
+            "--json",
+            "--time",
+            "2025-01-01 00:00:00",
+            "--host",
+            "fixture",
+            "--tag",
+            "old",
+            "--stdin",
+            "--stdin-filename",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":0,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":1,\"data_added\":288,\"data_added_packed\":340,\"total_files_processed\":1,\"total_bytes_processed\":13,\"total_duration\":0.581936759,\"backup_start\":\"2026-11-21T23:57:26.629268794+05:30\",\"backup_end\":\"2026-11-21T23:57:27.211205503+05:30\",\"snapshot_id\":\"f943cae9b21a182042398b9ff123f196a89d749292923b87cdb0462a1038ea3c\"}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"29a518c3c45689565965da3f00dca05d128ff1b5d244a81f6bdf85ef7ad8d620\",\"paths\":[\"/fixture\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:25.930399953+05:30\",\"backup_end\":\"2026-11-21T23:57:26.617516274+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":0,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":1,\"data_added\":288,\"data_added_packed\":340,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"1a76fb603ad593ebc6a039995821a604202ac5afd637a934b36633affc15a825\",\"short_id\":\"1a76fb60\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/identical",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"29a518c3c45689565965da3f00dca05d128ff1b5d244a81f6bdf85ef7ad8d620\",\"paths\":[\"/fixture\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:26.629268794+05:30\",\"backup_end\":\"2026-11-21T23:57:27.211205503+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":0,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":1,\"data_added\":288,\"data_added_packed\":340,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"f943cae9b21a182042398b9ff123f196a89d749292923b87cdb0462a1038ea3c\",\"short_id\":\"f943cae9\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/identical",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "1a76fb603ad593ebc6a039995821a604202ac5afd637a934b36633affc15a825"
+          ],
+          "exit": 0,
+          "stdout": "\nsnapshot 1a76fb60 of [/fixture] at 2025-01-01 00:00:00 +0530 IST by neutrino@fixture\n  copy started, this may take a while...\n[0:00]          0 packs copied\n\nsnapshot d7040154 saved\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/identical",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"29a518c3c45689565965da3f00dca05d128ff1b5d244a81f6bdf85ef7ad8d620\",\"paths\":[\"/fixture\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"original\":\"1a76fb603ad593ebc6a039995821a604202ac5afd637a934b36633affc15a825\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:25.930399953+05:30\",\"backup_end\":\"2026-11-21T23:57:26.617516274+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":0,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":1,\"data_added\":288,\"data_added_packed\":340,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"d7040154ea6a18d4e94e0f03da37760783ac73a50e137f4be71e1865a5148c4f\",\"short_id\":\"d7040154\"},{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"29a518c3c45689565965da3f00dca05d128ff1b5d244a81f6bdf85ef7ad8d620\",\"paths\":[\"/fixture\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:26.629268794+05:30\",\"backup_end\":\"2026-11-21T23:57:27.211205503+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":0,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":1,\"data_added\":288,\"data_added_packed\":340,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"f943cae9b21a182042398b9ff123f196a89d749292923b87cdb0462a1038ea3c\",\"short_id\":\"f943cae9\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"29a518c3c45689565965da3f00dca05d128ff1b5d244a81f6bdf85ef7ad8d620\",\"paths\":[\"/fixture\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:25.930399953+05:30\",\"backup_end\":\"2026-11-21T23:57:26.617516274+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":0,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":1,\"data_added\":288,\"data_added_packed\":340,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"1a76fb603ad593ebc6a039995821a604202ac5afd637a934b36633affc15a825\",\"short_id\":\"1a76fb60\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "backup",
+            "--json",
+            "--",
+            "[fixture]/unavailable",
+            "[fixture]/data"
+          ],
+          "exit": 0,
+          "stdout": "{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1164,\"data_added_packed\":1002,\"total_files_processed\":1,\"total_bytes_processed\":19,\"total_duration\":0.650980548,\"backup_start\":\"2026-11-21T23:57:31.231050433+05:30\",\"backup_end\":\"2026-11-21T23:57:31.882031007+05:30\",\"snapshot_id\":\"a3f9b01bb63948ef94b9ad91522e77e79698af09ce59b87c5f32ea3954e1ab1a\"}\n",
+          "stderr": "[fixture]/unavailable does not exist, skipping\n"
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00+05:30\",\"tree\":\"29a518c3c45689565965da3f00dca05d128ff1b5d244a81f6bdf85ef7ad8d620\",\"paths\":[\"/fixture\"],\"hostname\":\"fixture\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:25.930399953+05:30\",\"backup_end\":\"2026-11-21T23:57:26.617516274+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":0,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":1,\"data_added\":288,\"data_added_packed\":340,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"1a76fb603ad593ebc6a039995821a604202ac5afd637a934b36633affc15a825\",\"short_id\":\"1a76fb60\"},{\"time\":\"2026-11-21T23:57:31.231050433+05:30\",\"tree\":\"73a0e9c4646de68bd30362194ea0063371161d3bf0153eed86237cd4ae2c33ce\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"Icebox\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:31.231050433+05:30\",\"backup_end\":\"2026-11-21T23:57:31.882031007+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1164,\"data_added_packed\":1002,\"total_files_processed\":1,\"total_bytes_processed\":19},\"id\":\"a3f9b01bb63948ef94b9ad91522e77e79698af09ce59b87c5f32ea3954e1ab1a\",\"short_id\":\"a3f9b01b\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "backup",
+            "--json",
+            "--",
+            "[fixture]/unreadable",
+            "[fixture]/data"
+          ],
+          "exit": 3,
+          "stdout": "{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":0,\"tree_blobs\":2,\"data_added\":764,\"data_added_packed\":603,\"total_files_processed\":1,\"total_bytes_processed\":19,\"total_duration\":0.670026577,\"backup_start\":\"2026-11-21T23:57:32.623734832+05:30\",\"backup_end\":\"2026-11-21T23:57:33.293761413+05:30\",\"snapshot_id\":\"b6ae6c701dec657c718c25cb1b4d0b682c9cbc43d66f1296b5b240e295462fec\"}\n",
+          "stderr": "{\"message_type\":\"error\",\"error\":{\"message\":\"open [fixture]/unreadable: permission denied\"},\"during\":\"archival\",\"item\":\"[fixture]/unreadable\"}\n{\"message_type\":\"exit_error\",\"code\":3,\"message\":\"Warning: at least one source file could not be read\"}\n"
+        }
+      ]
+    },
+    {
+      "test_id": "native-locks-and-interruption",
+      "repository_format": 2,
+      "fixture_removed": true,
+      "status": "pass",
+      "observations": {
+        "backup_while_copy": "3ed1750439cf8618825338f25046c8e0e1bd3568d1eacab9aa9e830733c1832c",
+        "forget": 11,
+        "prune": 11,
+        "check": 11,
+        "same_destination_copy": 0,
+        "same_destination_representations": 1
+      },
+      "commands": [
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "init",
+            "--repository-version",
+            "2"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository 3a98f668a7 at [fixture]/a\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "init",
+            "--repository-version",
+            "2"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository f44da28b35 at [fixture]/b\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "init",
+            "--repository-version",
+            "2"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository 750035357c at [fixture]/c\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/d",
+            "init",
+            "--repository-version",
+            "2"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository 756552af85 at [fixture]/d\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "backup",
+            "--json",
+            "--",
+            "[fixture]/large"
+          ],
+          "exit": 0,
+          "stdout": "{\"message_type\":\"status\",\"percent_done\":0.26146650314331055,\"total_files\":1,\"total_bytes\":12582912,\"bytes_done\":3290010,\"current_files\":[\"[fixture]/large\"]}\n{\"message_type\":\"status\",\"percent_done\":0.5010590553283691,\"total_files\":1,\"total_bytes\":12582912,\"bytes_done\":6304782,\"current_files\":[\"[fixture]/large\"]}\n{\"message_type\":\"status\",\"percent_done\":1,\"total_files\":1,\"total_bytes\":12582912,\"bytes_done\":12582912}\n{\"message_type\":\"status\",\"percent_done\":1,\"total_files\":1,\"total_bytes\":12582912,\"bytes_done\":12582912}\n{\"message_type\":\"status\",\"percent_done\":1,\"total_files\":1,\"total_bytes\":12582912,\"bytes_done\":12582912}\n{\"message_type\":\"status\",\"percent_done\":1,\"total_files\":1,\"files_done\":1,\"total_bytes\":12582912,\"bytes_done\":12582912}\n{\"message_type\":\"status\",\"percent_done\":1,\"total_files\":1,\"files_done\":1,\"total_bytes\":12582912,\"bytes_done\":12582912}\n{\"message_type\":\"status\",\"percent_done\":1,\"total_files\":1,\"files_done\":1,\"total_bytes\":12582912,\"bytes_done\":12582912}\n{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":10,\"tree_blobs\":3,\"data_added\":12584667,\"data_added_packed\":12585292,\"total_files_processed\":1,\"total_bytes_processed\":12582912,\"total_duration\":0.796784097,\"backup_start\":\"2026-11-21T23:57:15.898840783+05:30\",\"backup_end\":\"2026-11-21T23:57:16.695624881+05:30\",\"snapshot_id\":\"1fe6af9787f9fc7068364d0e9022018af07be6f7dd9551d1db41f59dbd9d08be\"}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-21T23:57:15.898840783+05:30\",\"tree\":\"0d58168170a7e4afd00c8648abbcff862c23a74c19d2be0973a85aa45c099af4\",\"paths\":[\"[fixture]/large\"],\"hostname\":\"Icebox\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:15.898840783+05:30\",\"backup_end\":\"2026-11-21T23:57:16.695624881+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":10,\"tree_blobs\":3,\"data_added\":12584667,\"data_added_packed\":12585292,\"total_files_processed\":1,\"total_bytes_processed\":12582912},\"id\":\"1fe6af9787f9fc7068364d0e9022018af07be6f7dd9551d1db41f59dbd9d08be\",\"short_id\":\"1fe6af97\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-21T23:57:15.898840783+05:30\",\"tree\":\"0d58168170a7e4afd00c8648abbcff862c23a74c19d2be0973a85aa45c099af4\",\"paths\":[\"[fixture]/large\"],\"hostname\":\"Icebox\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:15.898840783+05:30\",\"backup_end\":\"2026-11-21T23:57:16.695624881+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":10,\"tree_blobs\":3,\"data_added\":12584667,\"data_added_packed\":12585292,\"total_files_processed\":1,\"total_bytes_processed\":12582912},\"id\":\"1fe6af9787f9fc7068364d0e9022018af07be6f7dd9551d1db41f59dbd9d08be\",\"short_id\":\"1fe6af97\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-21T23:57:15.898840783+05:30\",\"tree\":\"0d58168170a7e4afd00c8648abbcff862c23a74c19d2be0973a85aa45c099af4\",\"paths\":[\"[fixture]/large\"],\"hostname\":\"Icebox\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:15.898840783+05:30\",\"backup_end\":\"2026-11-21T23:57:16.695624881+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":10,\"tree_blobs\":3,\"data_added\":12584667,\"data_added_packed\":12585292,\"total_files_processed\":1,\"total_bytes_processed\":12582912},\"id\":\"1fe6af9787f9fc7068364d0e9022018af07be6f7dd9551d1db41f59dbd9d08be\",\"short_id\":\"1fe6af97\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "backup",
+            "--json",
+            "--",
+            "[fixture]/extra"
+          ],
+          "exit": 0,
+          "stdout": "{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1161,\"data_added_packed\":1001,\"total_files_processed\":1,\"total_bytes_processed\":15,\"total_duration\":0.746842671,\"backup_start\":\"2026-11-21T23:57:20.351625155+05:30\",\"backup_end\":\"2026-11-21T23:57:21.098467827+05:30\",\"snapshot_id\":\"3ed1750439cf8618825338f25046c8e0e1bd3568d1eacab9aa9e830733c1832c\"}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-21T23:57:15.898840783+05:30\",\"tree\":\"0d58168170a7e4afd00c8648abbcff862c23a74c19d2be0973a85aa45c099af4\",\"paths\":[\"[fixture]/large\"],\"hostname\":\"Icebox\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:15.898840783+05:30\",\"backup_end\":\"2026-11-21T23:57:16.695624881+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":10,\"tree_blobs\":3,\"data_added\":12584667,\"data_added_packed\":12585292,\"total_files_processed\":1,\"total_bytes_processed\":12582912},\"id\":\"1fe6af9787f9fc7068364d0e9022018af07be6f7dd9551d1db41f59dbd9d08be\",\"short_id\":\"1fe6af97\"},{\"time\":\"2026-11-21T23:57:20.351625155+05:30\",\"tree\":\"78b965599ce170beb709522ffd92c511faa748c6c1992d3819c944f9dc467f26\",\"paths\":[\"[fixture]/extra\"],\"hostname\":\"Icebox\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:20.351625155+05:30\",\"backup_end\":\"2026-11-21T23:57:21.098467827+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1161,\"data_added_packed\":1001,\"total_files_processed\":1,\"total_bytes_processed\":15},\"id\":\"3ed1750439cf8618825338f25046c8e0e1bd3568d1eacab9aa9e830733c1832c\",\"short_id\":\"3ed17504\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "1fe6af9787f9fc7068364d0e9022018af07be6f7dd9551d1db41f59dbd9d08be"
+          ],
+          "exit": 0,
+          "stdout": "\nsnapshot 1fe6af97 of [[fixture]/large] at 2026-11-21 23:57:15.898840783 +0530 IST by neutrino@Icebox\n  copy started, this may take a while...\n[0:00] 100.00%  2 / 2 packs copied\n\nsnapshot 5a6d4020 saved\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-21T23:57:15.898840783+05:30\",\"tree\":\"0d58168170a7e4afd00c8648abbcff862c23a74c19d2be0973a85aa45c099af4\",\"paths\":[\"[fixture]/large\"],\"hostname\":\"Icebox\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"original\":\"1fe6af9787f9fc7068364d0e9022018af07be6f7dd9551d1db41f59dbd9d08be\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:15.898840783+05:30\",\"backup_end\":\"2026-11-21T23:57:16.695624881+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":10,\"tree_blobs\":3,\"data_added\":12584667,\"data_added_packed\":12585292,\"total_files_processed\":1,\"total_bytes_processed\":12582912},\"id\":\"5a6d4020037a910b916252eb1143c9a0cf000f88d7eec43fd02fb9d0f7c07bcf\",\"short_id\":\"5a6d4020\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "forget",
+            "--json",
+            "--keep-last",
+            "1"
+          ],
+          "exit": 11,
+          "stdout": "",
+          "stderr": "{\"message_type\":\"exit_error\",\"code\":11,\"message\":\"unable to create lock in backend: repository is already locked by PID 1228 on Icebox by neutrino (UID 1000, GID 1000)\\nlock was created at 2026-11-21 23:57:18 (6.08323114s ago)\\nstorage ID 2d974db0\\nthe `unlock` command can be used to remove stale locks\"}\n"
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "prune"
+          ],
+          "exit": 11,
+          "stdout": "repo already locked, waiting up to 0s for the lock\n",
+          "stderr": "unable to create lock in backend: repository is already locked by PID 1228 on Icebox by neutrino (UID 1000, GID 1000)\nlock was created at 2026-11-21 23:57:18 (6.620936908s ago)\nstorage ID 2d974db0\nthe `unlock` command can be used to remove stale locks\n"
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "check"
+          ],
+          "exit": 11,
+          "stdout": "create exclusive lock for repository\nrepo already locked, waiting up to 0s for the lock\n",
+          "stderr": "unable to create lock in backend: repository is already locked by PID 1228 on Icebox by neutrino (UID 1000, GID 1000)\nlock was created at 2026-11-21 23:57:18 (7.155783699s ago)\nstorage ID 2d974db0\nthe `unlock` command can be used to remove stale locks\n"
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--limit-upload",
+            "2048",
+            "--pack-size",
+            "4",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "1fe6af9787f9fc7068364d0e9022018af07be6f7dd9551d1db41f59dbd9d08be"
+          ],
+          "exit": 1,
+          "stdout": "\nsnapshot 1fe6af97 of [[fixture]/large] at 2026-11-21 23:57:15.898840783 +0530 IST by neutrino@Icebox\n  copy started, this may take a while...\n[0:07] 50.00%  1 / 2 packs copied\n\n",
+          "stderr": "\u001b[2Ksignal interrupt received, cleaning up\nFatal: context canceled\n"
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "check"
+          ],
+          "exit": 0,
+          "stdout": "create exclusive lock for repository\nload indexes\ncheck all packs\n1 additional files were found in the repo, which likely contain duplicate data.\nThis is non-critical, you can run `restic prune` to correct this.\ncheck snapshots, trees and blobs\n[0:00]          0 snapshots\nno errors were found\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/d",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "1fe6af9787f9fc7068364d0e9022018af07be6f7dd9551d1db41f59dbd9d08be"
+          ],
+          "exit": 0,
+          "stdout": "\nsnapshot 1fe6af97 of [[fixture]/large] at 2026-11-21 23:57:15.898840783 +0530 IST by neutrino@Icebox\n  copy started, this may take a while...\n[0:00] 100.00%  2 / 2 packs copied\n\nsnapshot 05d7765d saved\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--limit-upload",
+            "2048",
+            "--pack-size",
+            "4",
+            "--no-cache",
+            "--repo",
+            "[fixture]/d",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "1fe6af9787f9fc7068364d0e9022018af07be6f7dd9551d1db41f59dbd9d08be"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/d",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-21T23:57:15.898840783+05:30\",\"tree\":\"0d58168170a7e4afd00c8648abbcff862c23a74c19d2be0973a85aa45c099af4\",\"paths\":[\"[fixture]/large\"],\"hostname\":\"Icebox\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"original\":\"1fe6af9787f9fc7068364d0e9022018af07be6f7dd9551d1db41f59dbd9d08be\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:15.898840783+05:30\",\"backup_end\":\"2026-11-21T23:57:16.695624881+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":10,\"tree_blobs\":3,\"data_added\":12584667,\"data_added_packed\":12585292,\"total_files_processed\":1,\"total_bytes_processed\":12582912},\"id\":\"05d7765d91704d35eb13dafb917151594fb7cb4584633b3321c500f663db97f8\",\"short_id\":\"05d7765d\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "1fe6af9787f9fc7068364d0e9022018af07be6f7dd9551d1db41f59dbd9d08be"
+          ],
+          "exit": 0,
+          "stdout": "\nsnapshot 1fe6af97 of [[fixture]/large] at 2026-11-21 23:57:15.898840783 +0530 IST by neutrino@Icebox\n  copy started, this may take a while...\n[0:00] 100.00%  2 / 2 packs copied\n\nsnapshot a542c4f1 saved\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-21T23:57:15.898840783+05:30\",\"tree\":\"0d58168170a7e4afd00c8648abbcff862c23a74c19d2be0973a85aa45c099af4\",\"paths\":[\"[fixture]/large\"],\"hostname\":\"Icebox\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"original\":\"1fe6af9787f9fc7068364d0e9022018af07be6f7dd9551d1db41f59dbd9d08be\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:15.898840783+05:30\",\"backup_end\":\"2026-11-21T23:57:16.695624881+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":10,\"tree_blobs\":3,\"data_added\":12584667,\"data_added_packed\":12585292,\"total_files_processed\":1,\"total_bytes_processed\":12582912},\"id\":\"a542c4f1490c562bb306f1d1d47cf34ab4819c95f4dbdc35d72e52f952b696da\",\"short_id\":\"a542c4f1\"}]\n",
+          "stderr": ""
+        }
+      ]
+    },
+    {
+      "test_id": "cross-format-copy",
+      "repository_format": 2,
+      "fixture_removed": true,
+      "status": "pass",
+      "observations": {
+        "verified_directions": [
+          "1->2",
+          "2->1"
+        ]
+      },
+      "commands": [
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/v1",
+            "init",
+            "--repository-version",
+            "1"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository e616e0df84 at [fixture]/v1\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/v2",
+            "init",
+            "--repository-version",
+            "2"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository fb0af699f4 at [fixture]/v2\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/v1",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/v1",
+            "backup",
+            "--json",
+            "--",
+            "[fixture]/data"
+          ],
+          "exit": 0,
+          "stdout": "{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1155,\"data_added_packed\":1431,\"total_files_processed\":1,\"total_bytes_processed\":10,\"total_duration\":0.642728457,\"backup_start\":\"2026-11-21T23:57:37.051700537+05:30\",\"backup_end\":\"2026-11-21T23:57:37.694428994+05:30\",\"snapshot_id\":\"878f3548bfba91713a9f61d5d9c8491ce052aacde71d96339f3a64a2f36ffeae\"}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/v1",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-21T23:57:37.051700537+05:30\",\"tree\":\"b56650085002299c8ef9de9635079bb43b68cb2c5166b92d3db854d4b31352e8\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"Icebox\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:37.051700537+05:30\",\"backup_end\":\"2026-11-21T23:57:37.694428994+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1155,\"data_added_packed\":1431,\"total_files_processed\":1,\"total_bytes_processed\":10},\"id\":\"878f3548bfba91713a9f61d5d9c8491ce052aacde71d96339f3a64a2f36ffeae\",\"short_id\":\"878f3548\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/v2",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/v2",
+            "backup",
+            "--json",
+            "--",
+            "[fixture]/data"
+          ],
+          "exit": 0,
+          "stdout": "{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1155,\"data_added_packed\":996,\"total_files_processed\":1,\"total_bytes_processed\":10,\"total_duration\":0.516434624,\"backup_start\":\"2026-11-21T23:57:38.892093004+05:30\",\"backup_end\":\"2026-11-21T23:57:39.408527581+05:30\",\"snapshot_id\":\"57035ab0d81e62c114124da594d4c447bf494916133c519a2719cd98575a31bf\"}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/v2",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-21T23:57:38.892093004+05:30\",\"tree\":\"0243fcb9ab906dc9380da99e4214a22ea9daf56e8c10bd003d2cce2f8bb163eb\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"Icebox\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:38.892093004+05:30\",\"backup_end\":\"2026-11-21T23:57:39.408527581+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1155,\"data_added_packed\":996,\"total_files_processed\":1,\"total_bytes_processed\":10},\"id\":\"57035ab0d81e62c114124da594d4c447bf494916133c519a2719cd98575a31bf\",\"short_id\":\"57035ab0\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/v2",
+            "copy",
+            "--from-repo",
+            "[fixture]/v1",
+            "--",
+            "878f3548bfba91713a9f61d5d9c8491ce052aacde71d96339f3a64a2f36ffeae"
+          ],
+          "exit": 0,
+          "stdout": "\nsnapshot 878f3548 of [[fixture]/data] at 2026-11-21 23:57:37.051700537 +0530 IST by neutrino@Icebox\n  copy started, this may take a while...\n[0:00] 100.00%  2 / 2 packs copied\n\nsnapshot 6c490224 saved\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/v1",
+            "copy",
+            "--from-repo",
+            "[fixture]/v2",
+            "--",
+            "57035ab0d81e62c114124da594d4c447bf494916133c519a2719cd98575a31bf"
+          ],
+          "exit": 0,
+          "stdout": "\nsnapshot 57035ab0 of [[fixture]/data] at 2026-11-21 23:57:38.892093004 +0530 IST by neutrino@Icebox\n  copy started, this may take a while...\n[0:00] 100.00%  2 / 2 packs copied\n\nsnapshot e0d75e4f saved\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/v1",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-21T23:57:37.051700537+05:30\",\"tree\":\"b56650085002299c8ef9de9635079bb43b68cb2c5166b92d3db854d4b31352e8\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"Icebox\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:37.051700537+05:30\",\"backup_end\":\"2026-11-21T23:57:37.694428994+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1155,\"data_added_packed\":1431,\"total_files_processed\":1,\"total_bytes_processed\":10},\"id\":\"878f3548bfba91713a9f61d5d9c8491ce052aacde71d96339f3a64a2f36ffeae\",\"short_id\":\"878f3548\"},{\"time\":\"2026-11-21T23:57:38.892093004+05:30\",\"tree\":\"0243fcb9ab906dc9380da99e4214a22ea9daf56e8c10bd003d2cce2f8bb163eb\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"Icebox\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"original\":\"57035ab0d81e62c114124da594d4c447bf494916133c519a2719cd98575a31bf\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:38.892093004+05:30\",\"backup_end\":\"2026-11-21T23:57:39.408527581+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1155,\"data_added_packed\":996,\"total_files_processed\":1,\"total_bytes_processed\":10},\"id\":\"e0d75e4f0b973cf7f68b0ad7b3c8943ce8198c04f79364c8a43988dd810bfe62\",\"short_id\":\"e0d75e4f\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/v1",
+            "check"
+          ],
+          "exit": 0,
+          "stdout": "create exclusive lock for repository\nload indexes\ncheck all packs\ncheck snapshots, trees and blobs\n[0:00] 100.00%  2 / 2 snapshots\nno errors were found\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/v2",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-21T23:57:37.051700537+05:30\",\"tree\":\"b56650085002299c8ef9de9635079bb43b68cb2c5166b92d3db854d4b31352e8\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"Icebox\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"original\":\"878f3548bfba91713a9f61d5d9c8491ce052aacde71d96339f3a64a2f36ffeae\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:37.051700537+05:30\",\"backup_end\":\"2026-11-21T23:57:37.694428994+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1155,\"data_added_packed\":1431,\"total_files_processed\":1,\"total_bytes_processed\":10},\"id\":\"6c49022487ea368fe8c3aa1571d5f89ea3a53901e5469a42d51248b432a926e5\",\"short_id\":\"6c490224\"},{\"time\":\"2026-11-21T23:57:38.892093004+05:30\",\"tree\":\"0243fcb9ab906dc9380da99e4214a22ea9daf56e8c10bd003d2cce2f8bb163eb\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"Icebox\",\"username\":\"neutrino\",\"uid\":1000,\"gid\":1000,\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-21T23:57:38.892093004+05:30\",\"backup_end\":\"2026-11-21T23:57:39.408527581+05:30\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1155,\"data_added_packed\":996,\"total_files_processed\":1,\"total_bytes_processed\":10},\"id\":\"57035ab0d81e62c114124da594d4c447bf494916133c519a2719cd98575a31bf\",\"short_id\":\"57035ab0\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/usr/bin/restic",
+            "--no-cache",
+            "--repo",
+            "[fixture]/v2",
+            "check"
+          ],
+          "exit": 0,
+          "stdout": "create exclusive lock for repository\nload indexes\ncheck all packs\ncheck snapshots, trees and blobs\n[0:00] 100.00%  2 / 2 snapshots\nno errors were found\n",
+          "stderr": ""
+        }
+      ]
+    }
+  ],
+  "unchanged_inputs": true,
+  "passed": true
+}

@@ -1,7 +1,7 @@
 """Bounded supervisor for subprocesses in Linux user systemd scopes."""
 
 import base64
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import json
 import os
 from pathlib import Path
@@ -32,8 +32,8 @@ class SupervisionUncertain(Exception):
 @dataclass(frozen=True)
 class ScopedResult:
     exit_code: int | None
-    stdout: bytes
-    stderr: bytes
+    stdout: bytes = field(repr=False)
+    stderr: bytes = field(repr=False)
     truncated: bool
     containment: str
 
@@ -46,7 +46,8 @@ class Frames:
     def read(self, deadline, cancelled=None):
         with selectors.DefaultSelector() as selector:
             selector.register(self.stream, selectors.EVENT_READ)
-            while b"\n" not in self.pending:
+            delimiter = self.pending.find(b"\n")
+            while delimiter < 0:
                 remaining = deadline - monotonic()
                 if remaining <= 0:
                     raise TimeoutError
@@ -55,13 +56,32 @@ class Frames:
                 wait = min(remaining, 0.1) if cancelled is not None else remaining
                 if not selector.select(wait):
                     continue
-                chunk = os.read(self.stream.fileno(), 8192)
+                chunk = os.read(self.stream.fileno(), 65536)
                 if not chunk or len(self.pending) + len(chunk) > FRAME_LIMIT:
                     raise SupervisionUncertain("Worker frame was missing or exceeded its limit.")
+                previous = len(self.pending)
                 self.pending.extend(chunk)
-        line, rest = self.pending.split(b"\n", 1)
-        self.pending = bytearray(rest)
+                delimiter = self.pending.find(b"\n", previous)
+        line = self.pending[:delimiter]
+        del self.pending[:delimiter + 1]
         return json.loads(line)
+
+
+def send_request(stream, request, deadline):
+    descriptor = stream.fileno()
+    os.set_blocking(descriptor, False)
+    remaining = memoryview(request)
+    with selectors.DefaultSelector() as selector:
+        selector.register(stream, selectors.EVENT_WRITE)
+        while remaining:
+            wait = deadline - monotonic()
+            if wait <= 0 or not selector.select(wait):
+                raise TimeoutError
+            try:
+                sent = os.write(descriptor, remaining)
+            except BlockingIOError:
+                continue
+            remaining = remaining[sent:]
 
 
 def cgroup_for(worker, unit):
@@ -106,6 +126,7 @@ def execute(intent, argv, *, deadline, on_launch, cwd=None, env=None, stdin_payl
     unit = f"backup-manager-{UUID(intent.execution_id).hex}.scope"
     request = json.dumps({
         "argv": list(argv), "cwd": os.fspath(cwd) if cwd else None,
+        "env": env,
         "stdin": base64.b64encode(stdin_payload).decode("ascii") if stdin_payload is not None else None,
     }).encode() + b"\n"
     if len(request) > REQUEST_LIMIT or monotonic() >= deadline:
@@ -115,7 +136,7 @@ def execute(intent, argv, *, deadline, on_launch, cwd=None, env=None, stdin_payl
             ["systemd-run", "--user", "--scope", "--quiet", f"--unit={unit}",
              "--property=KillMode=control-group", "--property=TimeoutStopSec=2s",
              sys.executable, "-m", "backup_manager.scope_worker"],
-            stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, env=env,
+            stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
         )
     except OSError as error:
         raise SupervisionUncertain("Could not establish a scope launch.") from error
@@ -129,8 +150,7 @@ def execute(intent, argv, *, deadline, on_launch, cwd=None, env=None, stdin_payl
         namespace = os.readlink("/proc/self/ns/cgroup")
         if on_scope_ready is not None:
             on_scope_ready(LaunchReceipt(intent.supervisor_id, containment, worker, namespace))
-        wrapper.stdin.write(request)
-        wrapper.stdin.flush()
+        send_request(wrapper.stdin, request, deadline)
         process = ProcessIdentity(**frames.read(deadline)["process"])
         if process.boot_id != worker.boot_id or process.pid_namespace != worker.pid_namespace:
             raise SupervisionUncertain("The launched process identity differs from the scoped worker.")

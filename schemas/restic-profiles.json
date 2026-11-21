@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "profiles": [
+    {
+      "binary_sha256": "7135345e471b64fe43356f8cc665d33d9e52fb042ba39e5cff77310c46d46857",
+      "version_line": "restic 0.18.0 compiled with go1.24.4 on linux/amd64",
+      "repository_formats": [
+        1,
+        2
+      ],
+      "native_overlap": [
+        [
+          "BACKUP",
+          "COPY_SOURCE"
+        ],
+        [
+          "COPY_SOURCE",
+          "READ"
+        ],
+        [
+          "COPY_SOURCE"
+        ]
+      ],
+      "report": "tests/certification/restic-0.18.0-linux-amd64.json",
+      "report_sha256": "62c4058f102436b79308919d42cc31c16b6e4c0414ce7bf1020c641b83798ea4"
+    }
+  ]
+}

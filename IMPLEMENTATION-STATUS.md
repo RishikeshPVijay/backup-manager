@@ -1,6 +1,6 @@
 # Implementation status
 
-Baseline v1.0. I1–I3 milestone gates verified on Linux x86_64. I4–I9 are pending. The full 40-scenario release acceptance run and exact Restic binary certification remain pending. I3 crash and storage fixture evidence is recorded below.
+Baseline v1.0. I1–I4 milestone gates verified on Linux x86_64. I5–I9 are pending. Restic 0.18.0 Linux amd64 is certified only for the exact recorded binary fingerprint and repository formats 1 and 2. The full 40-scenario release acceptance run remains pending.
 
 ## I1 foundation checklist
 
@@ -163,3 +163,25 @@ Completed SQLite migrations and verified backups, cross-process storage and repo
 | `tests/experiments/linux_loop_lifecycle.py` in the I2 disposable test image described above | 0 | Real ext4 loop identity before and after acquisition, independent verification, verified release, preservation of an external mount, and complete fixture cleanup. |
 
 Verified 2026-11-21 UTC on Linux 6.12.101+deb13-amd64 x86_64 and CPython 3.13.5. Final tested wheel SHA-256 `1bad08c1b89944256fb3df08b111f85c99e59d4ed96450711081953eebc0f956`. The supervisor uses verified user systemd scopes and keeps work fenced when the scope or its recovery evidence cannot be verified. Cross-process coordination tests used a marker-file provider; physical block mount tests ran separately in the private loop-device container. These results establish the I3 milestone on the tested platform. The release acceptance run and I4 binary certification are separate gates.
+
+## I4 Restic adapter and binary certification
+
+- [x] A6/A7/D1/D14/D41/D63/R4/R6/R8/R9/R10/G3. Typed argv-only Restic adapter, credential separation, strict identity/backup/inventory evidence, exact installed profile selection, and disposable certification runner. The adapter exposes explicit admin invocations but does not schedule them.
+- [x] V-001/V-002/V-005/V-006 for the tested Linux amd64 binary and formats 1 and 2. The profile records only observed compatible pairs: COPY_SOURCE with READ, BACKUP, or COPY_SOURCE. A9 still serializes same-destination copies. Forget, prune, and check remain exclusive. No native lock removal occurs in the runner or production adapter.
+- [x] Certification report and traceability. Recorded 146 Restic command outcomes across five passing cases. Evidence at `tests/certification/restic-0.18.0-linux-amd64.json` includes executable and source hashes, redacted outputs, exit codes, and fixture removal.
+
+Exact binary `/usr/bin/restic`, version line `restic 0.18.0 compiled with go1.24.4 on linux/amd64`, SHA-256 `7135345e471b64fe43356f8cc665d33d9e52fb042ba39e5cff77310c46d46857`. Report SHA-256 `62c4058f102436b79308919d42cc31c16b6e4c0414ce7bf1020c641b83798ea4`. Linux kernel 6.12.101+deb13-amd64, x86_64, glibc 2.41, CPython 3.13.5. The report records the I3 baseline revision and the SHA-256 of the exact I4 runner and adapter sources.
+
+| Command | Exit | Evidence |
+|---|---:|---|
+| `/tmp/bm-dev/bin/python tools/certify_restic.py --restic /usr/bin/restic --report tests/certification/restic-0.18.0-linux-amd64.json` | 0 | All five cases passed. Verified formats 1 and 2, bidirectional cross-format copy, distinct repository identities and passwords, same-metadata independent histories, tag rewrites, transitive copy, repeated copy, lock overlaps/conflicts, and interruption after destination packs were written. |
+| `/tmp/bm-dev/bin/python tools/validate_handoff.py` | 0 | Static handoff and certified-report reference verified. |
+| `/tmp/bm-dev/bin/python -m build --no-isolation --outdir /tmp/bm-i4-dist` | 0 | Built sdist and wheel. |
+| `/tmp/bm-dev/bin/python -m pip --disable-pip-version-check install --no-deps --force-reinstall /tmp/bm-i4-dist/*.whl` | 0 | Installed final-profile wheel. |
+| `/tmp/bm-dev/bin/python -m unittest discover -s tests/unit -q` | 0 | 65 passed. |
+| `/tmp/bm-dev/bin/python tests/experiments/linux_scoped_restic.py` | 0 | Installed profile and supervisor executed a temporary backup and explicit copy with different credentials. The resulting snapshot and provenance were verified, credentials were absent from SQLite and its witness, and fixture repositories were cleaned up. |
+| Installed-wheel systemd regressions `linux_journaled_supervisor.py`, `linux_shared_storage.py`, and `linux_launch_boundaries.py` | 0 each | Private stdin and a 160 KiB result, scoped lifecycle dispatch, and crash fencing still passed after the transport changes. |
+
+Two provisional certification runs exited 1. The first assumed equal-time snapshots returned in a stable order, so a read-only preview looked like a mutation. Sorting by the full snapshot ID corrected the comparison. The other assumed a missing requested source yielded exit 3. Direct observations showed exit 0 and a snapshot missing that source, whereas an existing unreadable source yielded exit 3. The final harness asserts both behaviors. The adapter requires a fresh snapshot whose paths match the actual backup request. The final report also records a missing explicit copy source yielding exit 0 without creating the requested destination representation. Production copy confirmation must independently revalidate both source and destination inventory.
+
+Only the tested executable fingerprint is installed. Other Restic builds, operating environments, and repository formats have no certification here. I5 job orchestration, I6 production equivalence and convergence, I7 operations, and release acceptance remain pending.

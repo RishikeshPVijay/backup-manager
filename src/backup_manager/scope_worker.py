@@ -11,8 +11,8 @@ import sys
 
 from .process_identity import ProcessIdentity
 
-REQUEST_LIMIT = 4096
-OUTPUT_LIMIT = 65536
+REQUEST_LIMIT = 1024 * 1024
+OUTPUT_LIMIT = 8 * 1024 * 1024
 
 
 def reply(data):
@@ -61,7 +61,7 @@ def main():
         with (
             child_input(data.get("stdin")) as command_input,
             subprocess.Popen(
-                data["argv"], cwd=data["cwd"], stdin=command_input,
+                data["argv"], cwd=data["cwd"], env=data.get("env"), stdin=command_input,
                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, start_new_session=True,
             ) as command,
         ):
