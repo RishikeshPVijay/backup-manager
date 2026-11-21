@@ -61,6 +61,27 @@ def read_document(path: Path, schema: str) -> tuple[dict, list[Diagnostic]]:
 
 def load_global(path: Path) -> ConfigDocument:
     data, errors = read_document(path, "global-config")
+    storage = data.get("storage")
+    if isinstance(storage, dict):
+        # Resolve plugins only when explicitly reading configuration.
+        from .providers import ProviderError, discover
+
+        try:
+            providers = discover("storage")
+        except ProviderError:
+            errors.append(Diagnostic("STORAGE_PROVIDERS", "Could not validate installed storage providers."))
+        else:
+            for resource in storage.values():
+                if not isinstance(resource, dict) or not isinstance(resource.get("provider"), str):
+                    continue
+                provider = providers.get(resource["provider"])
+                if provider is None:
+                    errors.append(Diagnostic("UNKNOWN_STORAGE_PROVIDER", "Storage references an unknown provider."))
+                    continue
+                for error in Draft202012Validator(provider.config_schema).iter_errors(resource.get("config")):
+                    errors.append(Diagnostic(
+                        "STORAGE_CONFIG", f"Storage configuration violates the {error.validator} rule.",
+                    ))
     return ConfigDocument(freeze(data), tuple(errors))
 
 

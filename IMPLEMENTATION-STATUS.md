@@ -1,6 +1,6 @@
 # Implementation status
 
-Baseline v1.0. I1 foundation is implemented. I2 is in progress. I3–I9 are pending. Mandatory acceptance scenarios remain 0 executed and 0 passed out of 40. Restic certification, runtime migrations, and process/storage crash recovery have no execution evidence.
+Baseline v1.0. I1 foundation is implemented. I2 provider and worker gate verified. I3 is in progress. I4–I9 are pending. Mandatory acceptance scenarios remain 0 executed and 0 passed out of 40. Restic certification, runtime migrations, and process/storage crash recovery have no execution evidence.
 
 ## I1 foundation checklist
 
@@ -77,3 +77,14 @@ The user approved the dedicated `on_demand` mountpoint restriction recorded in d
 | `/tmp/bm-dev/bin/python tests/experiments/linux_lifecycle_mountinfo.py` | 0 | Private-namespace tmpfs fixture confirmed unmounted, mounted-but-unverified, nested, and cleanly removed observations. |
 
 Kernel 6.12.101+deb13-amd64, Linux x86_64, Python 3.13.5. Required positive block-device lifecycle evidence is pending. This environment exposes neither a disposable loop device nor a loop-control node. Existing disk devices were excluded from the fixture. The user systemd scope bus also refused access. I2 remains open pending end-to-end verification on a disposable block filesystem and supervised termination evidence. No acceptance scenarios or Restic certification were run.
+
+### I2 gate verification
+
+I2 provider and worker gate verified on Linux x86_64. The absolute SQLite-backed coordinator integration and crash recovery are I3.
+
+- Installed-wheel unit suite, static handoff, and private tmpfs topology checks exited 0. The suite now has 22 tests including strict nested storage config and unknown-provider rejection.
+- `python3 tests/experiments/linux_scope_termination.py` exited 0 outside the sandbox. The disposable user systemd scope contained both fixture processes. Stopping it removed both original PID/start identities.
+- `tests/experiments/linux_loop_lifecycle.py` exited 0 in a private Docker mount namespace with network disabled, access limited to loop block devices, and the fixture source mounted read-only. It used a fresh sparse ext4 image and filesystem UUID. Assertions covered verified acquisition, no ownership from reuse, refusal of an empty ownership receipt, verified release, preservation of a pre-existing external fixture mount, and cleanup of the mount, loop attachment, and image.
+- The base image lacked `mke2fs`. The first custom-image run failed on mount under the default Docker profile and cleaned up the fixture. It passed with the fixture container's AppArmor profile disabled. The test image derived from `python:3.13-slim@sha256:e48f59cdba69a3cbd9ed2cf0f348d90d45a8d350d98134cf1070bc106ee9ed90`.
+
+The experiments exercise real fixture resources only. They do not validate production crash recovery or issue Restic certification.

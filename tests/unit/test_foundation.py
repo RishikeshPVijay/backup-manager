@@ -112,3 +112,17 @@ class FoundationTests(unittest.TestCase):
         self.job_path.write_text(content + "[retention]\nprune = true\n")
         payload = self.cli("config", "validate", "--all", exit_code=4)
         self.assertEqual(payload["errors"][0]["context"]["field"], "retention")
+
+    def test_nested_storage_configuration_rejects_unknown_fields(self):
+        with self.global_path.open("a") as stream:
+            stream.write('unknown = "SENTINEL"\n')
+        payload = self.cli("config", "validate", exit_code=4)
+        self.assertEqual([item["code"] for item in payload["errors"]], ["STORAGE_CONFIG"])
+        self.assertNotIn("SENTINEL", json.dumps(payload))
+
+    def test_unknown_storage_provider_rejected(self):
+        self.global_path.write_text(
+            self.global_path.read_text().replace('"linux_filesystem"', '"unknown_provider"'),
+        )
+        payload = self.cli("config", "validate", exit_code=4)
+        self.assertEqual([item["code"] for item in payload["errors"]], ["UNKNOWN_STORAGE_PROVIDER"])
