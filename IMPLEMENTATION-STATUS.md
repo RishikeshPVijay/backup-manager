@@ -88,3 +88,18 @@ I2 provider and worker gate verified on Linux x86_64. The absolute SQLite-backed
 - The base image lacked `mke2fs`. The first custom-image run failed on mount under the default Docker profile and cleaned up the fixture. It passed with the fixture container's AppArmor profile disabled. The test image derived from `python:3.13-slim@sha256:e48f59cdba69a3cbd9ed2cf0f348d90d45a8d350d98134cf1070bc106ee9ed90`.
 
 The experiments exercise real fixture resources only. They do not validate production crash recovery or issue Restic certification.
+
+## I3 initial state checkpoint
+
+- [x] D25/L3 foundation, explicit state initialization, runtime migration v1, version and checksum witness, SQLite WAL and foreign-key enforcement.
+- [x] Read-only state check rejects missing/corrupt state, permission violations, unreconciled SQLite sidecars, and mismatch against the adjacent identity witness. It does not admit work.
+- [ ] A3/A4/A5/D25/D82/D83/D84/D103/D104/D105/L3, durable launch and containment, claim fencing, interrupted-operation reconciliation.
+- [ ] Independent generation witness and backup-before-migration flow for upgrades to existing instances.
+
+Static handoff validation exited 0 before and after the runtime migration addition. Build, wheel installation, and the 29-test installed-wheel unit suite exited 0 on Linux x86_64 with Python 3.13.5. The suite covers missing state without writes, duplicate initialization refusal, WAL and migration checksum, corrupted state, generation mismatch, unexpected WAL refusal, and CLI confirmation and exit codes. Init currently recognizes btrfs, ext2/3/4, f2fs, tmpfs, xfs and zfs as local filesystems. Unrecognized filesystem types fail closed.
+
+### Rollback witness gate
+
+In an isolated SQLite fixture, advanced the database and its adjacent identity file from generation 1 to 2. Restoring only the SQLite file was detected and rejected. Restoring both files produced the same inputs as the original generation 1 and passed the local integrity check. The command exited 0 after asserting both observations. The current check is therefore evidence of local integrity only.
+
+The frozen configuration defines only the state database path. Whole-state rollback protection requires a generation witness outside the rollback domain. Its location and operational authority, as well as how to maintain it through recovery, must be established before authorizing production work. Claims, launch admission, state recovery, Restic certification and mandatory acceptance remain incomplete.

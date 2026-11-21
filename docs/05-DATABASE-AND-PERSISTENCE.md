@@ -17,3 +17,7 @@ Complete successful enumeration replaces current view atomically; failed/partial
 ## Crash recovery
 
 On uncertain launch assume possibly started; block conflicting claims until definitive process termination. Never automatically retry, unlock Restic, unmount unverified resources, or reconstruct missing state as authoritative. Reconcile process identity using boot ID + PID start identity + supervisor/cgroup evidence, then storage inspection and Restic repository state. External mounts preserved. Corrupt/missing/rolled-back DB => refuse automatic work; explicit `state recover` workflow with integrity check, identity reconciliation, evidence-loss report and admin approval. SQLite online backup API for state snapshots; protect file permissions and metadata.
+
+## I3 initialization checkpoint
+
+The shipped first migration runs only during explicit state initialization. The configured database parent directory must already exist, be owned by the invoking account, and be protected against writes by other users. Initialization enables WAL and records the migration checksum and initial instance identity. The adjacent identity file detects replacement or rollback of the database when the anchor survives. A copied or restored pair cannot establish its own freshness. Read-only state checks currently refuse SQLite sidecars pending supervised reconciliation.

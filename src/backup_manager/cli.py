@@ -8,6 +8,7 @@ import sys
 
 from .config import IDENTIFIER, load_global, load_job
 from .errors import Diagnostic, InvalidInvocation, Result, Status
+from . import state
 
 DEFAULT_CONFIG = Path("/etc/backup-manager/config.toml")
 
@@ -143,6 +144,22 @@ def dispatch(args):
         return Result(data={"version": version("backup-manager")})
     if args.group == "config":
         return config_validate(args)
+    if args.group == "state" and args.action in {"init", "check"}:
+        config = load_global(getattr(args, "config", DEFAULT_CONFIG))
+        if config.errors:
+            return Result(Status.INVALID, errors=config.errors)
+        path = Path(config.data["state"]["path"])
+        if args.action == "init" and not args.yes:
+            if not sys.stdin.isatty():
+                raise InvalidInvocation
+            print(f"Type {path} to confirm initialization.", file=sys.stderr)
+            if sys.stdin.readline().rstrip("\n") != str(path):
+                raise InvalidInvocation
+        try:
+            data = state.initialize(path) if args.action == "init" else state.check(path)
+        except state.StateUnsafe as error:
+            return Result(Status.UNSAFE, errors=(Diagnostic("STATE_UNSAFE", str(error)),))
+        return Result(data=data)
     if args.group == "batch" and bool(args.jobs) == args.all:
         raise InvalidInvocation
     if getattr(args, "limit", None) and args.limit > 1000:
