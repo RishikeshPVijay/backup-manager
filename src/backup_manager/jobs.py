@@ -119,7 +119,7 @@ class JobRunner:
             self.storage.path, self.storage.anchor, operation_id or str(uuid4()), self.storage.owner,
             invocation.argv, deadline=deadline / NANOSECONDS, env=invocation.env, cwd=cwd,
             user=user, group=group, repository=selection.directory if selection else None,
-            source_repository=source_repository,
+            source_repository=source_repository, executable_sha256=invocation.executable_sha256,
             claim_operation_id=claim,
             authorize=(lambda database: repository_authorized(database, claim, self.storage.owner)) if claim else None,
             cancelled=self.cancelled if observe_cancel else None,
@@ -517,7 +517,7 @@ def register_destination(config, job, destination_id, *, timeout=None, interrupt
         result = run_journaled(
             runner.storage.path, runner.storage.anchor, str(uuid4()), runner.storage.owner,
             invocation.argv, env=invocation.env, deadline=runner.operation_deadline() / NANOSECONDS,
-            repository=directory, cancelled=runner.cancelled,
+            repository=directory, cancelled=runner.cancelled, executable_sha256=invocation.executable_sha256,
         )
         identity = adapter.repository_identity(result)
         fresh = inspect_repository(runner.storage, lease, repo.path, runner.operation_deadline())

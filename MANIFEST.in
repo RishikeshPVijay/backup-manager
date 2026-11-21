@@ -1,0 +1,9 @@
+include AGENTS.md requirements-dev.lock
+exclude IMPLEMENTATION-STATUS.md
+graft contracts
+graft db
+graft docs
+graft examples
+graft tests
+graft tools
+global-exclude *.py[cod]

@@ -49,6 +49,7 @@ def initialize_repository(runner, adapter, lease, repo):
         runner.storage.path, runner.storage.anchor, str(uuid4()), runner.storage.owner,
         invocation.argv, env=invocation.env, deadline=runner.operation_deadline() / 1_000_000_000,
         repository={**binding, "empty": True}, cancelled=runner.cancelled,
+        executable_sha256=invocation.executable_sha256,
     )
     if result.exit_code != 0:
         raise ResticEvidenceError("Repository initialization did not succeed.")

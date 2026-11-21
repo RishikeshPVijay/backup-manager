@@ -5,10 +5,12 @@ from dataclasses import asdict
 import base64
 import json
 import grp
+import hashlib
 from pathlib import Path
 import pwd
 import os
 import selectors
+import stat
 import subprocess
 import sys
 
@@ -82,6 +84,21 @@ def repository_argv(argv, repository, flag="--repo"):
         os.close(descriptor)
 
 
+@contextmanager
+def check_executable(path, digest):
+    """Bind exec to the same open file whose bytes matched the certified profile."""
+    if digest is None:
+        yield {}
+        return
+    descriptor = os.open(path, os.O_RDONLY | os.O_CLOEXEC | os.O_NOFOLLOW | os.O_NONBLOCK)
+    with os.fdopen(descriptor, "rb") as stream:
+        if not stat.S_ISREG(os.fstat(descriptor).st_mode):
+            raise ValueError("Certified executable must be a regular file.")
+        if hashlib.file_digest(stream, "sha256").hexdigest() != digest:
+            raise ValueError("Certified executable changed before launch.")
+        yield {"executable": f"/proc/self/fd/{descriptor}", "pass_fds": (descriptor,)}
+
+
 def credentials(user, group):
     kwargs = {}
     if user is not None:
@@ -109,10 +126,12 @@ def main():
                 with ExitStack() as stack:
                     argv, descriptors = stack.enter_context(repository_argv(data["argv"], data.get("repository")))
                     argv, source = stack.enter_context(repository_argv(argv, data.get("source_repository"), "--from-repo"))
+                    executable = stack.enter_context(check_executable(argv[0], data.get("executable_sha256")))
+                    fds = (*descriptors, *source, *executable.pop("pass_fds", ()))
                     command = subprocess.Popen(
                         argv, cwd=data["cwd"], env=data.get("env"), stdin=command_input,
                         stdout=subprocess.PIPE, stderr=subprocess.PIPE, start_new_session=True,
-                        pass_fds=(*descriptors, *source), **credentials(data.get("user"), data.get("group")),
+                        pass_fds=fds, **executable, **credentials(data.get("user"), data.get("group")),
                     )
             except (OSError, ValueError, TypeError, KeyError, IndexError, StopIteration):
                 reply({"not_started": True})

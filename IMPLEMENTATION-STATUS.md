@@ -253,3 +253,44 @@ repositories and marker-backed storage. No production repository or mount was
 modified. Operator cancellation addresses job runs. Unsettled process evidence
 continues to require explicit reconciliation. I8 hardening and I9 release
 acceptance remain pending.
+
+## I8 hardening and release tooling
+
+- [x] D47/D76. Suppress credential-bearing captures after native truncation to avoid persisting a secret prefix. Verify file secret ownership, restrictive modes, final-component symlink rejection, FIFO rejection, complete-stream redaction and bounded capture.
+- [x] A4/A6/A7/D56/D78. Recheck the intended Restic SHA-256 at launch and execute the verified open inode. Refuse a nonregular candidate. Keep read-only timeout cleanup bounded even if a killed process cannot exit. The inherited witness lock keeps conflicting work blocked until the process exits.
+- [x] D25/D81–D85/D92/D103–D105/L3/A3–A5/A9–A12. Exercise launch crashes, live-child fencing, atomic claims, shared acquisition and release, real kernel mount topology, and SQLite migration rollback. No schema revision was needed for I8.
+- [x] Contracts 16/19/20. Build reproducible wheel and source archives from pinned dependencies, add CI workflows and operator runbooks, and document the state upgrade helper. D106 stays paused.
+
+### Security review
+
+Core subprocesses use argument arrays. Restic credentials use the child
+environment and the private scope request channel. Tests verify credentials
+are absent from the persistent command journal. Native operations still rely
+on registered identity, storage claims, scope termination evidence and Restic
+locks. Kernel probes covered the known unmount and move-mount races without
+widening the dedicated-mountpoint contract.
+
+The first dependency audit reported three entries against setuptools 78.1.1
+(`PYSEC-2026-3447` appeared twice and `GHSA-xmj3-9gf7-h52w` once). Both build
+pins were updated to 84.1.0. The revised lock scan reported no known
+vulnerabilities.
+
+| Command or fixture | Exit | Evidence |
+|---|---:|---|
+| `tools/validate_handoff.py` on Python 3.12 and 3.13 | 0 | Static schemas, configs, 140 requirement links, 40 scenario definitions, and the installed exact-profile report reference. |
+| `tools/build_release.py --epoch 1704067200 --output DIR`, twice per interpreter, followed by `diff -r` | 0 | Byte-identical within and across Python 3.12.16 and 3.13.5 on Linux x86-64. Wheel SHA-256 `ecf0bbfe67d4467035b57eb5eae44f8420bfb2e907ba0a49e0ce594921d360d0`. Sdist SHA-256 `3b5bd0322b25266c52baab6872405d97ecfef3d8ecf17e914f2d57c4836863a6`. Lock SHA-256 `b484fd4f981f15c79ec7b09502f9e0b40f16b3dbbe7a7a8ca4ef4925816ff0fd`. |
+| `pip_audit --no-deps --disable-pip -r requirements-dev.lock --format json` | 0 | No known vulnerabilities for the Python 3.13 lock entries. Report `/tmp/bm-i8-dependency-audit-fixed.json`. |
+| `tools/certify_restic.py --restic /usr/bin/restic --report /tmp/bm-i8-final-restic-certification.json` | 0 | All five disposable cases passed and cleaned up. Exact Restic 0.18.0 Linux amd64 SHA-256 `7135345e471b64fe43356f8cc665d33d9e52fb042ba39e5cff77310c46d46857`. Report SHA-256 `b2bee86135db801e6c5d3f811a72fb306f78dd7f18ac0c5ddb574d9940cfa908`. The installed certified profile was not replaced. |
+| `tools/run_linux_regressions.py namespace --output /tmp/bm-i8-namespace` | 0 | Private tmpfs mount topology, descriptor unmount and move-mount race probes. All three fixtures exited 0. |
+| `tests/experiments/linux_loop_lifecycle.py` in the dedicated network-disabled Docker fixture | 0 | Real ext4 acquisition, verified ownership/release, preservation of the external fixture mount, and cleanup of image, mount and loop device. |
+| `tools/upgrade_state.py --config CONFIG --backup BACKUP` | 0 | Independently upgraded a disposable schema-4 SQLite state, confirmed generation advanced, and verified that the old schema and manifest were preserved in the backup. |
+| `python -m pip check`, `python -m unittest discover -s tests/unit -q`, and `backup-manager --json version` on both final wheel installs | 0 each | 84 tests on Python 3.12.16 and 84 on 3.13.5. Coverage includes migration rollback, native binary replacement, nonregular executable refusal, truncated-secrets handling and bounded read-only timeout cleanup. |
+| `pip_audit --no-deps --disable-pip -r /tmp/bm-i8-audit-all-targets.txt --format json` | 0 | Audited all 11 pins by including the Python 3.12-only typing-extensions entry. Report SHA-256 `d5fd563d249ce01f4145c15640175ad39b7444723b712d9ff35dd7783f83cb67`. |
+| `/tmp/bm-i8-py312/bin/python tests/experiments/linux_i7_operations.py` | 0 | Final wheel repository inspection, retention failure isolation, recovery, notifications and operator endpoints in disposable scopes. |
+| `/tmp/bm-dev/bin/python tools/run_linux_regressions.py scoped --output /tmp/bm-i8-scoped` | 0 | All 12 fixtures passed on Python 3.13.5. This build preceded the final read-only cleanup change, which was tested on the final wheel by the timeout unit injection on both interpreters and the I7 integration on Python 3.12. |
+| `/tmp/bm-i8-py313-final/bin/python tests/experiments/linux_scoped_restic.py` | 0 | Final Python 3.13 wheel exercised certified backup and copy. The replaced executable was refused before launch and recorded terminally with no launch receipt. |
+
+The I8 local gate passed on Linux 6.12.101 x86-64. The hosted workflows were
+parsed locally. GitHub-hosted and dedicated self-hosted workflow executions,
+an aarch64 Restic profile, and the full acceptance evidence matrix remain
+release verification work. I9 release acceptance has not been signed off.

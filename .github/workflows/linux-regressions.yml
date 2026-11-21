@@ -1,0 +1,62 @@
+name: Linux safety regressions
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  scoped:
+    if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    runs-on: [self-hosted, linux, x64, backup-manager-disposable]
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m pip install -r requirements-dev.lock
+      - run: python tools/validate_handoff.py
+      - run: python -m build --no-isolation
+      - id: wheel
+        run: python -m pip install --no-deps dist/*.whl
+      - id: fingerprint
+        run: test "$(sha256sum "$(command -v restic)" | cut -d' ' -f1)" = 7135345e471b64fe43356f8cc665d33d9e52fb042ba39e5cff77310c46d46857
+      - run: python tools/certify_restic.py --report restic-certification.json
+      - if: ${{ !cancelled() && steps.fingerprint.outcome == 'success' }}
+        run: python tools/run_linux_regressions.py scoped --output scoped-results
+      - if: ${{ !cancelled() && steps.wheel.outcome == 'success' }}
+        run: python tools/run_linux_regressions.py namespace --output namespace-results
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-regression-results
+          path: |
+            restic-certification.json
+            scoped-results/
+            namespace-results/
+          if-no-files-found: error
+  loop:
+    if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    runs-on: [self-hosted, linux, x64, backup-manager-disposable-loop]
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test ext4 acquisition, release and external preservation
+        shell: bash
+        run: |
+          set -o pipefail
+          docker run --rm --pull=never --network none \
+            --cap-add SYS_ADMIN --cap-add MKNOD \
+            --device-cgroup-rule 'c 10:237 rwm' --device-cgroup-rule 'b 7:* rwm' \
+            --security-opt apparmor=unconfined \
+            --mount "type=bind,src=${GITHUB_WORKSPACE},dst=/fixture,readonly" \
+            -e BACKUP_MANAGER_DISPOSABLE_LOOP_FIXTURE=1 \
+            -e PYTHONPATH=/fixture/src -e PYTHONDONTWRITEBYTECODE=1 \
+            backup-manager-disposable-loop-test:latest \
+            sh -c 'mknod /dev/loop-control c 10 237 && python /fixture/tests/experiments/linux_loop_lifecycle.py' \
+            2>&1 | tee loop-lifecycle.log
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: loop-device-regression
+          path: loop-lifecycle.log
+          if-no-files-found: error

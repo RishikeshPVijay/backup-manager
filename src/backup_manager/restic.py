@@ -9,6 +9,7 @@ import os
 from pathlib import Path
 import re
 import shutil
+import stat
 
 HEX_ID = re.compile(r"[0-9a-f]{64}")
 CHUNKER = re.compile(r"[0-9a-f]{1,16}")
@@ -41,7 +42,10 @@ class Binary:
             raise ResticUnsupported("The configured Restic executable is unavailable.")
         try:
             path = Path(candidate).resolve(strict=True)
-            with path.open("rb") as stream:
+            descriptor = os.open(path, os.O_RDONLY | os.O_CLOEXEC | os.O_NOFOLLOW | os.O_NONBLOCK)
+            with os.fdopen(descriptor, "rb") as stream:
+                if not stat.S_ISREG(os.fstat(descriptor).st_mode):
+                    raise ValueError("Expected a regular executable file.")
                 return cls(path, hashlib.file_digest(stream, "sha256").hexdigest())
         except (OSError, ValueError):
             raise ResticUnsupported("The configured Restic executable could not be fingerprinted.") from None
@@ -86,6 +90,7 @@ class Repository:
 class Invocation:
     argv: tuple[str, ...]
     env: dict[str, str] = field(repr=False)
+    executable_sha256: str | None = None
 
     def redacted_diagnostics(self, result):
         """Format diagnostic output without exposing known credentials."""
@@ -94,6 +99,8 @@ class Invocation:
             os.fsencode(value) for name, value in self.env.items()
             if name in {"RESTIC_PASSWORD", "RESTIC_FROM_PASSWORD"} and value
         )
+        if result.truncated and credentials:
+            return "[OUTPUT OMITTED: CAPTURE TRUNCATED]" if output else ""
         for credential in sorted(credentials, key=len, reverse=True):
             output = output.replace(credential, b"[REDACTED]")
         return output.decode(errors="replace")
@@ -105,6 +112,7 @@ def run_invocation(path, anchor, operation_id, owner_id, invocation, *, deadline
     return run_journaled(
         path, anchor, operation_id, owner_id, invocation.argv,
         deadline=deadline, env=invocation.env, authorize=authorize, cancelled=cancelled,
+        executable_sha256=invocation.executable_sha256,
     )
 
 
@@ -219,7 +227,7 @@ class Restic:
 
     @staticmethod
     def version(binary):
-        return Invocation((str(binary.path), "version"), {"PATH": os.defpath, "LC_ALL": "C"})
+        return Invocation((str(binary.path), "version"), {"PATH": os.defpath, "LC_ALL": "C"}, binary.sha256)
 
     def repository_identity(self, result):
         identity = parse_repository(result)
@@ -231,7 +239,7 @@ class Restic:
         env = {"PATH": os.defpath, "LC_ALL": "C", "RESTIC_PASSWORD": os.fsdecode(repo.password)}
         if source is not None:
             env["RESTIC_FROM_PASSWORD"] = os.fsdecode(source.password)
-        return Invocation((str(self.binary.path), "--no-cache", "--repo", str(repo.path), *args), env)
+        return Invocation((str(self.binary.path), "--no-cache", "--repo", str(repo.path), *args), env, self.binary.sha256)
 
     def identity(self, repo):
         return self._command(repo, "cat", "config")

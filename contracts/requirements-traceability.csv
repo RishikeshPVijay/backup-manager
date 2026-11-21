@@ -45,7 +45,7 @@ D43,confirmed,AT-012;AT-013;AT-014;AT-036,not_executed,linux_i7_operations.py re
 D44,confirmed,AT-012;AT-013;AT-014;AT-036,not_executed,linux_i7_operations.py refuses an incorrect expected replacement ID and accepts the verified full ID
 D45,confirmed,AT-012;AT-013;AT-014;AT-036,not_executed,linux_i5_job.py registers existing fixture repositories with explicit confirmation
 D46,confirmed,AT-012;AT-013;AT-014;AT-036,not_executed,linux_i5_job.py supplies incorrect primary credentials and verifies valid secondary backup
-D47,confirmed,AT-025;AT-035,not_executed,ProviderTests cover file mode and type enforcement and environment resolution; process and persistence secret-redaction acceptance pending
+D47,confirmed,AT-025;AT-035,not_executed,test_secret_file_permissions_symlink_and_fifo verifies file access controls; test_truncated_capture_cannot_persist_partial_known_credential discards an ambiguous stream
 D48,confirmed,AT-025;AT-035,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D49,confirmed,AT-025;AT-035,not_executed,FoundationTests.test_reports_multiple_errors_without_echoing_values asserts three distinct validation diagnostics and redaction; runtime invocation validation pending
 D50,confirmed,AT-025;AT-035,not_executed,linux_i5_job.py changes a queued job file after batch start and proves the queued run uses the original source
@@ -74,7 +74,7 @@ D72,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; r
 D73,confirmed,AT-017;AT-033;AT-034,not_executed,linux_i5_job.py uses a pre-hook to create an initially absent static configured source
 D74,confirmed,AT-017;AT-033;AT-034,not_executed,linux_i5_job.py verifies source validation is skipped after pre-hook failure
 D75,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D76,confirmed,AT-017;AT-033;AT-034,not_executed,linux_i5_job.py verifies hook secret redaction in JSON history and absence from SQLite
+D76,confirmed,AT-017;AT-033;AT-034,not_executed,test_truncated_capture_cannot_persist_partial_known_credential asserts truncated flag and safe omission; linux_i5_job.py checks complete stream credential redaction
 D77,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D78,confirmed,AT-017;AT-033;AT-034,not_executed,linux_i5_job.py verifies a hook timeout stops the scoped process and later pre-hooks still run
 D79,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
@@ -132,8 +132,8 @@ A2,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,Domain mapping is provisio
 A3,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,linux_atomic_claims.py asserts one complete ordered set and one busy outcome across two processes
 A4,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,linux_journaled_supervisor.py asserts scope verification and timed containment shutdown
 A5,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,linux_shared_storage.py asserts independent lifecycle dispatch through a scoped fixture provider
-A6,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,tools/certify_restic.py records exact version and SHA-256 plus repository formats 1 and 2; ResticTests rejects altered fingerprint or version
-A7,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,linux_scoped_restic.py uses the configured system binary through the installed fingerprint profile
+A6,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,test_exec_uses_open_verified_inode_after_path_replacement verifies the executable fd matches the certified bytes and linux_scoped_restic.py rejects a changed pathname prelaunch
+A7,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,linux_scoped_restic.py verifies the installed exact binary version and backup/copy while a replaced candidate records no launch receipt
 A8,confirmed,AT-007;AT-008;AT-009;AT-030;AT-031,not_executed,TransferStateTests verifies a failed enumeration preserves fresh provenance and linux_i6_replication.py checks the current per-repository index
 A9,confirmed,AT-007;AT-008;AT-009;AT-030;AT-031,not_executed,linux_atomic_claims.py checks cross-process exclusion and test_conflict_does_not_admit_part_of_claim_set checks same-target exclusion even with a compatible pair
 A10,confirmed,AT-007;AT-008;AT-009;AT-030;AT-031,not_executed,linux_i6_faults.py proves an unstarted failed attempt replans to a validated peer and preserves the pending requirement

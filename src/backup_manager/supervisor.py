@@ -124,13 +124,13 @@ def stop_scope(unit):
         return False
 
 
-def execute(intent, argv, *, deadline, on_launch, cwd=None, env=None, stdin_payload=None, cancelled=None, on_scope_ready=None, user=None, group=None, repository=None, source_repository=None):
+def execute(intent, argv, *, deadline, on_launch, cwd=None, env=None, stdin_payload=None, cancelled=None, on_scope_ready=None, user=None, group=None, repository=None, source_repository=None, executable_sha256=None):
     """Run after the caller commits intent. The callback must durably record the receipt."""
     unit = f"backup-manager-{UUID(intent.execution_id).hex}.scope"
     request = json.dumps({
         "argv": list(argv), "cwd": os.fspath(cwd) if cwd else None,
         "env": env, "user": user, "group": group, "repository": repository,
-        "source_repository": source_repository,
+        "source_repository": source_repository, "executable_sha256": executable_sha256,
         "stdin": base64.b64encode(stdin_payload).decode("ascii") if stdin_payload is not None else None,
     }).encode() + b"\n"
     if len(request) > REQUEST_LIMIT or monotonic() >= deadline:
@@ -195,7 +195,7 @@ def execute(intent, argv, *, deadline, on_launch, cwd=None, env=None, stdin_payl
     return return_value
 
 
-def run_journaled(path, anchor, operation_id, owner_id, argv, *, deadline, cwd=None, env=None, stdin_payload=None, authorize=None, cancelled=None, user=None, group=None, repository=None, claim_operation_id=None, source_repository=None):
+def run_journaled(path, anchor, operation_id, owner_id, argv, *, deadline, cwd=None, env=None, stdin_payload=None, authorize=None, cancelled=None, user=None, group=None, repository=None, claim_operation_id=None, source_repository=None, executable_sha256=None):
     """Run a declared operation and durably journal the supervised transitions."""
     with state_write(path, anchor, wait=5) as database:
         existing = database.execute(
@@ -221,6 +221,7 @@ def run_journaled(path, anchor, operation_id, owner_id, argv, *, deadline, cwd=N
             intent, argv, deadline=deadline, on_launch=persist, cwd=cwd, env=env,
             stdin_payload=stdin_payload, cancelled=cancelled, on_scope_ready=persist_scope,
             user=user, group=group, repository=repository, source_repository=source_repository,
+            executable_sha256=executable_sha256,
         )
     except SupervisionUncertain:
         with state_write(path, anchor, wait=5) as database:

@@ -17,7 +17,7 @@ from .job_repository import inspect_repository, registration
 from .jobs import destinations, seconds_deadline
 from .providers import discover
 from .restic import Binary, Repository, Restic, ResticEvidenceError, ResticUnsupported
-from .scope_worker import OUTPUT_LIMIT, repository_argv
+from .scope_worker import OUTPUT_LIMIT, check_executable, repository_argv
 from .secrets import SecretUnavailable
 from .state import StateUnsafe, check, checked_record, connect, state_lock
 from .storage_coordinator import StorageLease, context
@@ -38,38 +38,47 @@ def dry_run(job):
 
 
 def read_command(invocation, deadline, lock=None, binding=None):
-    with repository_argv(invocation.argv, binding) as (argv, descriptors):
+    with (
+        repository_argv(invocation.argv, binding) as (argv, descriptors),
+        check_executable(invocation.argv[0], invocation.executable_sha256) as executable,
+    ):
+        descriptors = (*descriptors, *executable.pop("pass_fds", ()))
         process = subprocess.Popen(
             argv, env=invocation.env, stdin=subprocess.DEVNULL,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, start_new_session=True,
-            pass_fds=(*descriptors, *((lock,) if lock is not None else ())),
+            pass_fds=(*descriptors, *((lock,) if lock is not None else ())), **executable,
         )
     outputs = {0: bytearray(), 1: bytearray()}
     truncated = False
-    with process:
-        try:
-            with selectors.DefaultSelector() as selector:
-                selector.register(process.stdout, selectors.EVENT_READ, 0)
-                selector.register(process.stderr, selectors.EVENT_READ, 1)
-                while selector.get_map():
-                    left = deadline - monotonic()
-                    if left <= 0:
-                        raise TimeoutError
-                    for key, _ in selector.select(min(left, 1)):
-                        chunk = os.read(key.fd, 65536)
-                        if not chunk:
-                            selector.unregister(key.fileobj)
-                            continue
-                        output = outputs[key.data]
-                        remaining = OUTPUT_LIMIT - len(output)
-                        output.extend(chunk[:remaining])
-                        truncated |= len(chunk) > remaining
-            code = process.wait(timeout=max(0, deadline - monotonic()))
-        except BaseException:
-            if process.poll() is None:
+    try:
+        with selectors.DefaultSelector() as selector:
+            selector.register(process.stdout, selectors.EVENT_READ, 0)
+            selector.register(process.stderr, selectors.EVENT_READ, 1)
+            while selector.get_map():
+                left = deadline - monotonic()
+                if left <= 0:
+                    raise TimeoutError
+                for key, _ in selector.select(min(left, 1)):
+                    chunk = os.read(key.fd, 65536)
+                    if not chunk:
+                        selector.unregister(key.fileobj)
+                        continue
+                    output = outputs[key.data]
+                    remaining = OUTPUT_LIMIT - len(output)
+                    output.extend(chunk[:remaining])
+                    truncated |= len(chunk) > remaining
+        code = process.wait(timeout=max(0, deadline - monotonic()))
+    except BaseException:
+        if process.poll() is None:
+            try:
                 os.killpg(process.pid, signal.SIGKILL)
-                process.wait(timeout=5)
-            raise
+            except ProcessLookupError:
+                pass
+            process.wait(timeout=5)
+        raise
+    finally:
+        process.stdout.close()
+        process.stderr.close()
     return ScopedResult(code, bytes(outputs[0]), bytes(outputs[1]), truncated, "read-only")
 
 
@@ -175,5 +184,5 @@ def doctor(config, timeout=None):
         return Result(data=data)
     except ResticUnsupported:
         return Result(Status.UNSUPPORTED, data, (Diagnostic("RESTIC_UNSUPPORTED", "No exact certification profile matches Restic."),))
-    except (StateUnsafe, ResticEvidenceError, OSError, TimeoutError, subprocess.TimeoutExpired):
+    except (StateUnsafe, ResticEvidenceError, OSError, ValueError, TimeoutError, subprocess.TimeoutExpired):
         return Result(Status.UNSAFE, data, (Diagnostic("DOCTOR_UNSAFE", "State or Restic verification requires attention."),))

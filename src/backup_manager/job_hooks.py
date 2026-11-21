@@ -49,6 +49,9 @@ def redact_output(result, values):
     known = sorted({value for value in values if value}, key=len, reverse=True)
 
     def clip(data):
+        if result.truncated and known:
+            # A capture boundary can split a credential before redaction.
+            return "[OUTPUT OMITTED: CAPTURE TRUNCATED]" if data else "", False
         for secret in known:
             data = data.replace(secret, b"[REDACTED]")
         return data[:HOOK_LOG_LIMIT].decode(errors="replace"), len(data) > HOOK_LOG_LIMIT

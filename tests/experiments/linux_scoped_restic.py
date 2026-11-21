@@ -3,13 +3,14 @@
 import os
 from pathlib import Path
 import secrets
+import shutil
 from tempfile import TemporaryDirectory
 from time import monotonic
 
 from backup_manager.launch_journal import register_owner
 from backup_manager.process_identity import ProcessIdentity
 from backup_manager.restic import Binary, Repository, Restic, confirm_backup, parse_snapshots, run_invocation
-from backup_manager.state import initialize, state_write
+from backup_manager.state import initialize, state_read, state_write
 
 
 def main():
@@ -29,6 +30,19 @@ def main():
             return result
 
         adapter = Restic.certified(binary, run("version", Restic.version(binary)))
+
+        copied_binary = root / "restic"
+        shutil.copy2(binary.path, copied_binary)
+        pending = Restic.version(Binary.identify(str(copied_binary)))
+        replacement = root / "replacement"
+        shutil.copy2("/usr/bin/true", replacement)
+        replacement.replace(copied_binary)
+        rejected = run_invocation(db, anchor, "replaced-binary", owner, pending, deadline=monotonic() + 20)
+        assert rejected.stop_reason == "not_started"
+        with state_read(db, anchor) as database:
+            assert database.execute(
+                "SELECT state, launched_at FROM command_executions WHERE operation_id = 'replaced-binary'"
+            ).fetchone() == ("TERMINATED", None)
         source, target = (
             Repository(root / name, secrets.token_hex(24).encode()) for name in ("source", "target")
         )
