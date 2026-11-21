@@ -1,0 +1,763 @@
+schema_version: 1
+scenarios:
+- id: AT-001
+  title: primary fallback
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - primary unavailable; secondary 1 available
+  assertions:
+  - backup receives secondary 1; primary designation remains unchanged
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-002
+  title: primary catch-up
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - primary recovers after fallback
+  assertions:
+  - primary catches up in same available replication/convergence run
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-003
+  title: divergent union
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - three repositories have distinct snapshot histories
+  assertions:
+  - all available repos contain union before retention
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-004
+  title: fixed normal source
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - Disposable isolated fixture for fixed normal source
+  assertions:
+  - Verify named behavior in fixed normal source against normative documents
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-005
+  title: same-destination copy serialization
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - two independent CLI processes copy into same repository
+  assertions:
+  - no overlapping destination copy execution
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-006
+  title: parallel different destination copy
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - Disposable isolated fixture for parallel different destination copy
+  assertions:
+  - Verify named behavior in parallel different destination copy against normative
+    documents
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-007
+  title: pending replanning
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - Disposable isolated fixture for pending replanning
+  assertions:
+  - Verify named behavior in pending replanning against normative documents
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-008
+  title: failed transfer no replacement
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - copy process launches then exits nonzero
+  assertions:
+  - no alternate source attempted for its assigned requirements
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-009
+  title: launch boundary uncertainty
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - kill manager between launch intent and launch receipt
+  assertions:
+  - uncertain launch blocks conflict; no false unstarted claim
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-010
+  title: copy verification failure
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - restic copy exit zero; destination enumeration fails
+  assertions:
+  - transfer is unverified, not successful
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-011
+  title: incomplete enumeration
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - enumeration fails midway
+  assertions:
+  - previous complete inventory not overwritten; no deletion inference
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-012
+  title: repository identity mismatch
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - Disposable isolated fixture for repository identity mismatch
+  assertions:
+  - Verify named behavior in repository identity mismatch against normative documents
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-013
+  title: credential isolation
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - Disposable isolated fixture for credential isolation
+  assertions:
+  - Verify named behavior in credential isolation against normative documents
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-014
+  title: no automatic init/unlock
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - Disposable isolated fixture for no automatic init/unlock
+  assertions:
+  - Verify named behavior in no automatic init/unlock against normative documents
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-015
+  title: retention ordering
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - Disposable isolated fixture for retention ordering
+  assertions:
+  - Verify named behavior in retention ordering against normative documents
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-016
+  title: retention independent failure
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - Disposable isolated fixture for retention independent failure
+  assertions:
+  - Verify named behavior in retention independent failure against normative documents
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-017
+  title: hook phase failure
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - first prehook fails, second succeeds
+  assertions:
+  - both attempted; no backup or post; all cleanup attempted
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-018
+  title: independent storage release outcome
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - two jobs share storage; first completes, second still running
+  assertions:
+  - first job completion independent of later release result
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-019
+  title: owner crash claim safety
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - owner SIGKILL with active child
+  assertions:
+  - claims blocked until child termination proven
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-020
+  title: corrupt DB fail-closed
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - state DB corrupted or restored old generation
+  assertions:
+  - automatic run fails closed, recovery required
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-021
+  title: external mount preservation
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - Disposable isolated fixture for external mount preservation
+  assertions:
+  - Verify named behavior in external mount preservation against normative documents
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-022
+  title: shared acquisition cancellation
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - Disposable isolated fixture for shared acquisition cancellation
+  assertions:
+  - Verify named behavior in shared acquisition cancellation against normative documents
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-023
+  title: batch precedence
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - Disposable isolated fixture for batch precedence
+  assertions:
+  - Verify named behavior in batch precedence against normative documents
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-024
+  title: strict unknown-field validation
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - Disposable isolated fixture for strict unknown-field validation
+  assertions:
+  - Verify named behavior in strict unknown-field validation against normative documents
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-025
+  title: secret redaction
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - password sentinel in secret provider
+  assertions:
+  - sentinel absent from argv, DB, logs, JSON, errors
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-026
+  title: Restic certification
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - Disposable isolated fixture for Restic certification
+  assertions:
+  - Verify named behavior in Restic certification against normative documents
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-027
+  title: unsupported Restic version
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - Disposable isolated fixture for unsupported Restic version
+  assertions:
+  - Verify named behavior in unsupported Restic version against normative documents
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-028
+  title: cancel termination uncertainty
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - Disposable isolated fixture for cancel termination uncertainty
+  assertions:
+  - Verify named behavior in cancel termination uncertainty against normative documents
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-029
+  title: no automatic retry
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - Disposable isolated fixture for no automatic retry
+  assertions:
+  - Verify named behavior in no automatic retry against normative documents
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-030
+  title: transitive lineage
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - copy A to B then B to C
+  assertions:
+  - certified lineage representation verified in C
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-031
+  title: similar metadata not equivalence
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - independently created snapshots with matching metadata
+  assertions:
+  - no false equivalence
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-032
+  title: chunker mismatch warning
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - Disposable isolated fixture for chunker mismatch warning
+  assertions:
+  - Verify named behavior in chunker mismatch warning against normative documents
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-033
+  title: required source missing
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - Disposable isolated fixture for required source missing
+  assertions:
+  - Verify named behavior in required source missing against normative documents
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-034
+  title: optional source missing
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - Disposable isolated fixture for optional source missing
+  assertions:
+  - Verify named behavior in optional source missing against normative documents
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-035
+  title: dry-run side-effect-free
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - Disposable isolated fixture for dry-run side-effect-free
+  assertions:
+  - Verify named behavior in dry-run side-effect-free against normative documents
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-036
+  title: replacement approval
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - Disposable isolated fixture for replacement approval
+  assertions:
+  - Verify named behavior in replacement approval against normative documents
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-037
+  title: launch crash fault injection
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - crash injection at every persisted launch boundary
+  assertions:
+  - no unsafe double launch or unverified success
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-038
+  title: DB migration rollback
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - Disposable isolated fixture for DB migration rollback
+  assertions:
+  - Verify named behavior in DB migration rollback against normative documents
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-039
+  title: atomic claim admission
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - two contenders request reverse-ordered repo sets
+  assertions:
+  - no deadlock, atomic all-or-none admission
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required
+- id: AT-040
+  title: preserve successful copies
+  status: not_implemented
+  required_evidence:
+  - test_command
+  - assertions
+  - observed_result
+  - log_or_report_path
+  preconditions:
+  - Disposable isolated fixture for preserve successful copies
+  assertions:
+  - Verify named behavior in preserve successful copies against normative documents
+  required_artifacts:
+  - isolated_fixture
+  - invocation_and_exit_code
+  - json_result
+  - sqlite_events
+  - cleanup_log
+  automation: required

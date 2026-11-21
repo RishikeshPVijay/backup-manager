@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "provider_id",
+    "api_version",
+    "kind",
+    "capabilities",
+    "config_schema"
+  ],
+  "properties": {
+    "provider_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$"
+    },
+    "api_version": {
+      "type": "string",
+      "pattern": "^1\\.[0-9]+\\.[0-9]+$"
+    },
+    "kind": {
+      "enum": [
+        "storage",
+        "secrets"
+      ]
+    },
+    "capabilities": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "config_schema": {
+      "type": "object"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+schema_version = 1
+[job]
+id = "immich"
+enabled = true
+[[sources]]
+path = "/srv/immich/library"
+required = true
+[destinations.primary]
+storage = "hdd1"
+repository = "/mnt/backups/hdd1/immich"
+[destinations.primary.password]
+provider = "file"
+path = "/etc/backup-manager/secrets/immich-restic-password"
+[[destinations.secondary]]
+id = "replica"
+storage = "hdd1"
+repository = "/mnt/backups/hdd1/immich-replica"
+[destinations.secondary.password]
+provider = "environment"
+variable = "IMMICH_REPLICA_PASSWORD"
+[retention]
+keep_daily = 7
+keep_weekly = 4
+keep_monthly = 12

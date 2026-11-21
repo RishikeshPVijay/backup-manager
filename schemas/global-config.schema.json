@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://backup-manager.local/schemas/global-v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "state",
+    "storage"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^/"
+        }
+      }
+    },
+    "restic": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "executable": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_jobs": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "job_timeout_seconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "operation_timeout_seconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "cleanup_timeout_seconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "release_timeout_seconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "acquire_timeout_seconds": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "logging": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "level": {
+          "enum": [
+            "DEBUG",
+            "INFO",
+            "WARNING",
+            "ERROR"
+          ]
+        },
+        "history_days": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "storage": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "provider",
+          "lifecycle",
+          "config"
+        ],
+        "properties": {
+          "provider": {
+            "type": "string",
+            "minLength": 1
+          },
+          "lifecycle": {
+            "enum": [
+              "always_on",
+              "on_demand"
+            ]
+          },
+          "coordination_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "config": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}

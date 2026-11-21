@@ -1,0 +1,15 @@
+schema_version = 1
+[job]
+id = "documents"
+enabled = true
+[[sources]]
+path = "/srv/documents"
+[destinations.primary]
+storage = "hdd1"
+repository = "/mnt/backups/hdd1/documents"
+[destinations.primary.password]
+provider = "file"
+path = "/etc/backup-manager/secrets/documents-password"
+[retention]
+keep_daily = 14
+keep_monthly = 6

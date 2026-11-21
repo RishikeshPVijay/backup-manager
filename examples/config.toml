@@ -1,0 +1,18 @@
+schema_version = 1
+[state]
+path = "/var/lib/backup-manager/state.sqlite3"
+[restic]
+executable = "restic"
+[execution]
+max_jobs = 2
+job_timeout_seconds = 14400
+operation_timeout_seconds = 7200
+cleanup_timeout_seconds = 300
+release_timeout_seconds = 120
+acquire_timeout_seconds = 120
+[storage.hdd1]
+provider = "linux_filesystem"
+lifecycle = "on_demand"
+[storage.hdd1.config]
+filesystem_uuid = "REPLACE-WITH-UUID"
+mountpoint = "/mnt/backups/hdd1"
