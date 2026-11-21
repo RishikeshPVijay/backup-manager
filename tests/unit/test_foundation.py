@@ -1,0 +1,97 @@
+import json
+from pathlib import Path
+import shutil
+import subprocess
+import sys
+from tempfile import TemporaryDirectory
+import unittest
+
+from backup_manager.config import load_global, load_job, validator
+
+
+EXAMPLES = Path(__file__).resolve().parents[2] / "examples"
+
+
+class FoundationTests(unittest.TestCase):
+    def setUp(self):
+        temporary = TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        self.root = Path(temporary.name)
+        self.global_path = self.root / "config.toml"
+        self.jobs = self.root / "jobs"
+        self.jobs.mkdir()
+        self.job_path = self.jobs / "immich.toml"
+        shutil.copyfile(EXAMPLES / "config.toml", self.global_path)
+        shutil.copyfile(EXAMPLES / "immich.toml", self.job_path)
+
+    def cli(self, *args, exit_code):
+        process = subprocess.run(
+            [sys.executable, "-m", "backup_manager.cli", "--json",
+             "--config", str(self.global_path), *args],
+            capture_output=True, text=True, check=False, timeout=10,
+        )
+        self.assertEqual(process.returncode, exit_code, process.stderr)
+        self.assertEqual(process.stderr, "")
+        payload = json.loads(process.stdout)
+        validator("cli-result").validate(payload)
+        return payload
+
+    def test_valid_examples_and_no_storage_access(self):
+        files_before = set(self.root.rglob("*"))
+        payload = self.cli("config", "validate", "--all", exit_code=0)
+        self.assertEqual(payload["status"], "full")
+        self.assertEqual(set(self.root.rglob("*")), files_before)
+
+    def test_reports_multiple_errors_without_echoing_values(self):
+        original = self.job_path.read_text()
+        changed = original.replace('id = "immich"', 'id = "immich"\npassword = "SENTINEL"')
+        changed = changed.replace('keep_daily = 7', 'keep_daily = false')
+        changed = changed.replace('path = "/srv/immich/library"', 'path = "relative"')
+        self.job_path.write_text(changed)
+        payload = self.cli("config", "validate", "--job", "immich", exit_code=4)
+        self.assertEqual(
+            {item["context"]["field"] for item in payload["errors"]},
+            {"job", "retention.keep_daily", "sources.0.path"},
+        )
+        self.assertNotIn("SENTINEL", json.dumps(payload))
+
+    def test_malformed_toml_does_not_echo_content(self):
+        self.job_path.write_text("password = SENTINEL")
+        payload = self.cli("config", "validate", "--all", exit_code=4)
+        self.assertEqual(payload["errors"][0]["code"], "CONFIG_READ")
+        self.assertNotIn("SENTINEL", json.dumps(payload))
+
+    def test_destinations_unique_and_reject_traversal(self):
+        changed = self.job_path.read_text().replace('id = "replica"', 'id = "primary"')
+        self.job_path.write_text(changed.replace("immich-replica", "immich/../immich"))
+        payload = self.cli("config", "validate", "--all", exit_code=4)
+        self.assertEqual(
+            {item["code"] for item in payload["errors"]},
+            {"DUPLICATE_DESTINATION", "REPOSITORY_PATH"},
+        )
+
+    def test_snapshot_is_immutable_and_independent_of_disk(self):
+        document = load_job(self.job_path, load_global(self.global_path))
+        self.assertEqual(document.errors, ())
+        self.job_path.write_text("")
+        self.assertEqual(document.data["job"]["id"], "immich")
+        with self.assertRaises(TypeError):
+            document.data["sources"][0]["path"] = "/other"
+
+    def test_invalid_flag_combinations(self):
+        for args in (
+            ("batch", "run"), ("batch", "run", "--all", "immich"),
+            ("job", "run", "immich", "--dry-run", "--preflight"),
+            ("history", "list", "--limit", "1001"),
+        ):
+            with self.subTest(args=args):
+                self.assertEqual(self.cli(*args, exit_code=4)["status"], "invalid")
+
+    def test_unimplemented_mutation_fails_without_side_effects(self):
+        files_before = set(self.root.rglob("*"))
+        payload = self.cli("repository", "init", "immich", "primary", "--yes", exit_code=7)
+        self.assertEqual(payload["status"], "unsupported")
+        self.assertEqual(set(self.root.rglob("*")), files_before)
+
+    def test_version(self):
+        self.assertEqual(self.cli("version", exit_code=0)["data"]["version"], "0.1.0")

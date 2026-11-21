@@ -10,7 +10,8 @@
   ],
   "properties": {
     "schema_version": {
-      "const": 1
+      "const": 1,
+      "type": "integer"
     },
     "state": {
       "type": "object",
@@ -113,6 +114,9 @@
             "type": "object"
           }
         }
+      },
+      "propertyNames": {
+        "pattern": "^[a-z][a-z0-9_-]{0,63}$"
       }
     }
   }

@@ -12,7 +12,8 @@
   ],
   "properties": {
     "schema_version": {
-      "const": 1
+      "const": 1,
+      "type": "integer"
     },
     "job": {
       "type": "object",
@@ -23,7 +24,7 @@
       "properties": {
         "id": {
           "type": "string",
-          "minLength": 1
+          "pattern": "^[a-z][a-z0-9_-]{0,63}$"
         },
         "enabled": {
           "type": "boolean"
@@ -68,15 +69,16 @@
           "properties": {
             "id": {
               "type": "string",
-              "minLength": 1
+              "pattern": "^[a-z][a-z0-9_-]{0,63}$"
             },
             "storage": {
               "type": "string",
-              "minLength": 1
+              "pattern": "^[a-z][a-z0-9_-]{0,63}$"
             },
             "repository": {
               "type": "string",
-              "minLength": 1
+              "minLength": 1,
+              "pattern": "^/"
             },
             "password": {
               "type": "object",
@@ -156,15 +158,16 @@
                 "properties": {
                   "id": {
                     "type": "string",
-                    "minLength": 1
+                    "pattern": "^[a-z][a-z0-9_-]{0,63}$"
                   },
                   "storage": {
                     "type": "string",
-                    "minLength": 1
+                    "pattern": "^[a-z][a-z0-9_-]{0,63}$"
                   },
                   "repository": {
                     "type": "string",
-                    "minLength": 1
+                    "minLength": 1,
+                    "pattern": "^/"
                   },
                   "password": {
                     "type": "object",
@@ -358,6 +361,20 @@
             }
           }
         }
+      }
+    },
+    "excludes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
       }
     }
   }
