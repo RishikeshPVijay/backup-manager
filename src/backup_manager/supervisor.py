@@ -92,10 +92,13 @@ def stop_scope(unit):
         return False
 
 
-def execute(intent, argv, *, deadline, on_launch, cwd=None, env=None):
+def execute(intent, argv, *, deadline, on_launch, cwd=None, env=None, stdin_payload=None):
     """Run after the caller commits intent. The callback must durably record the receipt."""
     unit = f"backup-manager-{UUID(intent.execution_id).hex}.scope"
-    request = json.dumps({"argv": list(argv), "cwd": os.fspath(cwd) if cwd else None}).encode() + b"\n"
+    request = json.dumps({
+        "argv": list(argv), "cwd": os.fspath(cwd) if cwd else None,
+        "stdin": base64.b64encode(stdin_payload).decode("ascii") if stdin_payload is not None else None,
+    }).encode() + b"\n"
     if len(request) > REQUEST_LIMIT or monotonic() >= deadline:
         raise SupervisionUncertain("Command request is too long or its deadline has expired.")
     try:
@@ -143,17 +146,23 @@ def execute(intent, argv, *, deadline, on_launch, cwd=None, env=None):
     return return_value
 
 
-def run_journaled(path, anchor, operation_id, owner_id, argv, *, deadline, cwd=None, env=None):
+def run_journaled(path, anchor, operation_id, owner_id, argv, *, deadline, cwd=None, env=None, stdin_payload=None, authorize=None):
     """Run a declared operation and durably journal the supervised transitions."""
     with state_write(path, anchor) as database:
-        intent = record_intent(database, operation_id, owner_id)
+        authorized = authorize is None or authorize(database)
+        intent = record_intent(database, operation_id, owner_id) if authorized else None
+    if intent is None:
+        raise SupervisionUncertain("The operation no longer authorizes launch.")
 
     def persist(receipt):
         with state_write(path, anchor) as database:
             record_launched(database, intent, receipt)
 
     try:
-        result = execute(intent, argv, deadline=deadline, on_launch=persist, cwd=cwd, env=env)
+        result = execute(
+            intent, argv, deadline=deadline, on_launch=persist, cwd=cwd, env=env,
+            stdin_payload=stdin_payload,
+        )
     except SupervisionUncertain:
         with state_write(path, anchor) as database:
             fence_uncertain(database, intent)

@@ -1,5 +1,6 @@
 """Internal scoped worker. It waits for its supervisor before executing a command."""
 
+from contextlib import contextmanager
 from dataclasses import asdict
 import base64
 import json
@@ -37,6 +38,19 @@ def capture(process):
     return outputs, truncated
 
 
+@contextmanager
+def child_input(encoded):
+    if encoded is None:
+        yield subprocess.DEVNULL
+        return
+    payload = base64.b64decode(encoded, validate=True)
+    descriptor = os.memfd_create("backup-manager-worker-input", os.MFD_CLOEXEC)
+    with os.fdopen(descriptor, "w+b") as stream:
+        stream.write(payload)
+        stream.seek(0)
+        yield stream
+
+
 def main():
     reply({"worker": asdict(ProcessIdentity.capture(os.getpid()))})
     request = sys.stdin.buffer.readline(REQUEST_LIMIT + 1)
@@ -44,10 +58,13 @@ def main():
         return 1
     try:
         data = json.loads(request)
-        with subprocess.Popen(
-            data["argv"], cwd=data["cwd"], stdin=subprocess.DEVNULL,
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-        ) as command:
+        with (
+            child_input(data.get("stdin")) as command_input,
+            subprocess.Popen(
+                data["argv"], cwd=data["cwd"], stdin=command_input,
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE, start_new_session=True,
+            ) as command,
+        ):
             reply({"process": asdict(ProcessIdentity.capture(command.pid))})
             outputs, truncated = capture(command)
             reply({

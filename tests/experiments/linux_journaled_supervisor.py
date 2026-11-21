@@ -25,6 +25,12 @@ def main():
         initialize(db, anchor)
         with state_write(db, anchor) as database:
             owner = register_owner(database, ProcessIdentity.capture(os.getpid()), "fixture-supervisor")
+        received = run_journaled(
+            db, anchor, "stdin", owner,
+            (sys.executable, "-c", "import sys; sys.stdout.buffer.write(sys.stdin.buffer.read())"),
+            deadline=monotonic() + 10, stdin_payload=b"disposable worker payload",
+        )
+        assert received.exit_code == 0 and received.stdout == b"disposable worker payload"
         marker = root / "child.identity"
         script = """
 from dataclasses import asdict
@@ -55,7 +61,7 @@ print("fixture output")
             rows = database.execute(
                 "SELECT operation_id, state, exit_code FROM command_executions ORDER BY operation_id",
             ).fetchall()
-        assert rows == [("success", "TERMINATED", 0), ("timeout", "LAUNCH_UNCERTAIN", None)]
+        assert rows == [("stdin", "TERMINATED", 0), ("success", "TERMINATED", 0), ("timeout", "LAUNCH_UNCERTAIN", None)]
     print("Installed-wheel scope, detached descendant, durable receipt and timeout passed.")
 
 

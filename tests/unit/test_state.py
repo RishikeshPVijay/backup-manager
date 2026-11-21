@@ -109,3 +109,15 @@ with state_write(*(Path(item) for item in sys.argv[1:])):
         self.assertEqual(json.loads(self.anchor.read_text())["generation"], 2)
         with self.assertRaises(StateUnsafe):
             check(self.path, self.anchor)
+
+    def test_failed_initial_migration_leaves_no_admissible_instance(self):
+        from unittest.mock import patch
+
+        with patch("backup_manager.state.migration", return_value=("CREATE TABLE incomplete(x); INVALID SQL;", "broken")):
+            with self.assertRaises(StateUnsafe):
+                initialize(self.path, self.anchor)
+        self.assertFalse(self.anchor.exists())
+        with closing(sqlite3.connect(self.path)) as database:
+            self.assertEqual(database.execute("SELECT name FROM sqlite_master").fetchall(), [])
+        with self.assertRaises(StateUnsafe):
+            check(self.path, self.anchor)
