@@ -81,65 +81,7 @@
               "pattern": "^/"
             },
             "password": {
-              "type": "object",
-              "required": [
-                "provider"
-              ],
-              "properties": {
-                "provider": {
-                  "enum": [
-                    "file",
-                    "environment"
-                  ]
-                },
-                "path": {
-                  "type": "string"
-                },
-                "variable": {
-                  "type": "string"
-                }
-              },
-              "additionalProperties": false,
-              "allOf": [
-                {
-                  "if": {
-                    "properties": {
-                      "provider": {
-                        "const": "file"
-                      }
-                    }
-                  },
-                  "then": {
-                    "required": [
-                      "path"
-                    ],
-                    "not": {
-                      "required": [
-                        "variable"
-                      ]
-                    }
-                  }
-                },
-                {
-                  "if": {
-                    "properties": {
-                      "provider": {
-                        "const": "environment"
-                      }
-                    }
-                  },
-                  "then": {
-                    "required": [
-                      "variable"
-                    ],
-                    "not": {
-                      "required": [
-                        "path"
-                      ]
-                    }
-                  }
-                }
-              ]
+              "$ref": "#/$defs/secretReference"
             }
           }
         },
@@ -170,65 +112,7 @@
                     "pattern": "^/"
                   },
                   "password": {
-                    "type": "object",
-                    "required": [
-                      "provider"
-                    ],
-                    "properties": {
-                      "provider": {
-                        "enum": [
-                          "file",
-                          "environment"
-                        ]
-                      },
-                      "path": {
-                        "type": "string"
-                      },
-                      "variable": {
-                        "type": "string"
-                      }
-                    },
-                    "additionalProperties": false,
-                    "allOf": [
-                      {
-                        "if": {
-                          "properties": {
-                            "provider": {
-                              "const": "file"
-                            }
-                          }
-                        },
-                        "then": {
-                          "required": [
-                            "path"
-                          ],
-                          "not": {
-                            "required": [
-                              "variable"
-                            ]
-                          }
-                        }
-                      },
-                      {
-                        "if": {
-                          "properties": {
-                            "provider": {
-                              "const": "environment"
-                            }
-                          }
-                        },
-                        "then": {
-                          "required": [
-                            "variable"
-                          ],
-                          "not": {
-                            "required": [
-                              "path"
-                            ]
-                          }
-                        }
-                      }
-                    ]
+                    "$ref": "#/$defs/secretReference"
                   }
                 }
               },
@@ -323,7 +207,8 @@
             ],
             "properties": {
               "executable": {
-                "type": "string"
+                "type": "string",
+                "minLength": 1
               },
               "args": {
                 "type": "array",
@@ -332,11 +217,54 @@
                 }
               },
               "cwd": {
-                "type": "string"
+                "type": "string",
+                "pattern": "^/"
               },
               "timeout_seconds": {
                 "type": "integer",
                 "minimum": 1
+              },
+              "env": {
+                "type": "object",
+                "propertyNames": {
+                  "pattern": "^(?!BACKUP_MANAGER_)[A-Za-z_][A-Za-z0-9_]*$"
+                },
+                "additionalProperties": {
+                  "type": "string"
+                }
+              },
+              "secrets": {
+                "type": "object",
+                "propertyNames": {
+                  "pattern": "^(?!BACKUP_MANAGER_)[A-Za-z_][A-Za-z0-9_]*$"
+                },
+                "additionalProperties": {
+                  "$ref": "#/$defs/secretReference"
+                }
+              },
+              "user": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                ]
+              },
+              "group": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                ]
               }
             }
           }
@@ -351,7 +279,8 @@
             ],
             "properties": {
               "executable": {
-                "type": "string"
+                "type": "string",
+                "minLength": 1
               },
               "args": {
                 "type": "array",
@@ -360,11 +289,54 @@
                 }
               },
               "cwd": {
-                "type": "string"
+                "type": "string",
+                "pattern": "^/"
               },
               "timeout_seconds": {
                 "type": "integer",
                 "minimum": 1
+              },
+              "env": {
+                "type": "object",
+                "propertyNames": {
+                  "pattern": "^(?!BACKUP_MANAGER_)[A-Za-z_][A-Za-z0-9_]*$"
+                },
+                "additionalProperties": {
+                  "type": "string"
+                }
+              },
+              "secrets": {
+                "type": "object",
+                "propertyNames": {
+                  "pattern": "^(?!BACKUP_MANAGER_)[A-Za-z_][A-Za-z0-9_]*$"
+                },
+                "additionalProperties": {
+                  "$ref": "#/$defs/secretReference"
+                }
+              },
+              "user": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                ]
+              },
+              "group": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                ]
               }
             }
           }
@@ -379,7 +351,8 @@
             ],
             "properties": {
               "executable": {
-                "type": "string"
+                "type": "string",
+                "minLength": 1
               },
               "args": {
                 "type": "array",
@@ -388,11 +361,54 @@
                 }
               },
               "cwd": {
-                "type": "string"
+                "type": "string",
+                "pattern": "^/"
               },
               "timeout_seconds": {
                 "type": "integer",
                 "minimum": 1
+              },
+              "env": {
+                "type": "object",
+                "propertyNames": {
+                  "pattern": "^(?!BACKUP_MANAGER_)[A-Za-z_][A-Za-z0-9_]*$"
+                },
+                "additionalProperties": {
+                  "type": "string"
+                }
+              },
+              "secrets": {
+                "type": "object",
+                "propertyNames": {
+                  "pattern": "^(?!BACKUP_MANAGER_)[A-Za-z_][A-Za-z0-9_]*$"
+                },
+                "additionalProperties": {
+                  "$ref": "#/$defs/secretReference"
+                }
+              },
+              "user": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                ]
+              },
+              "group": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                ]
               }
             }
           }
@@ -426,6 +442,71 @@
           "minimum": 1
         }
       }
+    }
+  },
+  "$defs": {
+    "secretReference": {
+      "type": "object",
+      "required": [
+        "provider"
+      ],
+      "properties": {
+        "provider": {
+          "enum": [
+            "file",
+            "environment"
+          ]
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^/"
+        },
+        "variable": {
+          "type": "string",
+          "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "provider": {
+                "const": "file"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "path"
+            ],
+            "not": {
+              "required": [
+                "variable"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "provider": {
+                "const": "environment"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "variable"
+            ],
+            "not": {
+              "required": [
+                "path"
+              ]
+            }
+          }
+        }
+      ]
     }
   }
 }

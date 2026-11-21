@@ -86,7 +86,7 @@ def sync_directory(path):
         os.close(directory)
 
 
-MIGRATIONS = ("001_initial.sql", "002_coordination_indexes.sql")
+MIGRATIONS = ("001_initial.sql", "002_coordination_indexes.sql", "003_job_execution.sql")
 
 
 def migration(name):

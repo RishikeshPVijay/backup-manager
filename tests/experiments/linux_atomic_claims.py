@@ -36,7 +36,7 @@ def main():
         initialize(db, anchor)
         with state_write(db, anchor) as database:
             database.executemany(
-                "INSERT INTO repository_registrations VALUES (?, 'job', ?, ?, 1, 'time')",
+                "INSERT INTO repository_registrations (repository_key, job_id, destination_id, restic_repository_id, repo_generation, approved_at) VALUES (?, 'job', ?, ?, 1, 'time')",
                 [(name, name, f"id-{name}") for name in "ab"],
             )
         gate = root / "gate"

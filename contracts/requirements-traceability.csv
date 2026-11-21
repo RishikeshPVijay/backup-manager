@@ -3,34 +3,34 @@ D1,confirmed,AT-012;AT-014;AT-024,not_executed,Domain mapping is provisional; re
 D2,confirmed,AT-012;AT-014;AT-024,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D3,confirmed,AT-012;AT-014;AT-024,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D4,confirmed,AT-012;AT-014;AT-024,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D5,confirmed,AT-012;AT-014;AT-024,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D5,confirmed,AT-012;AT-014;AT-024,not_executed,linux_i5_job.py verifies registered identity and storage path before selecting a backup destination
 D6,confirmed,AT-012;AT-014;AT-024,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D7,confirmed,AT-012;AT-014;AT-024,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D8,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D9,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D8,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,linux_i5_job.py isolates incorrect primary credentials and selects the second configured repository
+D9,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,linux_i5_job.py verifies the first usable secondary receives backup while a later registered secondary remains empty
 D10,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D11,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D12,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D13,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D14,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,identity-json-lineage certifies successful summary and fresh new snapshot with expected paths and rejects a skipped requested source
+D13,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,linux_i5_job.py proves Restic exit 3 leaves the backup failed and never switches the selected repository
+D14,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,linux_i5_job.py verifies successful live backup and history snapshot ID; I4 certifies strict expected-path evidence
 D15,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D16,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D17,confirmed,AT-015;AT-016;AT-018,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D18,confirmed,AT-015;AT-016;AT-018,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D17,confirmed,AT-015;AT-016;AT-018,not_executed,linux_i5_job.py verifies failed pre-hook suppresses backup and later pre-hook still runs
+D18,confirmed,AT-015;AT-016;AT-018,not_executed,linux_i5_job.py asserts ordered pre-hook markers even after failure and confirmed timeout
 D19,confirmed,AT-015;AT-016;AT-018,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D20,confirmed,AT-015;AT-016;AT-018,not_executed,linux_shared_storage.py asserts release after final claimant and independent dispatcher completion
 D21,confirmed,AT-015;AT-016;AT-018,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D22,confirmed,AT-015;AT-016;AT-018,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D23,confirmed,AT-015;AT-016;AT-018,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D24,confirmed,AT-015;AT-016;AT-018,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D25,confirmed,AT-019;AT-023;AT-029,not_executed,linux_crash_fencing.py asserts SIGKILL leaves live scope claims fenced and later recovers only after termination
-D26,confirmed,AT-019;AT-023;AT-029,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D27,confirmed,AT-019;AT-023;AT-029,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D28,confirmed,AT-019;AT-023;AT-029,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D29,confirmed,AT-019;AT-023;AT-029,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D25,confirmed,AT-019;AT-023;AT-029,not_executed,linux_i5_job.py uses SIGKILL to verify admission remains fenced until scope termination and later run has a new ID
+D26,confirmed,AT-019;AT-023;AT-029,not_executed,linux_i5_job.py asserts same-job overlap returns exit 5
+D27,confirmed,AT-019;AT-023;AT-029,not_executed,linux_i5_job.py observes two different active jobs in a batch when two slots are configured
+D28,confirmed,AT-019;AT-023;AT-029,not_executed,linux_i5_job.py asserts global saturation returns exit 5 for another individual job
+D29,confirmed,AT-019;AT-023;AT-029,not_executed,linux_i5_job.py exercises individual rejection and frozen jobs queued with a single batch slot
 D30,confirmed,AT-019;AT-023;AT-029,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D31,confirmed,AT-019;AT-023;AT-029,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D32,confirmed,AT-019;AT-023;AT-029,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D31,confirmed,AT-019;AT-023;AT-029,not_executed,linux_i5_job.py asserts invalid batch TOML does not prevent both valid jobs succeeding
+D32,confirmed,AT-019;AT-023;AT-029,not_executed,linux_i5_job.py asserts aggregate exit 3 for a batch containing invalid and successful jobs
 D33,confirmed,AT-019;AT-023;AT-029,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D34,confirmed,AT-019;AT-023;AT-029,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D35,confirmed,AT-019;AT-023;AT-029,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
@@ -42,41 +42,41 @@ D40,confirmed,AT-012;AT-013;AT-014;AT-036,not_executed,Domain mapping is provisi
 D41,confirmed,AT-012;AT-013;AT-014;AT-036,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D42,confirmed,AT-012;AT-013;AT-014;AT-036,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D43,confirmed,AT-012;AT-013;AT-014;AT-036,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D44,confirmed,AT-012;AT-013;AT-014;AT-036,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D45,confirmed,AT-012;AT-013;AT-014;AT-036,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D46,confirmed,AT-012;AT-013;AT-014;AT-036,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D44,confirmed,AT-012;AT-013;AT-014;AT-036,not_executed,linux_i5_job.py replaces the disposable primary with another valid repository and verifies identity mismatch without writing it
+D45,confirmed,AT-012;AT-013;AT-014;AT-036,not_executed,linux_i5_job.py registers existing fixture repositories with explicit confirmation
+D46,confirmed,AT-012;AT-013;AT-014;AT-036,not_executed,linux_i5_job.py supplies incorrect primary credentials and verifies valid secondary backup
 D47,confirmed,AT-025;AT-035,not_executed,ProviderTests cover file mode and type enforcement and environment resolution; process and persistence secret-redaction acceptance pending
 D48,confirmed,AT-025;AT-035,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D49,confirmed,AT-025;AT-035,not_executed,FoundationTests.test_reports_multiple_errors_without_echoing_values asserts three distinct validation diagnostics and redaction; runtime invocation validation pending
-D50,confirmed,AT-025;AT-035,not_executed,FoundationTests.test_snapshot_is_immutable_and_independent_of_disk asserts nested immutability and disk independence; batch scheduling assertion pending
+D50,confirmed,AT-025;AT-035,not_executed,linux_i5_job.py changes a queued job file after batch start and proves the queued run uses the original source
 D51,confirmed,AT-025;AT-035,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D52,confirmed,AT-025;AT-035,not_executed,FoundationTests.test_confirmed_timeout_and_retention_configuration validates the confirmed configuration; runtime assertion pending
-D53,confirmed,AT-025;AT-035,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D52,confirmed,AT-025;AT-035,not_executed,JobHistoryTests.test_retention_age_or_count_is_per_job asserts age and count independently remove only the affected job history
+D53,confirmed,AT-025;AT-035,not_executed,linux_i5_job.py asserts history show returns redacted typed hook outcomes and a finished run
 D54,confirmed,AT-025;AT-035,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D55,confirmed,AT-025;AT-035,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D55,confirmed,AT-025;AT-035,not_executed,linux_i5_job.py requests cancellation by run ID while a hook is active and asserts bounded cleanup and exit 6
 D56,confirmed,AT-025;AT-035,not_executed,FoundationTests.test_confirmed_timeout_and_retention_configuration validates the confirmed configuration; runtime assertion pending
 D57,confirmed,AT-025;AT-035,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D58,confirmed,AT-025;AT-035,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D59,confirmed,AT-025;AT-035,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D60,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D60,confirmed,AT-017;AT-033;AT-034,not_executed,linux_i5_job.py verifies an optional source can be skipped while a required source aborts backup
 D61,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D62,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D63,confirmed,AT-017;AT-033;AT-034,not_executed,identity-json-lineage observes real exit 3 on unreadable source and rejects it as a successful backup
+D62,confirmed,AT-017;AT-033;AT-034,not_executed,linux_i5_job.py verifies an all-missing optional source set cannot create a snapshot
+D63,confirmed,AT-017;AT-033;AT-034,not_executed,linux_i5_job.py observes Restic exit 3 on an unreadable source and preserves failed outcome without fallback
 D64,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D65,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D66,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D67,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D68,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D69,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D70,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D70,confirmed,AT-017;AT-033;AT-034,not_executed,linux_i5_job.py checks cleanup ordering after failed preparation and cancelled work
 D71,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D72,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D73,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D74,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D73,confirmed,AT-017;AT-033;AT-034,not_executed,linux_i5_job.py uses a pre-hook to create an initially absent static configured source
+D74,confirmed,AT-017;AT-033;AT-034,not_executed,linux_i5_job.py verifies source validation is skipped after pre-hook failure
 D75,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D76,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D76,confirmed,AT-017;AT-033;AT-034,not_executed,linux_i5_job.py verifies hook secret redaction in JSON history and absence from SQLite
 D77,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D78,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D78,confirmed,AT-017;AT-033;AT-034,not_executed,linux_i5_job.py verifies a hook timeout stops the scoped process and later pre-hooks still run
 D79,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D80,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D81,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
@@ -125,7 +125,7 @@ L1,confirmed,AT-017;AT-018;AT-021;AT-022,not_executed,Domain mapping is provisio
 L2,confirmed,AT-017;AT-018;AT-021;AT-022,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 L3,confirmed,AT-017;AT-018;AT-021;AT-022,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 L4,confirmed,AT-017;AT-018;AT-021;AT-022,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-L5,confirmed,AT-017;AT-018;AT-021;AT-022,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+L5,confirmed,AT-017;AT-018;AT-021;AT-022,not_executed,linux_i5_job.py asserts no source validation phase exists after a failed pre-hook
 L6,confirmed,AT-017;AT-018;AT-021;AT-022,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 A1,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 A2,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release

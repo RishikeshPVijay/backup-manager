@@ -29,3 +29,13 @@ A job may specify `timeouts.job_timeout_seconds` and `timeouts.operation_timeout
 `retention.prune` is a boolean and defaults to false. A policy must contain at least one keep selector. When enabled, prune is a separate operation under the shared job policy and follows forget.
 
 State configuration requires both `state.path` and `state.anchor_path`. Provision their parent directories before initialization, under the service account on supported local filesystems and protected from other writers. Keep the witness in a separate directory tree and outside every database restore or snapshot rollback scope. If either component is lost or generations disagree, stop scheduled admissions and preserve both components for recovery.
+
+## I5 job and hook fields
+
+A backup invocation uses the configured execution limits. When omitted, the effective limits are one job, 14,400 seconds per job, 7,200 seconds per operation, 120 seconds for acquisition, 300 seconds per cleanup hook, and 120 seconds for release. Job overrides and the CLI timeout can shorten the applicable ordinary budgets. Cleanup and release retain their independent budgets.
+
+Each hook entry accepts `executable`, `args`, an absolute `cwd`, and `timeout_seconds`. The optional `env` table maps names to ordinary environment strings. The optional `secrets` table maps names to file or environment secret references. A name may appear in only one table. The `BACKUP_MANAGER_` prefix is reserved for the run ID, job ID, phase, selected destination ID, and backup outcome supplied at execution.
+
+A hook may set `user` or `group` by OS name or numeric ID. It inherits the invoking identity by default. Changing identity requires the corresponding OS privilege. The worker clears inherited supplementary groups when switching identity. Hook results include redacted stdout and stderr, exit status, stop reason, and whether capture was truncated.
+
+Restic repository file secrets use Restic's observed whitespace framing for password files. Environment secrets are passed unchanged. A file or environment secret used by a hook keeps its original bytes.

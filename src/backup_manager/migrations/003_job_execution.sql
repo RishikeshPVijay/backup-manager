@@ -1,0 +1,13 @@
+ALTER TABLE job_runs ADD COLUMN owner_id TEXT REFERENCES process_owners(owner_id);
+ALTER TABLE job_runs ADD COLUMN cancel_requested INTEGER NOT NULL DEFAULT 0 CHECK(cancel_requested IN (0, 1));
+ALTER TABLE job_runs ADD COLUMN destination_id TEXT;
+ALTER TABLE job_runs ADD COLUMN snapshot_id TEXT;
+ALTER TABLE repository_registrations ADD COLUMN storage_id TEXT REFERENCES storage_resources(resource_id);
+ALTER TABLE repository_registrations ADD COLUMN repository_path TEXT;
+CREATE UNIQUE INDEX ix_job_active ON job_runs(job_id) WHERE finished_at IS NULL;
+CREATE UNIQUE INDEX ix_registered_restic_id ON repository_registrations(restic_repository_id);
+CREATE UNIQUE INDEX ix_registered_storage_path ON repository_registrations(storage_id, repository_path);
+CREATE INDEX ix_job_runs_owner ON job_runs(owner_id);
+CREATE INDEX ix_phase_results_run ON phase_results(run_id);
+ALTER TABLE command_executions ADD COLUMN claim_operation_id TEXT REFERENCES repository_claim_sets(operation_id);
+CREATE INDEX ix_command_executions_claim ON command_executions(claim_operation_id, state);

@@ -47,7 +47,7 @@ def register_owner(database, identity, supervisor_id):
     return owner_id
 
 
-def record_intent(database, operation_id, owner_id, *, scope_gate=False):
+def record_intent(database, operation_id, owner_id, *, scope_gate=False, claim_operation_id=None):
     """The caller commits this intent before requesting a launch."""
     owner = database.execute(
         "SELECT supervisor_id FROM process_owners WHERE owner_id = ? AND state = 'ACTIVE'",
@@ -58,9 +58,10 @@ def record_intent(database, operation_id, owner_id, *, scope_gate=False):
     execution_id = str(uuid4())
     database.execute(
         """INSERT INTO command_executions
-           (execution_id, operation_id, owner_id, state, launch_intent_at, process_identity_json)
-           VALUES (?, ?, ?, 'LAUNCH_INTENT', ?, ?)""",
-        (execution_id, operation_id, owner_id, now(), json.dumps({"supervisor_id": owner[0], "scope_gate": scope_gate})),
+           (execution_id, operation_id, owner_id, state, launch_intent_at, process_identity_json, claim_operation_id)
+           VALUES (?, ?, ?, 'LAUNCH_INTENT', ?, ?, ?)""",
+        (execution_id, operation_id, owner_id, now(),
+         json.dumps({"supervisor_id": owner[0], "scope_gate": scope_gate}), claim_operation_id),
     )
     event(database, execution_id, "launch_intent")
     return LaunchIntent(execution_id, operation_id, owner_id, owner[0])
@@ -148,12 +149,18 @@ def fence_uncertain(database, intent):
 
 def record_terminated(database, intent, result):
     state, payload, _, _, owner_state = execution(database, intent)
-    if state != "LAUNCHED" or owner_state != "ACTIVE":
+    if (
+        owner_state != "ACTIVE" or (
+            state != "LAUNCHED" and not (state == "LAUNCH_INTENT" and result.stop_reason == "not_started")
+        )
+    ):
         raise StateUnsafe("Execution lacks an active launch receipt.")
     receipt = json.loads(payload)
     if not result.containment or receipt["containment_id"] != result.containment:
         raise StateUnsafe("Termination evidence does not match the launch containment.")
     evidence = {"containment_id": result.containment, "observation": "empty_cgroup"}
+    if result.stop_reason:
+        evidence["stop_reason"] = result.stop_reason
     database.execute(
         """UPDATE command_executions SET state = 'TERMINATED', exit_code = ?, termination_evidence = ?
            WHERE execution_id = ?""",

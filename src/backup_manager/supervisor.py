@@ -36,6 +36,7 @@ class ScopedResult:
     stderr: bytes = field(repr=False)
     truncated: bool
     containment: str
+    stop_reason: str | None = None
 
 
 class Frames:
@@ -53,7 +54,7 @@ class Frames:
                     raise TimeoutError
                 if cancelled is not None and cancelled():
                     raise ScopeCancellation
-                wait = min(remaining, 0.1) if cancelled is not None else remaining
+                wait = min(remaining, 0.1 if cancelled is not None else 1)
                 if not selector.select(wait):
                     continue
                 chunk = os.read(self.stream.fileno(), 65536)
@@ -75,8 +76,10 @@ def send_request(stream, request, deadline):
         selector.register(stream, selectors.EVENT_WRITE)
         while remaining:
             wait = deadline - monotonic()
-            if wait <= 0 or not selector.select(wait):
+            if wait <= 0:
                 raise TimeoutError
+            if not selector.select(min(wait, 1)):
+                continue
             try:
                 sent = os.write(descriptor, remaining)
             except BlockingIOError:
@@ -121,12 +124,12 @@ def stop_scope(unit):
         return False
 
 
-def execute(intent, argv, *, deadline, on_launch, cwd=None, env=None, stdin_payload=None, cancelled=None, on_scope_ready=None):
+def execute(intent, argv, *, deadline, on_launch, cwd=None, env=None, stdin_payload=None, cancelled=None, on_scope_ready=None, user=None, group=None, repository=None):
     """Run after the caller commits intent. The callback must durably record the receipt."""
     unit = f"backup-manager-{UUID(intent.execution_id).hex}.scope"
     request = json.dumps({
         "argv": list(argv), "cwd": os.fspath(cwd) if cwd else None,
-        "env": env,
+        "env": env, "user": user, "group": group, "repository": repository,
         "stdin": base64.b64encode(stdin_payload).decode("ascii") if stdin_payload is not None else None,
     }).encode() + b"\n"
     if len(request) > REQUEST_LIMIT or monotonic() >= deadline:
@@ -142,6 +145,7 @@ def execute(intent, argv, *, deadline, on_launch, cwd=None, env=None, stdin_payl
         raise SupervisionUncertain("Could not establish a scope launch.") from error
 
     location = None
+    launched = False
     try:
         frames = Frames(wrapper.stdout)
         worker = ProcessIdentity(**frames.read(deadline)["worker"])
@@ -151,10 +155,14 @@ def execute(intent, argv, *, deadline, on_launch, cwd=None, env=None, stdin_payl
         if on_scope_ready is not None:
             on_scope_ready(LaunchReceipt(intent.supervisor_id, containment, worker, namespace))
         send_request(wrapper.stdin, request, deadline)
-        process = ProcessIdentity(**frames.read(deadline)["process"])
+        response = frames.read(deadline)
+        if response.get("not_started") is True:
+            return ScopedResult(None, b"", b"", False, containment, "not_started")
+        process = ProcessIdentity(**response["process"])
         if process.boot_id != worker.boot_id or process.pid_namespace != worker.pid_namespace:
             raise SupervisionUncertain("The launched process identity differs from the scoped worker.")
         on_launch(LaunchReceipt(intent.supervisor_id, containment, process, namespace))
+        launched = True
         result = frames.read(deadline, cancelled)
         return_value = ScopedResult(
             int(result["exit_code"]), base64.b64decode(result["stdout"], validate=True),
@@ -163,8 +171,12 @@ def execute(intent, argv, *, deadline, on_launch, cwd=None, env=None, stdin_payl
         )
     except ScopeCancellation:
         # The finally block verifies containment termination before returning it.
-        return_value = ScopedResult(None, b"", b"", False, str(location.relative_to(CGROUP_ROOT)))
-    except (OSError, TimeoutError, ValueError, TypeError, KeyError) as error:
+        return_value = ScopedResult(None, b"", b"", False, containment, "cancelled")
+    except TimeoutError as error:
+        if not launched:
+            raise SupervisionUncertain("The launch deadline expired before a receipt was verified.") from error
+        return_value = ScopedResult(None, b"", b"", False, containment, "timeout")
+    except (OSError, ValueError, TypeError, KeyError) as error:
         raise SupervisionUncertain("Scope command did not return a verified result.") from error
     finally:
         try:
@@ -182,14 +194,16 @@ def execute(intent, argv, *, deadline, on_launch, cwd=None, env=None, stdin_payl
     return return_value
 
 
-def run_journaled(path, anchor, operation_id, owner_id, argv, *, deadline, cwd=None, env=None, stdin_payload=None, authorize=None, cancelled=None):
+def run_journaled(path, anchor, operation_id, owner_id, argv, *, deadline, cwd=None, env=None, stdin_payload=None, authorize=None, cancelled=None, user=None, group=None, repository=None, claim_operation_id=None):
     """Run a declared operation and durably journal the supervised transitions."""
     with state_write(path, anchor, wait=5) as database:
         existing = database.execute(
             "SELECT 1 FROM command_executions WHERE operation_id = ?", (operation_id,),
         ).fetchone()
         authorized = existing is None and (authorize is None or authorize(database))
-        intent = record_intent(database, operation_id, owner_id, scope_gate=True) if authorized else None
+        intent = record_intent(
+            database, operation_id, owner_id, scope_gate=True, claim_operation_id=claim_operation_id,
+        ) if authorized else None
     if intent is None:
         raise SupervisionUncertain("The operation no longer authorizes launch.")
 
@@ -205,6 +219,7 @@ def run_journaled(path, anchor, operation_id, owner_id, argv, *, deadline, cwd=N
         result = execute(
             intent, argv, deadline=deadline, on_launch=persist, cwd=cwd, env=env,
             stdin_payload=stdin_payload, cancelled=cancelled, on_scope_ready=persist_scope,
+            user=user, group=group, repository=repository,
         )
     except SupervisionUncertain:
         with state_write(path, anchor, wait=5) as database:

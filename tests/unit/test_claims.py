@@ -18,7 +18,7 @@ class RepositoryClaimTests(unittest.TestCase):
             with state_write(db, anchor) as database:
                 database.execute("INSERT INTO process_owners (owner_id, boot_id, state) VALUES ('worker', 'boot', 'ACTIVE')")
                 database.executemany(
-                    "INSERT INTO repository_registrations VALUES (?, 'job', ?, ?, 1, 'time')",
+                    "INSERT INTO repository_registrations (repository_key, job_id, destination_id, restic_repository_id, repo_generation, approved_at) VALUES (?, 'job', ?, ?, 1, 'time')",
                     [("a", "a", "id-a"), ("b", "b", "id-b")],
                 )
                 first = admit_repository_claims(database, "op1", "worker", [
@@ -50,7 +50,7 @@ class RepositoryClaimTests(unittest.TestCase):
             with state_write(db, anchor) as database:
                 identity = ProcessIdentity.capture(os.getpid())
                 owner = register_owner(database, identity, "fixture")
-                database.execute("INSERT INTO repository_registrations VALUES ('a', 'job', 'a', 'id-a', 1, 'time')")
+                database.execute("INSERT INTO repository_registrations (repository_key, job_id, destination_id, restic_repository_id, repo_generation, approved_at) VALUES ('a', 'job', 'a', 'id-a', 1, 'time')")
                 admit_repository_claims(database, "op", owner, [RepositoryClaim("a", 1, "COPY_DESTINATION")])
                 intent = record_intent(database, "op", owner)
                 with self.assertRaisesRegex(StateUnsafe, "unconfirmed"):

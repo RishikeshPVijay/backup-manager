@@ -29,7 +29,7 @@ class StorageCoordinatorTests(unittest.TestCase):
             deadline = monotonic_ns() + 5_000_000_000
             lease = coordinator.acquire("disk", deadline=deadline)
             with state_write(db, anchor) as database:
-                database.execute("INSERT INTO repository_registrations VALUES ('repo', 'job', 'primary', 'repo-id', 1, 'now')")
+                database.execute("INSERT INTO repository_registrations (repository_key, job_id, destination_id, restic_repository_id, repo_generation, approved_at) VALUES ('repo', 'job', 'primary', 'repo-id', 1, 'now')")
             request = [RepositoryClaim("repo", 1, "COPY_DESTINATION")]
             self.assertIsNotNone(coordinator.reserve_repositories("op", request, [lease], deadline=deadline))
             with self.assertRaisesRegex(StateUnsafe, "Acquire storage"):

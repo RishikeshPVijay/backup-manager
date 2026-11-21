@@ -9,3 +9,11 @@ Executable `backup-manager`. Commands: `config validate`, `job list|show|run`, `
 ## Representative syntax
 
 `backup-manager job run immich --json`; `backup-manager batch run --json`; `backup-manager repository register immich primary`; `backup-manager state check`; `backup-manager doctor --json`. Administrative unlock requires explicit repository ID, confirmed safe state, and audit record. Never automatically invoke unlock.
+
+## I5 job operations
+
+Initialize the application state explicitly. Create the Restic repository through an explicit administrative action and use `repository register JOB_ID DEST_ID --yes` to bind that existing repository. Registration checks the Restic ID at the configured location, refuses a duplicate or replacement, and cannot initialize a repository. A legacy row without path binding can be explicitly registered again only after proving its previously approved ID.
+
+`job run JOB_ID` admits a job immediately or returns busy. `batch run JOB_ID ...` freezes all requested job files before admission, waits for global job slots in invocation order, and reports per-job results. Same-job overlaps return busy in either mode. `operation list --active-only` reports active job run IDs. `operation cancel RUN_ID --yes` requests cancellation of an active job. The invocation stops new ordinary work and attempts bounded cleanup after preparation. `history list` and `history show RUN_ID` expose the independently recorded phase outcomes.
+
+I5 runs the backup phase through the certified Restic profile. A confirmed backup for a multi-destination job reports partial while the required replication and convergence phases await I6. Retention is recorded as deferred until I7. Dry-run and operational preflight also await I7.

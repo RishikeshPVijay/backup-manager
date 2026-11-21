@@ -4,6 +4,9 @@ from contextlib import contextmanager
 from dataclasses import asdict
 import base64
 import json
+import grp
+from pathlib import Path
+import pwd
 import os
 import selectors
 import subprocess
@@ -51,6 +54,47 @@ def child_input(encoded):
         yield stream
 
 
+def directory_identity(descriptor):
+    metadata = os.fstat(descriptor)
+    info = Path(f"/proc/self/fdinfo/{descriptor}").read_text().splitlines()
+    mount_id = next(line.split()[1] for line in info if line.startswith("mnt_id:"))
+    return {"device": metadata.st_dev, "inode": metadata.st_ino, "mount_id": mount_id}
+
+
+@contextmanager
+def repository_argv(argv, repository):
+    if repository is None:
+        yield argv, ()
+        return
+    index = argv.index("--repo") + 1
+    if argv[index] != repository["path"]:
+        raise ValueError("Repository argument differs from the verified directory.")
+    descriptor = os.open(repository["path"], os.O_PATH | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC)
+    try:
+        if directory_identity(descriptor) != repository["identity"]:
+            raise ValueError("Verified repository directory changed before launch.")
+        command = list(argv)
+        command[index] = f"/proc/self/fd/{descriptor}"
+        yield command, (descriptor,)
+    finally:
+        os.close(descriptor)
+
+
+def credentials(user, group):
+    kwargs = {}
+    if user is not None:
+        account = pwd.getpwuid(user) if isinstance(user, int) else pwd.getpwnam(user)
+        kwargs["user"] = account.pw_uid
+        kwargs["group"] = account.pw_gid
+    if group is not None:
+        kwargs["group"] = group if isinstance(group, int) else grp.getgrnam(group).gr_gid
+    if kwargs.get("user", os.geteuid()) == os.geteuid() and kwargs.get("group", os.getegid()) == os.getegid():
+        return {}
+    if kwargs:
+        kwargs["extra_groups"] = []
+    return kwargs
+
+
 def main():
     reply({"worker": asdict(ProcessIdentity.capture(os.getpid()))})
     request = sys.stdin.buffer.readline(REQUEST_LIMIT + 1)
@@ -58,22 +102,28 @@ def main():
         return 1
     try:
         data = json.loads(request)
-        with (
-            child_input(data.get("stdin")) as command_input,
-            subprocess.Popen(
-                data["argv"], cwd=data["cwd"], env=data.get("env"), stdin=command_input,
-                stdout=subprocess.PIPE, stderr=subprocess.PIPE, start_new_session=True,
-            ) as command,
-        ):
-            reply({"process": asdict(ProcessIdentity.capture(command.pid))})
-            outputs, truncated = capture(command)
-            reply({
-                "exit_code": command.wait(),
-                **{name: base64.b64encode(value).decode("ascii") for name, value in outputs.items()},
-                "truncated": truncated,
-            })
-            # Keep the scope present while the supervisor records/reads results.
-            sys.stdin.buffer.read(1)
+        with child_input(data.get("stdin")) as command_input:
+            try:
+                with repository_argv(data["argv"], data.get("repository")) as (argv, descriptors):
+                    command = subprocess.Popen(
+                        argv, cwd=data["cwd"], env=data.get("env"), stdin=command_input,
+                        stdout=subprocess.PIPE, stderr=subprocess.PIPE, start_new_session=True,
+                        pass_fds=descriptors, **credentials(data.get("user"), data.get("group")),
+                    )
+            except (OSError, ValueError, TypeError, KeyError, IndexError, StopIteration):
+                reply({"not_started": True})
+                sys.stdin.buffer.read(1)
+                return 0
+            with command:
+                reply({"process": asdict(ProcessIdentity.capture(command.pid))})
+                outputs, truncated = capture(command)
+                reply({
+                    "exit_code": command.wait(),
+                    **{name: base64.b64encode(value).decode("ascii") for name, value in outputs.items()},
+                    "truncated": truncated,
+                })
+                # Keep the scope present while the supervisor records results.
+                sys.stdin.buffer.read(1)
         return 0
     except (OSError, ValueError, TypeError, KeyError, IndexError):
         return 1

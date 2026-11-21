@@ -15,6 +15,10 @@ from jsonschema import Draft202012Validator
 from .errors import Diagnostic
 
 IDENTIFIER = re.compile(r"[a-z][a-z0-9_-]{0,63}")
+EXECUTION_DEFAULTS = {
+    "max_jobs": 1, "job_timeout_seconds": 14400, "operation_timeout_seconds": 7200,
+    "acquire_timeout_seconds": 120, "cleanup_timeout_seconds": 300, "release_timeout_seconds": 120,
+}
 
 
 @cache
@@ -28,6 +32,14 @@ def freeze(value):
         return MappingProxyType({key: freeze(item) for key, item in value.items()})
     if isinstance(value, list):
         return tuple(map(freeze, value))
+    return value
+
+
+def plain(value):
+    if isinstance(value, Mapping):
+        return {key: plain(item) for key, item in value.items()}
+    if isinstance(value, tuple):
+        return [plain(item) for item in value]
     return value
 
 
@@ -95,12 +107,26 @@ def load_job(path: Path, global_config: ConfigDocument) -> ConfigDocument:
     if isinstance(timeouts, dict) and isinstance(execution, Mapping):
         for field in ("job_timeout_seconds", "operation_timeout_seconds"):
             override = timeouts.get(field)
-            maximum = execution.get(field)
+            maximum = execution.get(field, EXECUTION_DEFAULTS[field])
             if type(override) is int and type(maximum) is int and override > maximum:
                 errors.append(Diagnostic(
                     "JOB_TIMEOUT_CAP", "Job timeout settings may only shorten global budgets.",
                     {"file": path.name, "field": f"timeouts.{field}"},
                 ))
+    hooks = data.get("hooks")
+    if isinstance(hooks, dict):
+        for phase, entries in hooks.items():
+            if not isinstance(entries, list):
+                continue
+            for index, hook in enumerate(entries):
+                if not isinstance(hook, dict):
+                    continue
+                env, refs = hook.get("env", {}), hook.get("secrets", {})
+                if isinstance(env, dict) and isinstance(refs, dict) and env.keys() & refs.keys():
+                    errors.append(Diagnostic(
+                        "HOOK_ENV_CONFLICT", "A hook environment name cannot be configured both directly and as a secret.",
+                        {"file": path.name, "field": f"hooks.{phase}.{index}"},
+                    ))
     targets = data.get("destinations")
     if isinstance(targets, dict):
         secondary = targets.get("secondary", [])

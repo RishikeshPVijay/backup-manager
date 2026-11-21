@@ -1,6 +1,6 @@
 # Implementation status
 
-Baseline v1.0. I1–I4 milestone gates verified on Linux x86_64. I5–I9 are pending. Restic 0.18.0 Linux amd64 is certified only for the exact recorded binary fingerprint and repository formats 1 and 2. The full 40-scenario release acceptance run remains pending.
+Baseline v1.0. I1–I5 milestone gates verified on Linux x86_64. I6–I9 are pending. Restic 0.18.0 Linux amd64 is certified only for the exact recorded binary fingerprint and repository formats 1 and 2. The full 40-scenario release acceptance run remains pending.
 
 ## I1 foundation checklist
 
@@ -185,3 +185,24 @@ Exact binary `/usr/bin/restic`, version line `restic 0.18.0 compiled with go1.24
 Two provisional certification runs exited 1. The first assumed equal-time snapshots returned in a stable order, so a read-only preview looked like a mutation. Sorting by the full snapshot ID corrected the comparison. The other assumed a missing requested source yielded exit 3. Direct observations showed exit 0 and a snapshot missing that source, whereas an existing unreadable source yielded exit 3. The final harness asserts both behaviors. The adapter requires a fresh snapshot whose paths match the actual backup request. The final report also records a missing explicit copy source yielding exit 0 without creating the requested destination representation. Production copy confirmation must independently revalidate both source and destination inventory.
 
 Only the tested executable fingerprint is installed. Other Restic builds, operating environments, and repository formats have no certification here. I5 job orchestration, I6 production equivalence and convergence, I7 operations, and release acceptance remain pending.
+
+## I5 job execution gate
+
+- [x] D5/D8/D9/D13/D14/D44–D48/D60–D63/D73/D74/L5. Backup selection authenticates and verifies an explicitly registered Restic repository at its recorded storage and path. Primary selection precedes secondaries in declaration order. Linux launch uses a pinned repository directory and verifies the repository and new snapshot after backup. A failed backup never switches repositories.
+- [x] D25–D36/D49/D50/D55/D56/L4. Transactional same-job exclusion and global admission, immutable batch configuration, ordered batch admission, per-job outcomes, cancellation and interruption fencing.
+- [x] D7/D16–D18/D51–D53/D64–D79/L1. Ordered hooks and required-source validation, independent post and cleanup results, bounded and redacted output, hook identity configuration, durable history and per-job history retention.
+- [x] Packaged migration 003 adds job-owner and phase runtime state, registered repository path bindings and command-to-claim links. Existing registrations can be explicitly bound only after verification of the already approved Restic ID.
+
+| Command or fixture | Exit | Evidence |
+|---|---:|---|
+| `/tmp/bm-dev/bin/python tools/validate_handoff.py` | 0 | Handoff schemas, examples, reference DDL and unchanged I4 certification profile. |
+| `/tmp/bm-dev/bin/python -m build --no-isolation --outdir /tmp/bm-i5-dist` and install final wheel | 0 each | Built source and wheel packages. Final tested wheel SHA-256 `51b61a948a81abfdbf11d6153bc0eaa3196833d36e8a884e5fc34a100b3390f9`. |
+| `/tmp/bm-dev/bin/python -m unittest discover -s tests/unit -q` | 0 | 68 passed, including migration rollback, generation fencing, job/history admission and retention, and repository path replacement rejection. |
+| `/tmp/bm-dev/bin/python tests/experiments/linux_i5_job.py` | 0 | Real certified Restic backups to disposable repositories. Assertions cover explicit registration, no auto-init, verified primary and ordered fallback, wrong credential and ID isolation, source preparation, missing sources, partial backup with fixed target, hook timeout and cleanup, secret redaction, cancellation, crash fencing and later fresh invocation, batch concurrency and immutable queued configuration. |
+| Installed-wheel integration regressions `linux_scoped_restic.py`, `linux_journaled_supervisor.py`, `linux_shared_storage.py`, `linux_launch_boundaries.py`, `linux_crash_fencing.py`, and `linux_atomic_claims.py` | 0 each | Scoped Restic backup/copy, recovery and storage claims, crash injection, and reverse-ordered repository claims. |
+
+During fixture development, a crash test left a direct SQLite connection open and triggered the expected fail-closed WAL check. The final fixture uses the immutable state reader and verifies recovery without SQLite sidecars. A separate disposable native-password probe confirmed Restic strips file whitespace and does not strip environment password newlines. The final backup fixture verifies file-provider whitespace handling through the scoped adapter.
+
+Verified on Linux x86_64 and CPython 3.13.5 with user systemd scopes. I5 used a marker-file storage provider for its multi-process orchestration fixture, real Restic repositories, and the installed exact binary profile. Actual block-mount verification remains covered by the separate I2/I3 loop fixture. Hook execution as the invoking identity was exercised. Switching to a different user or group requires deployment privileges.
+
+Multi-destination backup jobs explicitly report partial while replication and convergence await I6. Retention, admin initialization, full operation administration, and dry-run/preflight remain scheduled for I7. Release acceptance remains pending.

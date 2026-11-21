@@ -117,6 +117,11 @@ class StorageCoordinator:
                     break
                 if physical.state is StorageState.UNCERTAIN:
                     raise StorageUnavailable("Storage identity or physical state is uncertain.")
+                if (
+                    physical.state is StorageState.UNAVAILABLE and settings["lifecycle"] == "always_on"
+                    and all(row[2] == "TERMINATED" for row in observed)
+                ):
+                    raise StorageUnavailable("Always-on storage is unavailable.")
                 sleep(0.05)
             if plan is None:
                 raise StorageUnavailable("Storage admission was cancelled or timed out.")

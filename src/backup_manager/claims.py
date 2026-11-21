@@ -81,12 +81,13 @@ def repository_authorized(database, operation_id, owner_id):
 def relinquish_repository_claims(database, operation_id, owner_id):
     if not repository_authorized(database, operation_id, owner_id):
         raise StateUnsafe("Repository claims are absent or require recovery.")
-    execution = database.execute(
-        """SELECT state, termination_evidence FROM command_executions
-           WHERE operation_id = ? AND owner_id = ?""",
-        (operation_id, owner_id),
+    unresolved = database.execute(
+        """SELECT 1 FROM command_executions
+           WHERE (operation_id = ? OR claim_operation_id = ?) AND owner_id = ?
+           AND (state != 'TERMINATED' OR termination_evidence IS NULL) LIMIT 1""",
+        (operation_id, operation_id, owner_id),
     ).fetchone()
-    if execution is not None and (execution[0] != "TERMINATED" or not execution[1]):
+    if unresolved is not None:
         raise StateUnsafe("Repository command termination is unconfirmed.")
     return database.execute(
         """UPDATE repository_claim_sets SET state = 'RELEASED'

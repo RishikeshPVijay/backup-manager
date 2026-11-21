@@ -19,7 +19,7 @@ from backup_manager.supervisor import run_journaled
 def fixture_owner(db, anchor):
     with state_write(db, anchor, wait=5) as database:
         owner = register_owner(database, ProcessIdentity.capture(os.getpid()), "crash-fixture")
-        database.execute("INSERT INTO repository_registrations VALUES ('repo', 'job', 'primary', 'fixture-id', 1, 'now')")
+        database.execute("INSERT INTO repository_registrations (repository_key, job_id, destination_id, restic_repository_id, repo_generation, approved_at) VALUES ('repo', 'job', 'primary', 'fixture-id', 1, 'now')")
         admit_repository_claims(database, "crash-operation", owner, [RepositoryClaim("repo", 1, "COPY_DESTINATION")])
     run_journaled(
         db, anchor, "crash-operation", owner, (sys.executable, "-c", "import time; time.sleep(45)"),

@@ -77,22 +77,18 @@ print("fixture output")
             )
             assert stopped.exit_code is None
             assert sibling.wait(timeout=5) == 0
-        try:
-            run_journaled(
-                db, anchor, "timeout", owner, (sys.executable, "-c", "import time; time.sleep(45)"),
-                deadline=monotonic() + 1,
-            )
-        except SupervisionUncertain:
-            pass
-        else:
-            raise AssertionError("Deadline unexpectedly produced a successful result.")
+        timed_out = run_journaled(
+            db, anchor, "timeout", owner, (sys.executable, "-c", "import time; time.sleep(45)"),
+            deadline=monotonic() + 2,
+        )
+        assert timed_out.exit_code is None and timed_out.stop_reason == "timeout"
         with closing(sqlite3.connect(db)) as database:
             rows = database.execute(
                 "SELECT operation_id, state, exit_code FROM command_executions ORDER BY operation_id",
             ).fetchall()
         assert rows == [
             ("cancel", "TERMINATED", None), ("large", "TERMINATED", 0), ("stdin", "TERMINATED", 0),
-            ("success", "TERMINATED", 0), ("timeout", "LAUNCH_UNCERTAIN", None),
+            ("success", "TERMINATED", 0), ("timeout", "TERMINATED", None),
         ]
     print("Installed-wheel scope, detached descendant, durable receipt, cross-process cancellation and timeout passed.")
 
