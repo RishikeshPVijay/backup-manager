@@ -1,6 +1,6 @@
 # Implementation status
 
-Baseline v1.0. I1 has a tested partial checkpoint. I2–I9 are pending. Mandatory acceptance scenarios remain 0 executed and 0 passed out of 40. Restic certification, runtime migrations, and process/storage crash recovery have no execution evidence.
+Baseline v1.0. I1 foundation is implemented. I2 is in progress. I3–I9 are pending. Mandatory acceptance scenarios remain 0 executed and 0 passed out of 40. Restic certification, runtime migrations, and process/storage crash recovery have no execution evidence.
 
 ## I1 foundation checklist
 
@@ -10,9 +10,9 @@ Baseline v1.0. I1 has a tested partial checkpoint. I2–I9 are pending. Mandator
 - [x] D50 (snapshot primitive), deep immutable configuration detached from later edits. Batch admission integration is pending.
 - [x] D47 (configuration boundary), malformed TOML and validation diagnostics suppress raw values. Runtime secret handling is pending.
 - [x] Foundation CI and isolated unit fixtures.
-- [ ] D56, complete job timeout configuration contract.
-- [ ] D52, complete history retention configuration contract.
-- [ ] D22/R3/G6, complete shared retention configuration contract including explicit prune selection.
+- [x] D56, validate approved job timeout overrides.
+- [x] D52, validate approved per-job history limits.
+- [x] D22/R3/G6, validate approved explicit prune selection.
 - [ ] D49, integrate provider configuration schema validation and complete acceptance coverage when providers and runtime exist.
 
 ### Evidence
@@ -31,10 +31,8 @@ Wheel SHA-256 `7ac8c8719af32a28eeb2a28deab9eb15bee13f659f0b6b9ab619adc53c8bb9f9`
 Source distribution SHA-256 `f5e481cf31d7a10bfa875f2470a5dbb0e2459ff9f570187324e9944062e0f88f`.
 Python 3.12 and hosted CI were not run locally. The installed Restic reports version 0.18.0. The version query is environment inventory only.
 
-### I1 gate blockers
+### I1 configuration clarification checkpoint
 
-- D56 and docs/04 specify optional per-job `timeouts` alongside global execution budgets. The strict v1 schema forbids the per-job table, and the documents leave its permissible budgets and override rules open. These rules determine whether job configuration can alter the independent cleanup and release safety budgets in D79/D80. An explicit rule is needed for which global budgets can be reduced per job.
-- D52 requires history retention by both age and count. The schema defines only `logging.history_days`. The deletion rule when both limits are configured and the scope of the count (per job or instance-wide) are undefined.
-- The algorithm in docs/17 §D requires a policy opt-in to prune. The strict v1 retention schema only accepts keep selectors. The explicit opt-in must be defined before pruning can be enabled under the frozen configuration contract.
+The user confirmed the three configuration decisions recorded in docs/14. Static handoff, sdist/wheel build, wheel installation, and the ten-test foundation suite all exited 0 after the changes. Logs are at `/tmp/bm-i1-clarifications-build.log` and `/tmp/bm-i1-clarifications-tests.log`. The runtime enforcement of retention, history deletion, and deadlines belongs to later milestones.
 
-The validator rejects undefined fields. Repository, storage, job and state mutation commands return unsupported without executing an operation. The CLI uses argparse, packages the checked-in schemas with setuptools, and uses `jobs/<job-id>.toml` relative to the global configuration file for individual job selection. These packaging and discovery choices are documented in the README.
+The CLI uses argparse, packages the checked-in schemas with setuptools, and locates individual job configuration at `jobs/<job-id>.toml` relative to the global configuration file.

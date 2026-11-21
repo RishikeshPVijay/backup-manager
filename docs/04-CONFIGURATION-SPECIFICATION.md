@@ -19,3 +19,11 @@ Require at least one source and one destination; detect duplicate identifiers an
 ## Open implementation precision
 
 Formal JSON schemas in `schemas/` describe the stable baseline. Provider-specific nested config schemas are composed at runtime. Any field not defined in the baseline must be rejected until versioned documentation/schema/test coverage is added; do not invent configuration features.
+
+## Confirmed v1 configuration clarifications
+
+A job may specify `timeouts.job_timeout_seconds` and `timeouts.operation_timeout_seconds` as positive integer seconds. Overrides may equal or shorten their global counterparts. Omitting an override inherits the effective global budget. Acquisition, cleanup, and release limits use their independent global settings.
+
+`logging.history_days` and `logging.history_count` are optional positive integer limits applied to each job's history. A run becomes eligible for deletion when it exceeds either configured limit. When neither limit is configured, neither triggers deletion.
+
+`retention.prune` is a boolean and defaults to false. A policy must contain at least one keep selector. When enabled, prune is a separate operation under the shared job policy and follows forget.

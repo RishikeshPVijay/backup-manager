@@ -81,6 +81,10 @@
         "history_days": {
           "type": "integer",
           "minimum": 1
+        },
+        "history_count": {
+          "type": "integer",
+          "minimum": 1
         }
       }
     },

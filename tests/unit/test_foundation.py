@@ -95,3 +95,20 @@ class FoundationTests(unittest.TestCase):
 
     def test_version(self):
         self.assertEqual(self.cli("version", exit_code=0)["data"]["version"], "0.1.0")
+
+    def test_confirmed_timeout_and_retention_configuration(self):
+        self.global_path.write_text(self.global_path.read_text() + "\n[logging]\nhistory_count = 25\n")
+        self.job_path.write_text(
+            self.job_path.read_text() + "prune = true\n[timeouts]\njob_timeout_seconds = 20\n"
+        )
+        self.assertEqual(self.cli("config", "validate", "--all", exit_code=0)["errors"], [])
+        with self.job_path.open("a") as stream:
+            stream.write("operation_timeout_seconds = 9999\nrelease_timeout_seconds = 1\n")
+        codes = {item["code"] for item in self.cli("config", "validate", "--all", exit_code=4)["errors"]}
+        self.assertEqual(codes, {"CONFIG_SCHEMA", "JOB_TIMEOUT_CAP"})
+
+    def test_prune_requires_keep_selector(self):
+        content = self.job_path.read_text().split("[retention]")[0]
+        self.job_path.write_text(content + "[retention]\nprune = true\n")
+        payload = self.cli("config", "validate", "--all", exit_code=4)
+        self.assertEqual(payload["errors"][0]["context"]["field"], "retention")

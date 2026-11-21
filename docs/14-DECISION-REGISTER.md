@@ -17,3 +17,9 @@ A11 no same-run replacement after started transfer failure.
 A12 successful supervised Restic process launch defines started boundary; uncertain launch fail-closed until reconciled.
 
 Assistant-selected handoff defaults (user authorized choosing recommended options): versioned provider API, strict versioned TOML, local SQLite WAL, fail-closed missing/corrupt/rolled-back DB, explicit state recovery, exact Restic certification, conservative native lock matrix pending tests, CLI exit codes, Linux-first Python packaging, explicit bounded deadlines, no strict FIFO fairness, acceptance traceability, Codex execution protocol. These are design defaults, NOT empirically validated Restic/OS facts. If an assistant-selected default contradicts confirmed product policy, confirmed policy wins.
+
+## Confirmed configuration clarifications
+
+- D56/D79/D80. Per-job timeout overrides may shorten job and operation budgets. Acquisition, cleanup, and release budgets remain independently configured at the global level.
+- D52. History limits apply per job. A record is eligible for deletion once it exceeds either configured limit, by age or by count.
+- D22/R3/G6. `retention.prune` is an explicit boolean opt-in, defaulting to false. It applies uniformly to all destinations after convergence.

@@ -270,8 +270,44 @@
         "keep_yearly": {
           "type": "integer",
           "minimum": 1
+        },
+        "prune": {
+          "type": "boolean",
+          "default": false
         }
-      }
+      },
+      "anyOf": [
+        {
+          "required": [
+            "keep_last"
+          ]
+        },
+        {
+          "required": [
+            "keep_hourly"
+          ]
+        },
+        {
+          "required": [
+            "keep_daily"
+          ]
+        },
+        {
+          "required": [
+            "keep_weekly"
+          ]
+        },
+        {
+          "required": [
+            "keep_monthly"
+          ]
+        },
+        {
+          "required": [
+            "keep_yearly"
+          ]
+        }
+      ]
     },
     "hooks": {
       "type": "object",
@@ -375,6 +411,20 @@
       "items": {
         "type": "string",
         "minLength": 1
+      }
+    },
+    "timeouts": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "job_timeout_seconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "operation_timeout_seconds": {
+          "type": "integer",
+          "minimum": 1
+        }
       }
     }
   }

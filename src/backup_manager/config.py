@@ -69,6 +69,17 @@ def load_job(path: Path, global_config: ConfigDocument) -> ConfigDocument:
     job = data.get("job")
     if isinstance(job, dict) and job.get("id") != path.stem:
         errors.append(Diagnostic("JOB_FILE", "Job identifier must match the TOML filename stem."))
+    timeouts = data.get("timeouts")
+    execution = global_config.data.get("execution", {})
+    if isinstance(timeouts, dict) and isinstance(execution, Mapping):
+        for field in ("job_timeout_seconds", "operation_timeout_seconds"):
+            override = timeouts.get(field)
+            maximum = execution.get(field)
+            if type(override) is int and type(maximum) is int and override > maximum:
+                errors.append(Diagnostic(
+                    "JOB_TIMEOUT_CAP", "Job timeout settings may only shorten global budgets.",
+                    {"file": path.name, "field": f"timeouts.{field}"},
+                ))
     targets = data.get("destinations")
     if isinstance(targets, dict):
         secondary = targets.get("secondary", [])
