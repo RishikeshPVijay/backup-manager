@@ -50,3 +50,16 @@ The installed wheel passed 14 unit tests on Linux x86_64 with Python 3.13.5. Sta
 On Linux 6.12.101+deb13-amd64, `python3 tests/experiments/linux_unmount_identity.py` ran in a disposable user and mount namespace. It pinned a manager fixture mount with `O_PATH`, stacked a second fixture mount over it, and passed the saved descriptor path to `umount2`. The syscall returned zero and removed the **second** mount. The pinned manager fixture remained mounted until fixture cleanup. This rules out both a check followed by pathname unmount and the tested descriptor-path substitution as ownership-preserving release approaches under concurrent mount replacement.
 
 The built-in provider exposes read-only capabilities pending a release mechanism tied to the verified mount instance, or an approved operating restriction that rules out concurrent external mount changes. No runtime mount or unmount command is wired. D92 and D94 prohibit using the observed behavior in production. I2 remains open and the dependency gate holds I3–I9.
+
+### Descriptor-based move follow-up
+
+Ran `python3 tests/experiments/linux_move_mount_identity.py` on the same Linux build in a disposable user and private mount namespace. The fixture verified the source descriptor could still read the manager's marker before each move. It used empty source and destination paths with both descriptors.
+
+| Scenario | Syscall result | Observed mount locations |
+|---|---|---|
+| Manager mount alone | Success | Manager mount moved to staging. |
+| External mount stacked at target | Success | Original target became uncovered. The external mount was visible at staging. |
+| Manager detached and external replacement mounted | EINVAL | External replacement remained at target. Staging remained empty. |
+| External child mounted under manager mount | Success | Manager mount moved to staging with the external child. |
+
+The command exited 0 after reproducing all observations and removing fixture mounts. Its assertions reproduce the failure modes, so this is evidence against using this release mechanism. A post-move identity check would occur after the external mount was already moved. No production lifecycle changes were made. The original unmount experiment, static handoff validator, and 14 installed-wheel unit tests also exited 0. I2 stays blocked on D92/D94.
