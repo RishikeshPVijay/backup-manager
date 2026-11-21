@@ -45,7 +45,7 @@ D43,confirmed,AT-012;AT-013;AT-014;AT-036,not_executed,Domain mapping is provisi
 D44,confirmed,AT-012;AT-013;AT-014;AT-036,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D45,confirmed,AT-012;AT-013;AT-014;AT-036,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D46,confirmed,AT-012;AT-013;AT-014;AT-036,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D47,confirmed,AT-025;AT-035,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D47,confirmed,AT-025;AT-035,not_executed,ProviderTests cover file mode and type enforcement and environment resolution; process and persistence secret-redaction acceptance pending
 D48,confirmed,AT-025;AT-035,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D49,confirmed,AT-025;AT-035,not_executed,FoundationTests.test_reports_multiple_errors_without_echoing_values asserts three distinct validation diagnostics and redaction; runtime invocation validation pending
 D50,confirmed,AT-025;AT-035,not_executed,FoundationTests.test_snapshot_is_immutable_and_independent_of_disk asserts nested immutability and disk independence; batch scheduling assertion pending

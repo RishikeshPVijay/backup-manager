@@ -19,3 +19,5 @@ Required: `inspect(config, context) -> Inspection` (current accessibility, mount
 ## Extension example
 
 See `examples/custom-storage-plugin/` for a minimal reference provider. It is intentionally non-mutating and not suitable for mounting devices.
+
+The Python provider types are available from `backup_manager.plugin_api`. Storage and secret discovery validate installed provider manifests and capabilities. The built-in `linux_filesystem` provider currently supports read-only inspection. The disposable namespace experiment and the release gate are documented in [implementation status](../IMPLEMENTATION-STATUS.md).
