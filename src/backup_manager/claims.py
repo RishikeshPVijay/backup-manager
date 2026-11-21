@@ -36,16 +36,23 @@ def admit_repository_claims(database, operation_id, owner_id, requests, compatib
         if registration != (request.generation,):
             raise StateUnsafe("Repository generation changed.")
         existing = database.execute(
-            """SELECT claim.access_mode, claim_set.state
+            """SELECT claim.access_mode, claim_set.state, owner.state,
+                      EXISTS (
+                          SELECT 1 FROM command_executions AS command
+                          WHERE command.owner_id = owner.owner_id
+                          AND command.state IN ('LAUNCH_INTENT', 'LAUNCH_UNCERTAIN')
+                      )
                FROM repository_claims AS claim
                JOIN repository_claim_sets AS claim_set USING (claim_set_id)
+               JOIN process_owners AS owner USING (owner_id)
                WHERE claim.repository_key = ? AND claim_set.state != 'RELEASED'""",
             (request.repository_key,),
         )
-        for access_mode, state in existing:
+        for access_mode, state, owner_state, uncertain in existing:
             pair = frozenset((access_mode, request.access_mode))
             if (
-                state != "ACTIVE" or pair not in compatible_pairs
+                state != "ACTIVE" or owner_state != "ACTIVE" or uncertain
+                or pair not in compatible_pairs
                 or access_mode == request.access_mode == "COPY_DESTINATION"
             ):
                 return None

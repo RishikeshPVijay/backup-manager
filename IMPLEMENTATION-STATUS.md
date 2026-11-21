@@ -112,3 +112,11 @@ The frozen configuration defines only the state database path. Whole-state rollb
 - Added transactional all-or-none repository claim-set admission, fencing each request against its repository generation. Until a certified compatibility matrix is supplied, the primitive defaults to exclusive access. Same-destination copies are always excluded.
 - The installed-wheel unit suite exited 0 with 37 tests after an initial fixture-mode failure was fixed by creating private fixture directories. Static handoff, source/wheel build, and wheel installation exited 0. Build command used `/tmp/bm-dev/bin/python -m build --no-isolation --outdir /tmp/bm-i3-dist`.
 - Coordinator integration, durable containment launch receipts, explicit recovery of inconsistent state, backup-before-upgrade and later milestones remain open. No Restic certification or mandatory acceptance run yet.
+
+### I3 launch journal and storage identity checkpoint
+
+- A4/A5/A12/D25/D82/L3. SQLite transactions now record launch intent and launch receipts with events. A receipt must match the active supervisor and boot identity. Uncertain launch fences both storage and repository claims. Missing receipts block otherwise compatible repository use. The journal is a primitive and requires real containment observations from the coordinator.
+- D86/D87/D88/D89/L6. The storage identity primitive rejects verified aliases, unapproved identity changes, and unverifiable resources without explicit coordination identity. Equal explicit identities share the same admission fences.
+- `/tmp/bm-dev/bin/python -m build --no-isolation --outdir /tmp/bm-i3-dist` and installed-wheel regression exited 0. `/tmp/bm-dev/bin/python -m unittest discover -s tests/unit -q` passed 43 tests. `/tmp/bm-dev/bin/python tools/validate_handoff.py` exited 0.
+- The crash fixture deliberately exited 32 after committing intent and before writing any receipt. Another process verified the persisted intent and absence of launch confirmation. Other tests verify supervisor binding, recovery fencing, and prevention of new conflicting claims.
+- I3 remains open for the production supervisor, durable termination attestations, shared storage lifecycle transitions and crash reconciliation. The CLI cannot launch backup, copy, or mount operations. Restic certification and mandatory acceptance remain pending.
