@@ -595,3 +595,36 @@ for review in `faults/cli-and-sqlite.jsonl` and
 | `python -m py_compile tests/experiments/linux_i6_faults.py tests/experiments/linux_i9_boundaries.py` | 0 | Both changed probes compiled. |
 | `python -m unittest discover -s tests/unit` | 0 | 113 tests passed against the installed wheel. |
 | `python tools/run_acceptance.py --parallel 2 --probe faults --probe boundaries --output /tmp/bm-d37-d102.M4BxAv/evidence` | 1 | Both probes stopped at disposable repository registration with `TERMINATION_UNCERTAIN`. This workspace cannot access the user systemd bus. Neither new assertion was reached. |
+
+## Final requirement evidence intake
+
+Reviewed the four supplied archives from the hosted workflow running
+`f221f92c29b2b05bb55fe3b73f18ae6e6abb4891`. ZIP integrity and all recorded
+acceptance probe report hashes passed. Both architectures matched their
+registered Restic binaries. For each architecture all 19 probes exited 0,
+all 40 scenarios passed, and all five native certification cases passed
+and cleaned up. The scoped archive confirms all 12 scoped and all three
+namespace probes exited 0. The loop log confirms acquisition, ownership,
+release, external reuse and fixture cleanup.
+
+| Supplied archive | SHA-256 |
+|---|---|
+| `linux-regression-results.zip` | `5bd943145df23ec19f48dcd1dfdc3f5e88e9e302ccbc5fc83b2e49b647659a12` |
+| `loop-device-regression.zip` | `f24ce578c15faf9c3c6716dca9f9e4589b5d0a558503ecc29bd67a9edef52b8c` |
+| `release-acceptance-evidence-x64.zip` | `985a32fc377302a4c7dcbb6d2521b5aebdbc0a9c7969263461aa4690844a0c03` |
+| `release-acceptance-evidence-arm64.zip` | `0f7ab0856d0325239531e4d0c9426e8cea89c27a8115a789bac8e42a1ec8483a` |
+
+- D37. Both named trace records identify exactly one started target attempt
+  as `UNVERIFIED` with `COPY_INVENTORY_UNAVAILABLE` and confirm peer success.
+  The probe also asserted that the disconnected target requirement was
+  blocked and that no copy evidence was accepted for that attempt.
+- D102. Both named records show three distinct CLI owners with released
+  claims on `disk` generation 1. The provider recorded one acquisition and
+  one release. The probe asserted that the resource remained acquired until
+  the holder dropped the final claim.
+
+Both acceptance jobs exited 1 because the checked-out traceability register
+still listed D37 and D102 as unsigned. This review signs off both requirements
+and brings traceability to 139 of 139 confirmed requirements. A fresh
+default-branch run must confirm that the release gate exits 0 with the updated
+register. Release acceptance remains open.
