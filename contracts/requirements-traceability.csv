@@ -1,14 +1,14 @@
 requirement_id,policy_status,scenario_ids,evidence_status,traceability_note
-D1,confirmed,AT-012;AT-014;AT-024,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D2,confirmed,AT-012;AT-014;AT-024,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D3,confirmed,AT-012;AT-014;AT-024,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D1,confirmed,AT-012;AT-014;AT-024,verified,FoundationTests.test_public_commands_are_local_orchestration_commands inventories the CLI. The release wheel audit confirms one local console entry point and no service or socket or HTML payload.
+D2,confirmed,AT-024,verified,FoundationTests.test_distinct_destinations_on_shared_storage_cannot_share_repository_path rejects shared paths and LocalAcceptanceTests.test_registered_destinations_cannot_share_restic_identity exercises the SQLite ID constraint.
+D3,confirmed,AT-024,verified,FoundationTests.test_job_document_groups_sources_hooks_destinations_and_common_retention loads all four workload fields under one job.
 D4,confirmed,AT-018;AT-022,verified,Independent consumers share one acquisition and defer release until the last lease is relinquished.
 D5,confirmed,AT-012;AT-013;AT-036,verified,Confirmed storage path and registered Restic ID are required before selection; mismatched storage or credentials make the destination unavailable.
 D6,confirmed,AT-014;AT-036,verified,Automatic run preserves absent path and the operations probe verifies explicit successful initialization.
 D7,confirmed,AT-015;AT-016,verified,A full backup/transfer result has a separate failed retention phase recorded for one repository.
 D8,confirmed,AT-001,verified,Fallback chooses the first configured secondary and the designated primary config stays byte-identical.
 D9,confirmed,AT-001,verified,The I5 fallback receives its own snapshot only on the first viable secondary; the later peer has copied representations only.
-D10,confirmed,AT-001;AT-002;AT-004;AT-017,not_executed,linux_i6_replication.py verifies unavailable primary during fallback and normal verification after the primary returns
+D10,confirmed,AT-001;AT-002,verified,LocalAcceptanceTests.test_primary_acquisition_failure_allows_fallback_and_is_rechecked_for_replication observes a fresh READ admission for the restored primary while the source stays fixed.
 D11,confirmed,AT-004,verified,Both normal receipts name primary as their fixed source and freeze the same four IDs.
 D12,confirmed,AT-008;AT-040,verified,A started secondary copy failure leaves the third target independently successful.
 D13,confirmed,AT-017;AT-033,verified,The I5 real Restic exit 3 leaves the chosen primary failed and preserves the secondary inventory byte-for-byte.
@@ -22,22 +22,22 @@ D20,confirmed,AT-018;AT-022,verified,No release is planned while an independent 
 D21,confirmed,AT-015;AT-016,verified,Operations probe sees integrated retention after convergence and standalone forget followed by opt-in prune.
 D22,confirmed,AT-015;AT-016,verified,All three targets use the same policy and retain two snapshots; an injected failure leaves other targets successful.
 D23,confirmed,AT-004;AT-015,verified,Each frozen copy set includes all four snapshots before keep-last retains two.
-D24,confirmed,AT-015;AT-016;AT-018,not_executed,linux_i7_operations.py runs verify separately against the explicitly selected primary
+D24,confirmed,AT-015;AT-016;AT-018,verified,LocalAcceptanceTests.test_explicit_verification_checks_only_selected_repository observes a separate VERIFY claim and one check for the selected target. The successful backup phase test observes no verify stage.
 D25,confirmed,AT-019;AT-037,verified,Owner death fences the active scope and a later job retains a distinct historical INTERRUPTED run.
 D26,confirmed,AT-023,verified,I5 second invocation of the active job returns JOB_BUSY.
 D27,confirmed,AT-023,verified,Two independent jobs reach their pre hook and both remain visible as active before completing.
 D28,confirmed,AT-023,verified,I5 one configured global slot rejects a second job and two configured slots allow concurrency.
 D29,confirmed,AT-023,verified,Individual overflow returns GLOBAL_BUSY while the queued batch peer later runs the frozen config.
-D30,confirmed,AT-019;AT-023;AT-029,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D30,confirmed,AT-023,verified,LocalAcceptanceTests.test_batch_submits_in_input_order_after_each_admission observes input order and allows overlap only after the first admission callback.
 D31,confirmed,AT-023,verified,Invalid job input leaves both independent valid members full.
 D32,confirmed,AT-023,verified,Batch reports aggregate exit 3 for invalid/full and exit 2 for partial/full.
 D33,confirmed,AT-008;AT-016,verified,Failed required copy yields partial; retention failure alone leaves a full backup and transfer result.
 D34,confirmed,AT-008;AT-016;AT-033,verified,"CLI emits full with successful transfers, partial after a copied-target failure, and failed without a valid backup."
 D35,confirmed,AT-008;AT-016;AT-033,verified,"Fixtures assert JSON outcomes and exit status 2 for partial, 0 for full, and 3 for failed."
 D36,confirmed,AT-023,verified,Aggregate failure takes precedence over success; partial takes precedence over full in a separate batch.
-D37,confirmed,AT-012;AT-013;AT-014;AT-036,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D37,confirmed,AT-040,not_executed,linux_i6_faults.py demonstrates started failure isolation using a bad password. Still requires a scoped target-disconnect injection and no-retry assertion.
 D38,confirmed,AT-004;AT-011,verified,A failed or reduced fixed-source baseline schedules no alternate normal source; live enumeration failure launches zero copies.
-D39,confirmed,AT-012;AT-013;AT-014;AT-036,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D39,confirmed,AT-001;AT-002,verified,LocalAcceptanceTests.test_primary_acquisition_failure_allows_fallback_and_is_rechecked_for_replication records STORAGE_UNAVAILABLE before selecting the peer and rechecks primary during replication.
 D40,confirmed,AT-014,verified,I5 unregistered destination returns NO_USABLE_DESTINATION and never creates its directory.
 D41,confirmed,AT-014,verified,Verification returns native lock exit 11 with stale lock bytes identical; confirmed explicit unlock removes them.
 D42,confirmed,AT-014;AT-036,verified,"Explicit repository init, inspect and stale-lock unlock operate through the verified storage and registered identity."
@@ -54,7 +54,7 @@ D52,confirmed,AT-023,verified,JobHistoryTests.test_retention_age_or_count_is_per
 D53,confirmed,AT-017,verified,Release follow-up asserts one typed JSON history result and human history with the identical overall result and cleanup phases.
 D54,confirmed,AT-035,verified,Dry-run preserves ledger and witness bytes; preflight validates repository without taking a snapshot.
 D55,confirmed,AT-028,verified,Operation cancellation yields exit 6 and runs cleanup; injected unproved scope exit fences a competing claim.
-D56,confirmed,AT-025;AT-035,not_executed,FoundationTests.test_confirmed_timeout_and_retention_configuration validates the confirmed configuration; runtime assertion pending
+D56,confirmed,AT-025;AT-035,verified,FoundationTests.test_confirmed_timeout_and_retention_configuration checks override limits and LocalAcceptanceTests.test_job_and_operation_overrides_bound_runtime_deadlines checks runtime expiry and the operation cap.
 D57,confirmed,AT-016;AT-022,verified,I7 job notification command receives structured result context; independent lifecycle command receives storage release context.
 D58,confirmed,AT-018;AT-022,verified,Separate job outcome and resource release lifecycles are observed; shared fixture emits release notification after termination.
 D59,confirmed,AT-016,verified,One failed notification attempt is persisted and leaves the corresponding job full.
@@ -62,29 +62,29 @@ D60,confirmed,AT-033;AT-034,verified,Required missing aborts before backup; miss
 D61,confirmed,AT-033,verified,Release follow-up omits required on an absent source and observes REQUIRED_SOURCE_MISSING.
 D62,confirmed,AT-033;AT-034,verified,I5 all-optional-missing returns NO_SOURCES_AVAILABLE with no new snapshot.
 D63,confirmed,AT-033,verified,A native Restic partial exit cannot record successful backup or trigger failover.
-D64,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D65,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D64,confirmed,AT-017;AT-033,verified,LocalAcceptanceTests.test_success_prepares_static_source_and_runs_cleanup_before_replication has the configured pre-hook boundary prepare the workload source before backup can read it.
+D65,confirmed,AT-017;AT-033,verified,LocalAcceptanceTests.test_success_prepares_static_source_and_runs_cleanup_before_replication passes the static source prepared by the hook to backup and checks the explicit execution order.
 D66,confirmed,AT-017,verified,"Successful preparation produces distinct ordered pre, post and cleanup markers; a failed pre hook suppresses post."
 D67,confirmed,AT-004;AT-017,verified,I6 phase trace records cleanup before normal replication; I5 executes it after failed preparation.
 D68,confirmed,AT-017,verified,Failed first cleanup and successful second cleanup are recorded independently while a successful backup remains full.
-D69,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D69,confirmed,AT-017,verified,LocalAcceptanceTests.test_success_prepares_static_source_and_runs_cleanup_before_replication observes pre then backup then post then cleanup then replication.
 D70,confirmed,AT-017,verified,The declared cleanup hooks run in order even though the first exits nonzero.
 D71,confirmed,AT-017,verified,Both declared cleanup hooks run after failed preparation and after successful backup.
 D72,confirmed,AT-017;AT-025,verified,I5 hook checks BACKUP_MANAGER_PHASE and obtains configured secret material via environment.
 D73,confirmed,AT-017;AT-034,verified,I5 pre hook creates the initially absent configured absolute source and Restic successfully backs it up.
 D74,confirmed,AT-017;AT-033,verified,A pre-hook creates the required source before validation; failed pre hook skips source validation.
-D75,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D75,confirmed,AT-025,verified,LocalAcceptanceTests.test_hooks_forward_arguments_credentials_and_independent_cleanup_deadline captures literal argv and cwd and environment and a resolved secret at the journal boundary.
 D76,confirmed,AT-025,verified,Truncated known-credential capture is omitted and the trace still sets the truncation flag.
-D77,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D77,confirmed,AT-017,verified,LocalAcceptanceTests.test_default_and_explicit_hook_credentials_resolve checks inherited and explicit identity handling. The hook invocation test verifies both selectors reach the journal boundary.
 D78,confirmed,AT-028,verified,Journaled scope timeout and cancellation terminate detached children; missing proof instead fences the claim.
-D79,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D80,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D79,confirmed,AT-017;AT-028,verified,LocalAcceptanceTests.test_hooks_forward_arguments_credentials_and_independent_cleanup_deadline checks bounded cleanup after job expiry and records a timeout outcome.
+D80,confirmed,AT-018;AT-022,verified,LocalAcceptanceTests.test_storage_release_dispatch_has_independent_budget_after_job_timeout schedules a release with the global release deadline after job expiry.
 D81,confirmed,AT-028,verified,StorageDriverTests.test_release_timeout_keeps_ownership_and_refuses_another_release injects a confirmed timeout and observes fresh inspection plus a persistent recovery fence that refuses another release.
 D82,confirmed,AT-028,verified,StorageDriverTests.test_unconfirmed_lifecycle_fences_another_acquisition injects uncertain containment and refuses a competing storage claim.
 D83,confirmed,AT-018;AT-022,verified,Independent CLI and holder processes coordinate a shared lease and a separate provider release through the same state ledger.
 D84,confirmed,AT-019;AT-028,verified,Claims remain fenced until the recorded dead owner's child scope is confirmed empty.
 D85,confirmed,AT-019;AT-021,verified,StorageCoordinatorTests.test_recovery_preserves_mounted_storage_and_drops_orphan_release_authority asserts orphan recovery performs no physical release.
-D86,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D86,confirmed,AT-021;AT-036,verified,StorageClaimsTests.test_verified_alias_and_changed_identity_require_recovery binds repeated verified physical evidence to the same resource and refuses aliased or changed identity.
 D87,confirmed,AT-036,verified,Admission and storage replacement tests both refuse a verified physical identity already bound to another resource.
 D88,confirmed,AT-022,verified,StorageClaimsTests rejects an unverifiable provider identity without explicit coordination and shares the fence under an explicit common identity.
 D89,confirmed,AT-036,verified,Generic recovery and wrong expected ID refuse a mounted replacement; explicit exact-ID approval advances only the verified storage binding to generation 2.
@@ -92,15 +92,15 @@ D90,confirmed,AT-036,verified,Repository approval cannot authorize changed stora
 D91,confirmed,AT-021,verified,Private ext4 fixture reuses its externally mounted filesystem only after physical identity verification.
 D92,confirmed,AT-021,verified,External marker-backed and ext4 fixture mounts remain available following claim release.
 D93,confirmed,AT-022,verified,StorageDriverTests.test_verified_acquisition_persists_generation_and_ownership_receipt reopens the ledger and verifies active claim and owned mount evidence at generation 1.
-D94,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D95,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D94,confirmed,AT-021;AT-028,verified,StorageDriverTests.test_fresh_mounted_state_overrides_successful_release_receipt preserves ownership and fences release when a fresh observation contradicts the worker receipt.
+D95,confirmed,AT-021;AT-036,verified,LocalAcceptanceTests.test_repository_disconnect_stops_identity_read_without_reacquiring observes a disconnect and proves no reacquisition or Restic invocation at the identity boundary.
 D96,confirmed,AT-022,verified,Two independent waiters share one acquisition and a single native acquire action.
-D97,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D98,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,linux_shared_storage.py asserts one participant withdrawal leaves the other acquisition active
+D97,confirmed,AT-022;AT-028,verified,LocalAcceptanceTests.test_acquisition_dispatch_uses_global_budget_and_fences_unconfirmed_worker observes the independent dispatch budget and a retained fence when termination is unconfirmed.
+D98,confirmed,AT-022,verified,LocalAcceptanceTests.test_job_deadline_withdraws_only_its_shared_acquisition_claim expires a joined caller while the peer and original acquisition remain active.
 D99,confirmed,AT-022,verified,"Last waiter withdrawal ends the startup scope, and a later fresh acquisition succeeds."
 D100,confirmed,AT-022,verified,StorageDriverTests.test_acquisition_after_release_requires_fresh_lifecycle_observation refuses admission during release and rejects a stale observation after release before accepting a fresh acquisition plan.
 D101,confirmed,AT-018;AT-021;AT-022,verified,Independent waiters join one acquisition; external storage is reused and owned lifecycle release waits for the last live claim.
-D102,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D102,confirmed,AT-018;AT-021;AT-022;AT-036,not_executed,Still requires native evidence tracing backup and maintenance and repository admin through the same storage lifecycle.
 D103,confirmed,AT-005;AT-006;AT-039,verified,Actual scopes serialize a shared destination and overlap distinct destinations with the certified shared source mode.
 D104,confirmed,AT-005;AT-006;AT-026,verified,Certified source operations overlap for distinct copy destinations; equal destinations serialize and held copy conflicts with forget/prune/check.
 D105,confirmed,AT-039,verified,StorageCoordinatorTests.test_repository_work_follows_verified_storage_and_releases_first verifies a conflicting waiter exits on cancellation or deadline without taking claims and can acquire after the holder releases.
@@ -121,14 +121,14 @@ G4,confirmed,AT-008;AT-040,verified,Target failure leaves its assigned requireme
 G5,confirmed,AT-039,verified,Reverse-order concurrent claim requests yield one complete canonically ordered claim set and one busy result.
 G6,confirmed,AT-003;AT-015,verified,The entire logical set is transferred before retention eligibility is applied.
 G7,confirmed,AT-008;AT-010,verified,Successful backup followed by a failed/unverified required transfer yields exit 2 and a partial job.
-L1,confirmed,AT-017;AT-018;AT-021;AT-022,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+L1,confirmed,AT-017,verified,LocalAcceptanceTests.test_failed_preparation_attempts_all_pre_and_cleanup_hooks records independent failures and skips sources and backup and post. Its successful counterpart checks phase order.
 L2,confirmed,AT-018;AT-022,verified,The earlier job is durable while another claimant remains; the final release has separate state and notification.
-L3,confirmed,AT-017;AT-018;AT-021;AT-022,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-L4,confirmed,AT-017;AT-018;AT-021;AT-022,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+L3,confirmed,AT-019;AT-021;AT-022,not_executed,Storage driver and coordinator unit tests exercise durable ownership and fresh observations. Still requires cross-process scope-backed reconciliation evidence.
+L4,confirmed,AT-022;AT-023,verified,LocalAcceptanceTests.test_global_slot_is_held_while_destination_selection_waits verifies the slot stays occupied during resource selection and is released after the job finishes.
 L5,confirmed,AT-017,verified,Failed preparation skips the source phase even when its configured required path is absent.
 L6,confirmed,AT-022,verified,Unverified identity without a coordination key is refused; equal explicit keys share claim fencing.
-A1,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-A2,confirmed,AT-024;AT-025;AT-026;AT-027,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+A1,confirmed,AT-024;AT-025,verified,LocalAcceptanceTests.test_storage_and_secret_entry_points_and_job_local_references loads both entry point kinds and resolves two independent references. FoundationTests verifies inline file and environment configuration.
+A2,confirmed,AT-024,verified,LocalAcceptanceTests.test_storage_provider_requires_inspection_and_identity_with_optional_actions accepts inspect-only lifecycle capability and rejects missing required or advertised methods.
 A3,confirmed,AT-039,verified,"Separate OS processes contend through SQLite and the witness advisory lock, yielding one complete ordered claim set and one busy exit."
 A4,confirmed,AT-009;AT-028;AT-037,verified,Scoped commands produce durable launch evidence; launch and exit uncertainty prevent conflicting admission.
 A5,confirmed,AT-018;AT-022,verified,Independent provider worker acquires once for joined participants and records its later scoped release failure.

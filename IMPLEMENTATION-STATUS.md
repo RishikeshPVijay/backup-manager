@@ -469,3 +469,38 @@ requirements. The local probes used disposable fixtures and loaded the package
 from the built wheel. The user systemd bus is unavailable in this environment.
 The full x86-64 and ARM64 workflow artifacts and 27 requirement rows remain
 open for release signoff.
+
+## I9 expanded local evidence
+
+- [x] D1, D2, D3, A1, A2. Audit the local CLI and wheel. Check separate
+  repository paths and registered Restic IDs, job document composition, real entry-point metadata discovery and
+  required storage capabilities.
+- [x] D10, D24, D30, D39, L4. Check fallback and fresh replication discovery,
+  explicit selected-target verification, batch order and slot retention.
+- [x] D56, D64, D65, D69, D75, D77, D79, L1. Exercise job and operation
+  deadlines, static source preparation, hook ordering, credential resolution,
+  independent hook failures and a cleanup deadline after job expiry.
+- [x] D80, D86, D94, D95, D97, D98. Check independent storage deadlines,
+  canonical identity, conflicting physical observations, disconnect refusal
+  and withdrawal of only the expired participant in a shared acquisition.
+
+The exact assertions are recorded in the traceability register. The unit
+checks use real configuration, package metadata and isolated SQLite state.
+Where the assertion reaches a worker boundary, the tests supply a controlled
+response or clock. Full scoped execution remains a release gate.
+
+| Command | Exit | Evidence |
+|---|---:|---|
+| `python tools/run_acceptance.py --parallel 2 --probe unit --probe claims --probe migration --output /tmp/bm-local-acceptance.NrWpDc/release-local` | 1 | Each probe exited 0. The installed wheel passed 113 tests on Python 3.13. The subset produced two passing scenarios and kept release acceptance open. |
+| `python tools/run_acceptance.py --parallel 2 --output /tmp/bm-local-acceptance.NrWpDc/installed-probes` | 1 | All 19 probes ran. Unit, claims, migration, lineage and native certification exited 0. Fourteen scoped probes failed. Each probe reported an empty fixture directory afterward. |
+| `python tools/run_linux_regressions.py namespace --output /tmp/bm-local-acceptance.NrWpDc/namespace` | 0 | All three probes passed with disposable mounts and reported cleanup. |
+| `systemctl --user show-environment` | 1 | User bus connection denied. The native supervisor probe could not confirm scope termination, and installed-wheel fixtures requiring repository registration returned `TERMINATION_UNCERTAIN`. |
+| `docker image inspect backup-manager-disposable-loop-test:latest` | 1 | Docker socket access denied and the current workspace exposes no loop-control device. The ext4 regression needs its disposable runner. |
+| `python tools/build_release.py --epoch 1704067200` (two output directories); `diff -qr` | 0 each | The two builds produced byte-identical archives. The wheel exposes one local console entry point. The sdist includes the added test module. |
+| `python tools/validate_handoff.py`; `python tools/verify_arm64_report.py`; `cmp` | 0 each | Static validation passed and the supplied ZIP extracted to the exact registered JSON bytes. |
+
+Assertion coverage is 136 of 139 confirmed requirements. D37 needs a target
+disconnect injected during a scoped copy, with peer success and no retry
+asserted. D102 and L3 need native evidence of shared lifecycle coordination
+and cross-process physical reconciliation. Both manually generated workflow
+artifacts remain pending.

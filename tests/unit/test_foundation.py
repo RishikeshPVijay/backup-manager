@@ -70,6 +70,27 @@ class FoundationTests(unittest.TestCase):
             {"DUPLICATE_DESTINATION", "REPOSITORY_PATH"},
         )
 
+    def test_distinct_destinations_on_shared_storage_cannot_share_repository_path(self):
+        self.assertEqual(self.cli("config", "validate", "--all", exit_code=0)["status"], "full")
+        self.job_path.write_text(self.job_path.read_text().replace("immich-replica", "immich"))
+        payload = self.cli("config", "validate", "--all", exit_code=4)
+        self.assertEqual([item["code"] for item in payload["errors"]], ["DUPLICATE_REPOSITORY"])
+
+    def test_job_document_groups_sources_hooks_destinations_and_common_retention(self):
+        with self.job_path.open("a") as stream:
+            stream.write('\n[[hooks.pre]]\nexecutable = "/bin/true"\n')
+        document = load_job(self.job_path, load_global(self.global_path))
+        self.assertEqual(document.errors, ())
+        self.assertEqual(document.data["job"]["id"], "immich")
+        self.assertEqual(document.data["sources"][0]["path"], "/srv/immich/library")
+        self.assertEqual(document.data["hooks"]["pre"][0]["executable"], "/bin/true")
+        destinations = document.data["destinations"]
+        self.assertEqual(destinations["primary"]["password"]["provider"], "file")
+        self.assertEqual(destinations["secondary"][0]["password"]["provider"], "environment")
+        self.assertEqual(dict(document.data["retention"]), {
+            "keep_daily": 7, "keep_weekly": 4, "keep_monthly": 12,
+        })
+
     def test_snapshot_is_immutable_and_independent_of_disk(self):
         document = load_job(self.job_path, load_global(self.global_path))
         self.assertEqual(document.errors, ())
@@ -95,6 +116,19 @@ class FoundationTests(unittest.TestCase):
 
     def test_version(self):
         self.assertEqual(self.cli("version", exit_code=0)["data"]["version"], "0.1.0")
+
+    def test_public_commands_are_local_orchestration_commands(self):
+        process = subprocess.run(
+            [sys.executable, "-m", "backup_manager.cli", "--help"],
+            capture_output=True, text=True, check=True, timeout=10,
+        )
+        commands = {
+            "config", "job", "batch", "storage", "repository", "retention",
+            "verify", "history", "operation", "state", "doctor", "version",
+        }
+        advertised = next(line.strip() for line in process.stdout.splitlines() if line.strip().startswith("{"))
+        self.assertEqual(set(advertised.partition("}")[0][1:].split(",")), commands)
+        self.assertEqual(process.stderr, "")
 
     def test_confirmed_timeout_and_retention_configuration(self):
         self.global_path.write_text(self.global_path.read_text() + "\n[logging]\nhistory_count = 25\n")

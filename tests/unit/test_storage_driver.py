@@ -115,6 +115,23 @@ class StorageDriverTests(unittest.TestCase):
             self.assertEqual(database.execute("SELECT owned_by_manager FROM storage_ownership").fetchone(), (1,))
             self.assertIsNone(plan_release(database, "disk-uuid", self.owner))
 
+    def test_fresh_mounted_state_overrides_successful_release_receipt(self):
+        release, evidence = self.reserve_release()
+        self.assertEqual(self.drive_release(
+            release, evidence, self.release_result(), self.mounted,
+        ), (False, None))
+        with state_read(self.path, self.anchor) as database:
+            self.assertEqual(lifecycle_view(database, "disk-uuid")[-1][2], "RECOVERY_REQUIRED")
+            self.assertEqual(database.execute("SELECT owned_by_manager FROM storage_ownership").fetchone(), (1,))
+
+    def release_result(self):
+        output = json.dumps({
+            "changed_physical_state": True,
+            "ownership_evidence": {},
+            "inspection": asdict(self.absent),
+        }).encode()
+        return ScopedResult(0, output, b"", False, "release-scope")
+
     def test_acquisition_after_release_requires_fresh_lifecycle_observation(self):
         release, evidence = self.reserve_release()
         with state_write(self.path, self.anchor) as database:
@@ -125,13 +142,7 @@ class StorageDriverTests(unittest.TestCase):
                 database, disk, competing_owner, stale, available=True, on_demand=True,
             ))
 
-        output = json.dumps({
-            "changed_physical_state": True,
-            "ownership_evidence": {},
-            "inspection": asdict(self.absent),
-        }).encode()
-        result = ScopedResult(0, output, b"", False, "release-scope")
-        self.assertEqual(self.drive_release(release, evidence, result, self.absent), (True, None))
+        self.assertEqual(self.drive_release(release, evidence, self.release_result(), self.absent), (True, None))
         with state_write(self.path, self.anchor) as database:
             self.assertIsNone(plan_acquisition(
                 database, disk, competing_owner, stale, available=True, on_demand=True,
