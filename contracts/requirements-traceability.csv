@@ -35,7 +35,7 @@ D33,confirmed,AT-008;AT-016,verified,Failed required copy yields partial; retent
 D34,confirmed,AT-008;AT-016;AT-033,verified,"CLI emits full with successful transfers, partial after a copied-target failure, and failed without a valid backup."
 D35,confirmed,AT-008;AT-016;AT-033,verified,"Fixtures assert JSON outcomes and exit status 2 for partial, 0 for full, and 3 for failed."
 D36,confirmed,AT-023,verified,Aggregate failure takes precedence over success; partial takes precedence over full in a separate batch.
-D37,confirmed,AT-040,not_executed,linux_i6_faults.py demonstrates started failure isolation using a bad password. Still requires a scoped target-disconnect injection and no-retry assertion.
+D37,confirmed,AT-040,not_executed,linux_i6_faults.disconnected_target detaches the disposable repository after durable launch and asserts one blocked target attempt plus peer success. Hosted execution pending.
 D38,confirmed,AT-004;AT-011,verified,A failed or reduced fixed-source baseline schedules no alternate normal source; live enumeration failure launches zero copies.
 D39,confirmed,AT-001;AT-002,verified,LocalAcceptanceTests.test_primary_acquisition_failure_allows_fallback_and_is_rechecked_for_replication records STORAGE_UNAVAILABLE before selecting the peer and rechecks primary during replication.
 D40,confirmed,AT-014,verified,I5 unregistered destination returns NO_USABLE_DESTINATION and never creates its directory.
@@ -100,7 +100,7 @@ D98,confirmed,AT-022,verified,LocalAcceptanceTests.test_job_deadline_withdraws_o
 D99,confirmed,AT-022,verified,"Last waiter withdrawal ends the startup scope, and a later fresh acquisition succeeds."
 D100,confirmed,AT-022,verified,StorageDriverTests.test_acquisition_after_release_requires_fresh_lifecycle_observation refuses admission during release and rejects a stale observation after release before accepting a fresh acquisition plan.
 D101,confirmed,AT-018;AT-021;AT-022,verified,Independent waiters join one acquisition; external storage is reused and owned lifecycle release waits for the last live claim.
-D102,confirmed,AT-018;AT-021;AT-022;AT-036,not_executed,Still requires native evidence tracing backup and maintenance and repository admin through the same storage lifecycle.
+D102,confirmed,AT-021,not_executed,linux_i9_boundaries.shared_lifecycle_across_commands asserts three independent command owners share one storage generation and defer the only release until the final claim. Hosted execution pending.
 D103,confirmed,AT-005;AT-006;AT-039,verified,Actual scopes serialize a shared destination and overlap distinct destinations with the certified shared source mode.
 D104,confirmed,AT-005;AT-006;AT-026,verified,Certified source operations overlap for distinct copy destinations; equal destinations serialize and held copy conflicts with forget/prune/check.
 D105,confirmed,AT-039,verified,StorageCoordinatorTests.test_repository_work_follows_verified_storage_and_releases_first verifies a conflicting waiter exits on cancellation or deadline without taking claims and can acquire after the holder releases.

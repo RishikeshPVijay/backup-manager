@@ -571,3 +571,27 @@ capabilities if Ubuntu's AppArmor sysctl requires it, then restores the
 original setting when the step exits. Each probe still creates a private
 mount namespace. The local namespace suite exited 0 with all three fixtures
 passing. Hosted verification of this workflow change remains pending.
+
+## Remaining acceptance assertions
+
+- [x] D37 / AT-040. The faults probe removes access to the disposable target
+  path in the scoped Restic launch callback after the durable receipt. It
+  checks partial job status, one started and blocked target attempt, no
+  successful evidence for that attempt, and a verified copy to the peer.
+- [x] D102 / AT-021. The boundaries probe holds one on-demand storage claim
+  while three independent CLI processes run backup, verification, and
+  repository registration. It checks that each uses the same storage
+  resource and generation, that the holder keeps the mount acquired, and that
+  one release settles after the final claim is dropped.
+
+The checklist tracks assertion implementation. Both requirement rows stay
+open pending hosted execution. The probes emit named SQLite evidence records
+for review in `faults/cli-and-sqlite.jsonl` and
+`boundaries/cli-and-sqlite.jsonl`.
+
+| Command | Exit | Evidence |
+|---|---:|---|
+| `python tools/validate_handoff.py` | 0 | Validated handoff and both profile references. |
+| `python -m py_compile tests/experiments/linux_i6_faults.py tests/experiments/linux_i9_boundaries.py` | 0 | Both changed probes compiled. |
+| `python -m unittest discover -s tests/unit` | 0 | 113 tests passed against the installed wheel. |
+| `python tools/run_acceptance.py --parallel 2 --probe faults --probe boundaries --output /tmp/bm-d37-d102.M4BxAv/evidence` | 1 | Both probes stopped at disposable repository registration with `TERMINATION_UNCERTAIN`. This workspace cannot access the user systemd bus. Neither new assertion was reached. |

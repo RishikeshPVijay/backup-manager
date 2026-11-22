@@ -21,7 +21,7 @@ scenarios:
   AT-018: {probes: [boundaries, shared, unit], expected: "An earlier durable job outcome survives a failed final storage release."}
   AT-019: {probes: [crash, jobs], expected: "Owner SIGKILL blocks another job until the recorded child scope is confirmed empty."}
   AT-020: {probes: [boundaries, unit], expected: "A corrupt database yields unsafe and leaves witness, corrupt file, repository, and storage lifecycle untouched."}
-  AT-021: {probes: [shared, jobs], expected: "An externally mounted resource is reused and remains mounted after final claim release."}
+  AT-021: {probes: [shared, jobs, boundaries], expected: "An external mount is preserved. Backup, verification and registration share one acquired storage generation, with one physical release after the final claim."}
   AT-022: {probes: [shared], expected: "One waiter may withdraw while its peer acquires and the last waiter stops unused acquisition."}
   AT-023: {probes: [jobs], expected: "Concurrent jobs finish independently; invalid/full returns failed and partial/full returns partial."}
   AT-024: {probes: [unit, boundaries], expected: "Unknown nested provider fields and multiple invalid job fields are rejected without echoing input."}
@@ -40,4 +40,4 @@ scenarios:
   AT-037: {probes: [launch], expected: "Faults after intent, scope-ready and exec never produce a successful terminal receipt."}
   AT-038: {probes: [migration, unit], expected: "An invalid migration rolls back DDL, preserves the backup manifest and leaves admission fenced."}
   AT-039: {probes: [claims], expected: "Reverse-ordered admission returns one complete claim and one busy result without hanging."}
-  AT-040: {probes: [faults], expected: "A failed secondary transfer leaves the independently successful third copy and existing history intact."}
+  AT-040: {probes: [faults], expected: "A failed secondary transfer preserves the third copy and existing history. A target detached after durable launch has one failed or unverified attempt, no retry, and a successful peer copy."}

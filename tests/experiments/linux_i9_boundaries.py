@@ -130,6 +130,74 @@ def later_release_failure(fixture):
                 peer.kill()
 
 
+def shared_lifecycle_across_commands(fixture):
+    fixture.job()
+    fixture.job(job_id="admin", primary_repo="peer")
+    fixture.config.write_text(fixture.config.read_text().replace('lifecycle = "always_on"', 'lifecycle = "on_demand"'))
+    marker = fixture.storage / "mounted"
+    marker.unlink()
+    actions = fixture.storage / "actions"
+    ready, release = fixture.root / "lease-ready", fixture.root / "lease-release"
+    command = [sys.executable, __file__, "--hold", str(fixture.config), str(ready), str(release)]
+
+    def claims():
+        with state_read(fixture.db, fixture.anchor, wait=5) as database:
+            return database.execute(
+                """SELECT owner_id, resource_id, generation, state FROM storage_claims
+                   ORDER BY rowid""",
+            ).fetchall()
+
+    observed = {}
+    with subprocess.Popen(command, env=fixture.env) as peer:
+        try:
+            await_condition(ready.exists)
+            initial = claims()
+            holder, = (row for row in initial if row[3] == "ACTIVE")
+            previous_count = len(initial)
+            for label, argv in (
+                ("backup", ("job", "run", "fixture")),
+                ("maintenance", ("verify", "run", "fixture", "--destination", "primary")),
+                ("repository_admin", ("repository", "register", "admin", "primary", "--yes")),
+            ):
+                result = fixture.cli(*argv)
+                assert result["status"] == "full"
+                current = claims()
+                new = current[previous_count:]
+                assert new and all(row[0] != holder[0] and row[1:3] == holder[1:3]
+                                   and row[3] == "RELEASED" for row in new)
+                assert [row for row in current if row[3] == "ACTIVE"] == [holder]
+                assert marker.exists() and actions.read_text().splitlines() == ["acquire"]
+                observed[label] = {"command": result["command"], "claims": new}
+                previous_count = len(current)
+            assert len({row[0] for step in observed.values() for row in step["claims"]}) == 3
+            release.touch()
+            assert peer.wait(timeout=15) == 0
+        finally:
+            if peer.poll() is None:
+                peer.kill()
+
+    def settled():
+        with state_read(fixture.db, fixture.anchor, wait=5) as database:
+            operations = database.execute(
+                "SELECT kind, state FROM storage_operations ORDER BY rowid",
+            ).fetchall()
+        return operations == [("acquire", "TERMINATED"), ("release", "TERMINATED")]
+
+    await_condition(settled)
+    assert not marker.exists()
+    assert actions.read_text().splitlines() == ["acquire", "release"]
+    assert all(row[3] == "RELEASED" for row in claims())
+    with state_read(fixture.db, fixture.anchor, wait=5) as database:
+        assert database.execute(
+            "SELECT owned_by_manager FROM storage_ownership WHERE resource_id = ? AND generation = ?",
+            holder[1:3],
+        ).fetchone() == (0,)
+        record(database, "D102", {
+            "resource_id": holder[1], "generation": holder[2], "commands": observed,
+            "actions": actions.read_text().splitlines(),
+        })
+
+
 def main():
     with TemporaryDirectory(prefix="bm-i9-boundaries-") as temporary:
         fixture = Fixture(Path(temporary))
@@ -180,6 +248,9 @@ def main():
         fixture = Fixture(Path(temporary))
         fixture.job()
         later_release_failure(fixture)
+    with TemporaryDirectory(prefix="bm-i9-shared-command-lifecycle-") as temporary:
+        shared_lifecycle_across_commands(Fixture(Path(temporary)))
+    print("Backup, maintenance and repository registration shared a single acquire and release.")
     print("Later release failure and independent storage and repository approval gates passed.")
     print("Unsupported binary, missing repository, stale lock, strict config, and corrupt-state gates passed.")
 

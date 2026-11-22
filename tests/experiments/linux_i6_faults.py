@@ -9,6 +9,8 @@ import sys
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
+from acceptance_trace import record
+from backup_manager import supervisor
 from backup_manager.cli import main as cli_main
 from backup_manager.convergence import logical_identity
 from backup_manager.jobs import DestinationRejected, JobRunner
@@ -22,7 +24,25 @@ from linux_i6_replication import identities, inventory
 def inject(mode, root, command):
     original = JobRunner.run_command
     copy = Replication.copy
+    execute = supervisor.execute
     injected = False
+    target = root / "storage" / "secondary"
+
+    def execute_with_target_loss(intent, argv, *, on_launch, **kwargs):
+        if mode != "target-disconnect" or "copy" not in argv or str(target) not in argv:
+            return execute(intent, argv, on_launch=on_launch, **kwargs)
+        if injected:
+            raise AssertionError("Disconnected target was launched again.")
+
+        def disconnect(receipt):
+            nonlocal injected
+            on_launch(receipt)
+            # Remove access to the disposable destination after durable launch
+            # and before the supervisor reads the command's terminal result.
+            target.rename(root / "disconnected-secondary")
+            injected = True
+
+        return execute(intent, argv, on_launch=disconnect, **kwargs)
 
     def run(self, invocation, **kwargs):
         nonlocal injected
@@ -59,7 +79,11 @@ def inject(mode, root, command):
         with patch.object(self, "inventory", side_effect=fail_origin):
             return copy(self, phase, plan)
 
-    with patch.object(JobRunner, "run_command", run), patch.object(Replication, "copy", copy_with_prelaunch_loss):
+    with (
+        patch.object(JobRunner, "run_command", run),
+        patch.object(Replication, "copy", copy_with_prelaunch_loss),
+        patch.object(supervisor, "execute", execute_with_target_loss),
+    ):
         code = cli_main(command)
     assert injected, f"Fault {mode} was never reached."
     return code
@@ -135,6 +159,39 @@ def vanished_source():
             assert all(row[2] == "primary" for row in rows if row[1] == "replication")
 
 
+def disconnected_target():
+    with TemporaryDirectory(prefix="bm-i6-target-disconnect-") as directory:
+        fixture = fixture_root(directory)
+        result = command(fixture, "target-disconnect")
+        assert result["data"]["backup"] == "succeeded"
+        assert (fixture.root / "disconnected-secondary").is_dir()
+        assert not (fixture.storage / "secondary").exists()
+        primary = next(item for item in inventory(fixture, "primary") if item.id == result["data"]["snapshot_id"])
+        assert logical_identity(primary) in identities(fixture, "third")
+        with state_read(fixture.db, fixture.anchor, wait=5) as database:
+            rows = attempts(database, result["operation_id"])
+            affected = [row for row in rows if row[3] == "secondary"]
+            assert len(affected) == 1
+            _, phase, source, _, outcome, launched, code, _ = affected[0]
+            assert (phase, source, launched) == ("replication", "primary", 1)
+            assert (outcome, code) in {
+                ("FAILED", "COPY_EXECUTION_FAILED"),
+                ("UNVERIFIED", "COPY_INVENTORY_UNAVAILABLE"),
+            }
+            assert any(row[1:6] == ("replication", "primary", "third", "SUCCEEDED", 1) for row in rows)
+            assert database.execute(
+                "SELECT count(*) FROM copy_evidence WHERE attempt_id = ?", (affected[0][0],),
+            ).fetchone() == (0,)
+            assert database.execute(
+                """SELECT state FROM transfer_requirements
+                   WHERE run_id = ? AND destination_key IN (
+                       SELECT repository_key FROM repository_registrations WHERE job_id = 'fixture'
+                       AND destination_id = 'secondary'
+                   )""", (result["operation_id"],),
+            ).fetchall() == [("BLOCKED",)]
+            record(database, "D37", {"target_attempts": affected, "peer_succeeded": True})
+
+
 def prelaunch_replan():
     with TemporaryDirectory(prefix="bm-i6-replan-") as directory:
         fixture = fixture_root(directory)
@@ -166,5 +223,6 @@ if __name__ == "__main__":
         sys.exit(inject(sys.argv[1], Path(sys.argv[2]), sys.argv[3:]))
     started_failure()
     vanished_source()
+    disconnected_target()
     prelaunch_replan()
-    print("Started failure isolation, fresh source-loss verification and prelaunch alternate-source replanning passed.")
+    print("Started failure isolation, source loss, target disconnect and prelaunch alternate-source replanning passed.")
