@@ -445,3 +445,27 @@ modes. [Native run](https://github.com/RishikeshPVijay/backup-manager/actions/ru
 - Installed-wheel ARM64 acceptance and authenticated CI dispatch remain
   pending. The local host is x86-64 and its user scope bus check returned
   operation not permitted. Thirty requirement assertions remain open.
+
+## I9 local acceptance follow-up
+
+- [x] D81. Inject a confirmed release timeout and assert fresh inspection,
+  retained ownership, and a recovery fence that prevents automatic release retry.
+- [x] D100. Assert that release fences acquisition, that the pre-release
+  observation expires when the release settles, and that fresh absence permits
+  a new acquisition plan.
+- [x] D105. Inject a deadline and cancellation separately while an incompatible
+  repository holder is active. Assert neither waiter takes claims and the
+  competitor can acquire after the holder releases.
+
+| Command | Exit | Evidence |
+|---|---:|---|
+| `python3 tools/build_release.py --epoch 1704067200 --output /tmp/bm-unblocked.tbPKSD/dist` | 0 | Built the wheel and sdist. The wheel SHA-256 is `ad7ffaa057c720d9f75f19827eb088353b8ab5c32d92a7383baa20c23a6946cd`. |
+| `python3 tools/run_acceptance.py --parallel 2 --probe unit --probe migration --probe native --probe lineage --output /tmp/bm-unblocked.tbPKSD/evidence` | 1 | All four probes exited 0. All five exact Linux x86-64 Restic 0.18.0 cases passed and removed their fixtures. The subset kept the release gate open. |
+| `python3 tools/run_acceptance.py --parallel 2 --probe unit --probe migration --probe claims --output /tmp/bm-unblocked.tbPKSD/final-checks` | 1 | All three probes exited 0. The wheel payload passed 93 tests on Python 3.13, the injected migration preserved the prior state, and independent processes produced one complete claim set and one busy result. |
+| `python3 tools/validate_handoff.py` | 0 | Static validation checked both registered profile report references. |
+
+The traceability register now has assertion evidence for 112 of 139 confirmed
+requirements. The local probes used disposable fixtures and loaded the package
+from the built wheel. The user systemd bus is unavailable in this environment.
+The full x86-64 and ARM64 workflow artifacts and 27 requirement rows remain
+open for release signoff.
