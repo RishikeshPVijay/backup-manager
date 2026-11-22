@@ -56,8 +56,8 @@ files for investigation. A newly registered instance starts with new history.
    dist/*.whl`. The wheel entry point also works in a pipx installation.
 2. Verify the Restic executable SHA-256 against the packaged profile. Set the
    executable to its absolute system path. The current certification covers
-   Linux x86-64. A new build or an aarch64 package requires its own exact
-   certification before use.
+   the registered Linux x86-64 and ARM64 fingerprints. A different build
+   requires its own exact certification before use.
 3. Run under a dedicated account with a functioning user systemd manager and
    delegated cgroup v2 access for scopes. Confirm `systemctl --user show-environment`
    in the same account and scheduling environment. Use a user timer or cron

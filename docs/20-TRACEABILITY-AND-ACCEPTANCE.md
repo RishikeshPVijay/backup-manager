@@ -23,3 +23,20 @@ available for diagnosis and always leaves the overall gate closed. The
 dedicated Linux workflow publishes artifacts even when the acceptance step
 fails, so reviewers can distinguish runtime failures from incomplete evidence.
 The broader workflow separately covers kernel mount fixtures.
+
+## Review the ARM64 certification artifact
+
+Use the original **restic-linux-arm64-candidate-report** ZIP from the
+[successful native ARM64 run](https://github.com/RishikeshPVijay/backup-manager/actions/runs/45003235957).
+Run `python tools/verify_arm64_report.py /path/to/artifact.zip`. The verifier
+checks the recorded ZIP digest, native architecture, pinned binary and source
+fingerprints, all five certification cases, and fixture cleanup. To retain the
+verified JSON, pass `--report-out` with a new file path.
+
+The printed metadata is input to profile review. Installing a profile still
+requires review of the observed compatibility claims, the registered report
+reference, and ARM64 installed-wheel acceptance.
+
+The manual acceptance workflow requires a disposable self-hosted runner for
+each architecture. Provision the architecture-specific certified Restic on
+PATH and working user systemd scopes before dispatch.

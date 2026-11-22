@@ -38,6 +38,14 @@ class ResticTests(unittest.TestCase):
         with self.assertRaises(ResticUnsupported):
             Restic.certified(self.binary, self.version)
 
+    def test_packaged_arm64_profile_requires_exact_binary_and_version(self):
+        binary = Binary(self.binary.path, "a4aa97c7d651e87eb5ade27e32ae0f457887ee16b86958845e781aa18e524d03")
+        version = result(b"restic 0.18.0 compiled with go1.24.1 on linux/arm64\n")
+        adapter = Restic.certified(binary, version)
+        self.assertEqual(adapter.profile.repository_formats, {1, 2})
+        with self.assertRaises(ResticUnsupported):
+            Restic.certified(binary, result(b"restic 0.18.0 compiled with go1.24.4 on linux/amd64\n"))
+
     def test_copy_requires_explicit_ids_and_separate_secret_channels(self):
         for ids in ((), (ID, ID), (ID[:8],)):
             with self.assertRaises((ValueError, ResticEvidenceError)):

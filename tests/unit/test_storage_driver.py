@@ -12,7 +12,7 @@ from backup_manager.process_identity import ProcessIdentity
 from backup_manager.state import StateUnsafe, initialize, state_read, state_write
 from backup_manager.storage_claims import drop_claim, lifecycle_view, plan_acquisition, reconcile_identity
 from backup_manager.storage_driver import drive_lifecycle
-from backup_manager.supervisor import ScopedResult
+from backup_manager.supervisor import ScopedResult, SupervisionUncertain
 
 
 class StorageDriverTests(unittest.TestCase):
@@ -54,6 +54,28 @@ class StorageDriverTests(unittest.TestCase):
             "inspection": asdict(self.mounted),
         }).encode()
         return ScopedResult(0, output, b"", False, "scope")
+
+    def test_verified_acquisition_persists_generation_and_ownership_receipt(self):
+        self.assertEqual(self.drive(self.result(), self.mounted), (True, None))
+        with state_read(self.path, self.anchor) as database:
+            generation, owned, evidence = database.execute(
+                "SELECT generation, owned_by_manager, evidence_json FROM storage_ownership",
+            ).fetchone()
+            self.assertEqual((generation, owned, json.loads(evidence)), (1, 1, self.identity.evidence))
+            self.assertEqual(database.execute("SELECT state FROM storage_claims").fetchone(), ("ACTIVE",))
+
+    def test_unconfirmed_lifecycle_fences_another_acquisition(self):
+        from backup_manager.storage_claims import admit_storage_claim
+
+        with patch("backup_manager.storage_driver.execute_lifecycle", side_effect=SupervisionUncertain):
+            with self.assertRaises(SupervisionUncertain):
+                drive_lifecycle(self.path, self.anchor, self.plan, self.owner, self.provider, {}, None)
+        self.provider.inspect.assert_not_awaited()
+        with state_write(self.path, self.anchor) as database:
+            disk = reconcile_identity(database, "disk", self.identity, None)
+            competitor = register_owner(database, self.process, "competitor")
+            self.assertEqual(lifecycle_view(database, "disk-uuid")[0][2], "RECOVERY_REQUIRED")
+            self.assertIsNone(admit_storage_claim(database, disk, competitor))
 
     def test_fresh_physical_inspection_is_required(self):
         with self.assertRaisesRegex(StateUnsafe, "fresh physical evidence"):

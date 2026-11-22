@@ -2,6 +2,7 @@
 
 from dataclasses import replace
 import json
+import shutil
 from pathlib import Path
 import subprocess
 import sys
@@ -142,7 +143,7 @@ def prelaunch_replan():
         fixture.restic("secondary", "backup", str(independent))
         original, = inventory(fixture, "secondary")
         subprocess.run(
-            ["/usr/bin/restic", "--no-cache", "--repo", str(fixture.storage / "third"), "copy",
+            [shutil.which("restic"), "--no-cache", "--repo", str(fixture.storage / "third"), "copy",
              "--from-repo", str(fixture.storage / "secondary"), "--", original.id],
             env={
                 "PATH": "/usr/bin:/bin", "RESTIC_PASSWORD": fixture.env["THIRD_SECRET"],

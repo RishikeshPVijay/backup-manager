@@ -62,7 +62,17 @@ jobs:
           if-no-files-found: error
   acceptance:
     if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
-    runs-on: [self-hosted, linux, x64, backup-manager-disposable]
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner_arch: x64
+            machine: x86_64
+            restic_sha256: 7135345e471b64fe43356f8cc665d33d9e52fb042ba39e5cff77310c46d46857
+          - runner_arch: arm64
+            machine: aarch64
+            restic_sha256: a4aa97c7d651e87eb5ade27e32ae0f457887ee16b86958845e781aa18e524d03
+    runs-on: [self-hosted, linux, "${{ matrix.runner_arch }}", backup-manager-disposable]
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
@@ -73,10 +83,17 @@ jobs:
       - run: python tools/validate_handoff.py
       - run: python -m build --no-isolation
       - run: python -m pip install --no-deps dist/*.whl
+      - name: Verify the acceptance runner and certified binary
+        env:
+          EXPECTED_MACHINE: ${{ matrix.machine }}
+          EXPECTED_RESTIC_SHA256: ${{ matrix.restic_sha256 }}
+        run: |
+          test "$(uname -m)" = "$EXPECTED_MACHINE"
+          test "$(sha256sum "$(command -v restic)" | cut -d' ' -f1)" = "$EXPECTED_RESTIC_SHA256"
       - run: python tools/run_acceptance.py --output "${RUNNER_TEMP}/backup-manager-i9-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
       - if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: release-acceptance-evidence
+          name: release-acceptance-evidence-${{ matrix.runner_arch }}
           path: ${{ runner.temp }}/backup-manager-i9-${{ github.run_id }}-${{ github.run_attempt }}/
           if-no-files-found: error

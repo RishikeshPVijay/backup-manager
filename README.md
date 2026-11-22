@@ -9,7 +9,7 @@ upgrade, and recovery.
 
 Use a Python 3.12 or 3.13 virtual environment and the exact Restic binary
 listed in [the installed profile registry](schemas/restic-profiles.json).
-The current profile covers Linux x86-64 repository formats 1 and 2. An
+The registry contains certified Linux x86-64 and ARM64 binaries for repository formats 1 and 2. An
 operator must initialize state and explicitly register or initialize each
 repository. The examples under `examples/` provide configuration templates.
 Put each job TOML in a `jobs` directory next to the global TOML, naming the file

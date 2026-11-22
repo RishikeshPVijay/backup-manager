@@ -80,7 +80,7 @@ D78,confirmed,AT-028,verified,Journaled scope timeout and cancellation terminate
 D79,confirmed,AT-017;AT-033;AT-034,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D80,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D81,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
-D82,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D82,confirmed,AT-028,verified,StorageDriverTests.test_unconfirmed_lifecycle_fences_another_acquisition injects uncertain containment and refuses a competing storage claim.
 D83,confirmed,AT-018;AT-022,verified,Independent CLI and holder processes coordinate a shared lease and a separate provider release through the same state ledger.
 D84,confirmed,AT-019;AT-028,verified,Claims remain fenced until the recorded dead owner's child scope is confirmed empty.
 D85,confirmed,AT-019;AT-021,verified,StorageCoordinatorTests.test_recovery_preserves_mounted_storage_and_drops_orphan_release_authority asserts orphan recovery performs no physical release.
@@ -91,7 +91,7 @@ D89,confirmed,AT-036,verified,Generic recovery and wrong expected ID refuse a mo
 D90,confirmed,AT-036,verified,Repository approval cannot authorize changed storage; storage approval leaves the registered Restic ID and generation intact until separate repository approval.
 D91,confirmed,AT-021,verified,Private ext4 fixture reuses its externally mounted filesystem only after physical identity verification.
 D92,confirmed,AT-021,verified,External marker-backed and ext4 fixture mounts remain available following claim release.
-D93,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
+D93,confirmed,AT-022,verified,StorageDriverTests.test_verified_acquisition_persists_generation_and_ownership_receipt reopens the ledger and verifies active claim and owned mount evidence at generation 1.
 D94,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D95,confirmed,AT-019;AT-021;AT-022;AT-028,not_executed,Domain mapping is provisional; refine to one-to-one assertions before release
 D96,confirmed,AT-022,verified,Two independent waiters share one acquisition and a single native acquire action.

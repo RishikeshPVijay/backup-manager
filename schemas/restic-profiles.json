@@ -23,6 +23,29 @@
       ],
       "report": "tests/certification/restic-0.18.0-linux-amd64.json",
       "report_sha256": "62c4058f102436b79308919d42cc31c16b6e4c0414ce7bf1020c641b83798ea4"
+    },
+    {
+      "binary_sha256": "a4aa97c7d651e87eb5ade27e32ae0f457887ee16b86958845e781aa18e524d03",
+      "version_line": "restic 0.18.0 compiled with go1.24.1 on linux/arm64",
+      "repository_formats": [
+        1,
+        2
+      ],
+      "native_overlap": [
+        [
+          "BACKUP",
+          "COPY_SOURCE"
+        ],
+        [
+          "COPY_SOURCE",
+          "READ"
+        ],
+        [
+          "COPY_SOURCE"
+        ]
+      ],
+      "report": "tests/certification/restic-0.18.0-linux-arm64.json",
+      "report_sha256": "bd3590a53c3b9d913c705fb216bfde46946c4133590d77394c31b713678a9bcd"
     }
   ]
 }

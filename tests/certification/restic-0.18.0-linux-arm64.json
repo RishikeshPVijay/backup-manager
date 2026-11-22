@@ -1,0 +1,2341 @@
+{
+  "schema_version": 1,
+  "git_commit": "8af65967d7cec88d655eec9019ccfa87f1e63763",
+  "runner_sha256": "1243c6fe0bff2ffe2cd21f569418bd5dad3b02033d09f8a7e91e08700b9fd04e",
+  "adapter_sha256": "187a8b26459219b568e82db58d0069120db8d761a161bff79d9be4ee89e6ee59",
+  "command": [
+    "/opt/hostedtoolcache/Python/3.13.18/arm64/bin/python",
+    "tools/certify_restic.py",
+    "--restic",
+    "/home/runner/work/_temp/restic-arm64",
+    "--report",
+    "restic-arm64-certification.json"
+  ],
+  "environment": "Linux-7.0.0-1017-azure-aarch64-with-glibc2.39",
+  "restic_version": "restic 0.18.0 compiled with go1.24.1 on linux/arm64",
+  "restic_binary_sha256": "a4aa97c7d651e87eb5ade27e32ae0f457887ee16b86958845e781aa18e524d03",
+  "cases": [
+    {
+      "test_id": "identity-json-lineage",
+      "repository_format": 1,
+      "fixture_removed": true,
+      "status": "pass",
+      "observations": {
+        "initial": {
+          "id": "97fedc435d8b094ee89a4445a2bdbda8838ed3ff40eafca45d9a37506e873a7c",
+          "original": null,
+          "tree": "54bcfe1a7de5ae6ee59f9ffe1ad968e9a11ea1013e961407121879c0894a46d1",
+          "time": "2025-01-01T00:00:00Z",
+          "hostname": "fixture",
+          "paths": [
+            "/tmp/bm-restic-cert-vu9cxqjb/data"
+          ],
+          "tags": [
+            "old"
+          ]
+        },
+        "copied": {
+          "id": "ff674a1643aecf9b021ae160a23862f09220758173fdd4b7982adc5035d722fe",
+          "original": "97fedc435d8b094ee89a4445a2bdbda8838ed3ff40eafca45d9a37506e873a7c",
+          "tree": "54bcfe1a7de5ae6ee59f9ffe1ad968e9a11ea1013e961407121879c0894a46d1",
+          "time": "2025-01-01T00:00:00Z",
+          "hostname": "fixture",
+          "paths": [
+            "/tmp/bm-restic-cert-vu9cxqjb/data"
+          ],
+          "tags": [
+            "old"
+          ]
+        },
+        "transitive": {
+          "id": "4e509e09be2207dffd9bba1554972f80034d1fb7f945a6cbf3fa3085654ed0bd",
+          "original": "97fedc435d8b094ee89a4445a2bdbda8838ed3ff40eafca45d9a37506e873a7c",
+          "tree": "54bcfe1a7de5ae6ee59f9ffe1ad968e9a11ea1013e961407121879c0894a46d1",
+          "time": "2025-01-01T00:00:00Z",
+          "hostname": "fixture",
+          "paths": [
+            "/tmp/bm-restic-cert-vu9cxqjb/data"
+          ],
+          "tags": [
+            "old"
+          ]
+        },
+        "rewritten": {
+          "id": "34b0eba1cb883ac35b4cbb03619fa1468c6ed5e842f2f583442108c22f901ceb",
+          "original": "97fedc435d8b094ee89a4445a2bdbda8838ed3ff40eafca45d9a37506e873a7c",
+          "tree": "54bcfe1a7de5ae6ee59f9ffe1ad968e9a11ea1013e961407121879c0894a46d1",
+          "time": "2025-01-01T00:00:00Z",
+          "hostname": "fixture",
+          "paths": [
+            "/tmp/bm-restic-cert-vu9cxqjb/data"
+          ],
+          "tags": [
+            "rewritten"
+          ]
+        },
+        "deleted_source_exit": 0,
+        "repository_identities": [
+          {
+            "id": "e6f5dd06e7bf8a2d194eba478b4ed409cb12c05be22f9614e67e4db6dde049d3",
+            "version": 1,
+            "chunker_polynomial": "3a454a47c79935"
+          },
+          {
+            "id": "ddb0f074cb1cadd89e7a629242df3d3ee795442272759cd031568e55b35ede09",
+            "version": 1,
+            "chunker_polynomial": "256acd5d04e5eb"
+          },
+          {
+            "id": "105d208a10d43910ea5ae43a33207bc1cf2b0962e55e07380899430928c9e0e1",
+            "version": 1,
+            "chunker_polynomial": "2916743e31c2c5"
+          }
+        ],
+        "identical_metadata_independent_ids": [
+          "3156f78c7422d9142ea766317b682e1328210762497c9ed5dcfab670580aff1f",
+          "e76741e0740e33df885f8528a2f25e491f8436a5fe1c9e1ec819d0a334600e09"
+        ],
+        "missing_requested_source_exit": 0,
+        "unreadable_source_exit": 3
+      },
+      "commands": [
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "init",
+            "--repository-version",
+            "1"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository e6f5dd06e7 at [fixture]/a\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "init",
+            "--repository-version",
+            "1"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository ddb0f074cb at [fixture]/b\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "init",
+            "--repository-version",
+            "1"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository 105d208a10 at [fixture]/c\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "cat",
+            "config"
+          ],
+          "exit": 0,
+          "stdout": "{\n  \"version\": 1,\n  \"id\": \"e6f5dd06e7bf8a2d194eba478b4ed409cb12c05be22f9614e67e4db6dde049d3\",\n  \"chunker_polynomial\": \"3a454a47c79935\"\n}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "cat",
+            "config"
+          ],
+          "exit": 0,
+          "stdout": "{\n  \"version\": 1,\n  \"id\": \"ddb0f074cb1cadd89e7a629242df3d3ee795442272759cd031568e55b35ede09\",\n  \"chunker_polynomial\": \"256acd5d04e5eb\"\n}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "cat",
+            "config"
+          ],
+          "exit": 0,
+          "stdout": "{\n  \"version\": 1,\n  \"id\": \"105d208a10d43910ea5ae43a33207bc1cf2b0962e55e07380899430928c9e0e1\",\n  \"chunker_polynomial\": \"2916743e31c2c5\"\n}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "cat",
+            "config"
+          ],
+          "exit": 12,
+          "stdout": "",
+          "stderr": "Fatal: wrong password or no key found\n"
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "backup",
+            "--json",
+            "--time",
+            "2025-01-01 00:00:00",
+            "--host",
+            "fixture",
+            "--tag",
+            "old",
+            "--",
+            "[fixture]/data"
+          ],
+          "exit": 0,
+          "stdout": "{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1105,\"data_added_packed\":1381,\"total_files_processed\":1,\"total_bytes_processed\":13,\"total_duration\":0.692160297,\"backup_start\":\"2026-11-22T08:32:10.604868424Z\",\"backup_end\":\"2026-11-22T08:32:11.297028729Z\",\"snapshot_id\":\"97fedc435d8b094ee89a4445a2bdbda8838ed3ff40eafca45d9a37506e873a7c\"}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"54bcfe1a7de5ae6ee59f9ffe1ad968e9a11ea1013e961407121879c0894a46d1\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:10.604868424Z\",\"backup_end\":\"2026-11-22T08:32:11.297028729Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1105,\"data_added_packed\":1381,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"97fedc435d8b094ee89a4445a2bdbda8838ed3ff40eafca45d9a37506e873a7c\",\"short_id\":\"97fedc43\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"54bcfe1a7de5ae6ee59f9ffe1ad968e9a11ea1013e961407121879c0894a46d1\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:10.604868424Z\",\"backup_end\":\"2026-11-22T08:32:11.297028729Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1105,\"data_added_packed\":1381,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"97fedc435d8b094ee89a4445a2bdbda8838ed3ff40eafca45d9a37506e873a7c\",\"short_id\":\"97fedc43\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "backup",
+            "--json",
+            "--time",
+            "2025-01-01 00:00:00",
+            "--host",
+            "fixture",
+            "--tag",
+            "old",
+            "--",
+            "[fixture]/data"
+          ],
+          "exit": 0,
+          "stdout": "{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1111,\"data_added_packed\":1387,\"total_files_processed\":1,\"total_bytes_processed\":19,\"total_duration\":0.687919884,\"backup_start\":\"2026-11-22T08:32:13.381075706Z\",\"backup_end\":\"2026-11-22T08:32:14.068995582Z\",\"snapshot_id\":\"db856789b9fbcba49aaab0b1532faa3679d5dc611f18c092d42e62c1eb87d1b8\"}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"9aa1487729e8b8a5e5d92dcb3a38477f1cee20ccd26705bc7370dcbb1e950c1b\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:13.381075706Z\",\"backup_end\":\"2026-11-22T08:32:14.068995582Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1111,\"data_added_packed\":1387,\"total_files_processed\":1,\"total_bytes_processed\":19},\"id\":\"db856789b9fbcba49aaab0b1532faa3679d5dc611f18c092d42e62c1eb87d1b8\",\"short_id\":\"db856789\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "97fedc435d8b094ee89a4445a2bdbda8838ed3ff40eafca45d9a37506e873a7c"
+          ],
+          "exit": 0,
+          "stdout": "\nsnapshot 97fedc43 of [[fixture]/data] at 2025-01-01 00:00:00 +0000 UTC by runner@fixture\n  copy started, this may take a while...\n[0:00] 100.00%  2 / 2 packs copied\n\nsnapshot ff674a16 saved\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"54bcfe1a7de5ae6ee59f9ffe1ad968e9a11ea1013e961407121879c0894a46d1\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"original\":\"97fedc435d8b094ee89a4445a2bdbda8838ed3ff40eafca45d9a37506e873a7c\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:10.604868424Z\",\"backup_end\":\"2026-11-22T08:32:11.297028729Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1105,\"data_added_packed\":1381,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"ff674a1643aecf9b021ae160a23862f09220758173fdd4b7982adc5035d722fe\",\"short_id\":\"ff674a16\"},{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"9aa1487729e8b8a5e5d92dcb3a38477f1cee20ccd26705bc7370dcbb1e950c1b\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:13.381075706Z\",\"backup_end\":\"2026-11-22T08:32:14.068995582Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1111,\"data_added_packed\":1387,\"total_files_processed\":1,\"total_bytes_processed\":19},\"id\":\"db856789b9fbcba49aaab0b1532faa3679d5dc611f18c092d42e62c1eb87d1b8\",\"short_id\":\"db856789\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "97fedc435d8b094ee89a4445a2bdbda8838ed3ff40eafca45d9a37506e873a7c"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"9aa1487729e8b8a5e5d92dcb3a38477f1cee20ccd26705bc7370dcbb1e950c1b\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:13.381075706Z\",\"backup_end\":\"2026-11-22T08:32:14.068995582Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1111,\"data_added_packed\":1387,\"total_files_processed\":1,\"total_bytes_processed\":19},\"id\":\"db856789b9fbcba49aaab0b1532faa3679d5dc611f18c092d42e62c1eb87d1b8\",\"short_id\":\"db856789\"},{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"54bcfe1a7de5ae6ee59f9ffe1ad968e9a11ea1013e961407121879c0894a46d1\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"original\":\"97fedc435d8b094ee89a4445a2bdbda8838ed3ff40eafca45d9a37506e873a7c\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:10.604868424Z\",\"backup_end\":\"2026-11-22T08:32:11.297028729Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1105,\"data_added_packed\":1381,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"ff674a1643aecf9b021ae160a23862f09220758173fdd4b7982adc5035d722fe\",\"short_id\":\"ff674a16\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "copy",
+            "--from-repo",
+            "[fixture]/b",
+            "--",
+            "ff674a1643aecf9b021ae160a23862f09220758173fdd4b7982adc5035d722fe"
+          ],
+          "exit": 0,
+          "stdout": "\nsnapshot ff674a16 of [[fixture]/data] at 2025-01-01 00:00:00 +0000 UTC by runner@fixture\n  copy started, this may take a while...\n[0:00] 100.00%  2 / 2 packs copied\n\nsnapshot 4e509e09 saved\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"54bcfe1a7de5ae6ee59f9ffe1ad968e9a11ea1013e961407121879c0894a46d1\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"original\":\"97fedc435d8b094ee89a4445a2bdbda8838ed3ff40eafca45d9a37506e873a7c\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:10.604868424Z\",\"backup_end\":\"2026-11-22T08:32:11.297028729Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1105,\"data_added_packed\":1381,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"4e509e09be2207dffd9bba1554972f80034d1fb7f945a6cbf3fa3085654ed0bd\",\"short_id\":\"4e509e09\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "tag",
+            "--set",
+            "rewritten",
+            "ff674a1643aecf9b021ae160a23862f09220758173fdd4b7982adc5035d722fe"
+          ],
+          "exit": 0,
+          "stdout": "create exclusive lock for repository\nmodified 1 snapshots\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"9aa1487729e8b8a5e5d92dcb3a38477f1cee20ccd26705bc7370dcbb1e950c1b\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:13.381075706Z\",\"backup_end\":\"2026-11-22T08:32:14.068995582Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1111,\"data_added_packed\":1387,\"total_files_processed\":1,\"total_bytes_processed\":19},\"id\":\"db856789b9fbcba49aaab0b1532faa3679d5dc611f18c092d42e62c1eb87d1b8\",\"short_id\":\"db856789\"},{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"54bcfe1a7de5ae6ee59f9ffe1ad968e9a11ea1013e961407121879c0894a46d1\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"rewritten\"],\"original\":\"97fedc435d8b094ee89a4445a2bdbda8838ed3ff40eafca45d9a37506e873a7c\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:10.604868424Z\",\"backup_end\":\"2026-11-22T08:32:11.297028729Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1105,\"data_added_packed\":1381,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"34b0eba1cb883ac35b4cbb03619fa1468c6ed5e842f2f583442108c22f901ceb\",\"short_id\":\"34b0eba1\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "copy",
+            "--from-repo",
+            "[fixture]/b",
+            "--",
+            "34b0eba1cb883ac35b4cbb03619fa1468c6ed5e842f2f583442108c22f901ceb"
+          ],
+          "exit": 0,
+          "stdout": "\nsnapshot 34b0eba1 of [[fixture]/data] at 2025-01-01 00:00:00 +0000 UTC by runner@fixture\n  copy started, this may take a while...\n[0:00]          0 packs copied\n\nsnapshot 705c8259 saved\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"54bcfe1a7de5ae6ee59f9ffe1ad968e9a11ea1013e961407121879c0894a46d1\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"rewritten\"],\"original\":\"97fedc435d8b094ee89a4445a2bdbda8838ed3ff40eafca45d9a37506e873a7c\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:10.604868424Z\",\"backup_end\":\"2026-11-22T08:32:11.297028729Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1105,\"data_added_packed\":1381,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"705c8259e292e2b45631116a9f4344b6b2838c3b24a0d016904814e8905a4ed7\",\"short_id\":\"705c8259\"},{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"54bcfe1a7de5ae6ee59f9ffe1ad968e9a11ea1013e961407121879c0894a46d1\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"original\":\"97fedc435d8b094ee89a4445a2bdbda8838ed3ff40eafca45d9a37506e873a7c\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:10.604868424Z\",\"backup_end\":\"2026-11-22T08:32:11.297028729Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1105,\"data_added_packed\":1381,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"4e509e09be2207dffd9bba1554972f80034d1fb7f945a6cbf3fa3085654ed0bd\",\"short_id\":\"4e509e09\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "forget",
+            "--json",
+            "--keep-last",
+            "1",
+            "--dry-run"
+          ],
+          "exit": 0,
+          "stdout": "[{\"tags\":null,\"host\":\"fixture\",\"paths\":[\"[fixture]/data\"],\"keep\":[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"54bcfe1a7de5ae6ee59f9ffe1ad968e9a11ea1013e961407121879c0894a46d1\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"original\":\"97fedc435d8b094ee89a4445a2bdbda8838ed3ff40eafca45d9a37506e873a7c\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:10.604868424Z\",\"backup_end\":\"2026-11-22T08:32:11.297028729Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1105,\"data_added_packed\":1381,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"4e509e09be2207dffd9bba1554972f80034d1fb7f945a6cbf3fa3085654ed0bd\",\"short_id\":\"4e509e09\"}],\"remove\":[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"54bcfe1a7de5ae6ee59f9ffe1ad968e9a11ea1013e961407121879c0894a46d1\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"rewritten\"],\"original\":\"97fedc435d8b094ee89a4445a2bdbda8838ed3ff40eafca45d9a37506e873a7c\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:10.604868424Z\",\"backup_end\":\"2026-11-22T08:32:11.297028729Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1105,\"data_added_packed\":1381,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"705c8259e292e2b45631116a9f4344b6b2838c3b24a0d016904814e8905a4ed7\",\"short_id\":\"705c8259\"}],\"reasons\":[{\"snapshot\":{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"54bcfe1a7de5ae6ee59f9ffe1ad968e9a11ea1013e961407121879c0894a46d1\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"original\":\"97fedc435d8b094ee89a4445a2bdbda8838ed3ff40eafca45d9a37506e873a7c\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:10.604868424Z\",\"backup_end\":\"2026-11-22T08:32:11.297028729Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1105,\"data_added_packed\":1381,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"4e509e09be2207dffd9bba1554972f80034d1fb7f945a6cbf3fa3085654ed0bd\",\"short_id\":\"4e509e09\"},\"matches\":[\"last snapshot\"]}]}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"54bcfe1a7de5ae6ee59f9ffe1ad968e9a11ea1013e961407121879c0894a46d1\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"original\":\"97fedc435d8b094ee89a4445a2bdbda8838ed3ff40eafca45d9a37506e873a7c\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:10.604868424Z\",\"backup_end\":\"2026-11-22T08:32:11.297028729Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1105,\"data_added_packed\":1381,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"4e509e09be2207dffd9bba1554972f80034d1fb7f945a6cbf3fa3085654ed0bd\",\"short_id\":\"4e509e09\"},{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"54bcfe1a7de5ae6ee59f9ffe1ad968e9a11ea1013e961407121879c0894a46d1\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"rewritten\"],\"original\":\"97fedc435d8b094ee89a4445a2bdbda8838ed3ff40eafca45d9a37506e873a7c\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:10.604868424Z\",\"backup_end\":\"2026-11-22T08:32:11.297028729Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1105,\"data_added_packed\":1381,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"705c8259e292e2b45631116a9f4344b6b2838c3b24a0d016904814e8905a4ed7\",\"short_id\":\"705c8259\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "forget",
+            "97fedc435d8b094ee89a4445a2bdbda8838ed3ff40eafca45d9a37506e873a7c"
+          ],
+          "exit": 0,
+          "stdout": "[0:00] 100.00%  1 / 1 files deleted\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"54bcfe1a7de5ae6ee59f9ffe1ad968e9a11ea1013e961407121879c0894a46d1\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"rewritten\"],\"original\":\"97fedc435d8b094ee89a4445a2bdbda8838ed3ff40eafca45d9a37506e873a7c\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:10.604868424Z\",\"backup_end\":\"2026-11-22T08:32:11.297028729Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1105,\"data_added_packed\":1381,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"34b0eba1cb883ac35b4cbb03619fa1468c6ed5e842f2f583442108c22f901ceb\",\"short_id\":\"34b0eba1\"},{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"9aa1487729e8b8a5e5d92dcb3a38477f1cee20ccd26705bc7370dcbb1e950c1b\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:13.381075706Z\",\"backup_end\":\"2026-11-22T08:32:14.068995582Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1111,\"data_added_packed\":1387,\"total_files_processed\":1,\"total_bytes_processed\":19},\"id\":\"db856789b9fbcba49aaab0b1532faa3679d5dc611f18c092d42e62c1eb87d1b8\",\"short_id\":\"db856789\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "97fedc435d8b094ee89a4445a2bdbda8838ed3ff40eafca45d9a37506e873a7c"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Load(<snapshot/97fedc435d>, 0, 0) failed: open [fixture]/a/snapshots/97fedc435d8b094ee89a4445a2bdbda8838ed3ff40eafca45d9a37506e873a7c: no such file or directory\nLoad(<snapshot/97fedc435d>, 0, 0) failed: open [fixture]/a/snapshots/97fedc435d8b094ee89a4445a2bdbda8838ed3ff40eafca45d9a37506e873a7c: no such file or directory\nIgnoring \"97fedc435d8b094ee89a4445a2bdbda8838ed3ff40eafca45d9a37506e873a7c\": failed to load snapshot 97fedc43: open [fixture]/a/snapshots/97fedc435d8b094ee89a4445a2bdbda8838ed3ff40eafca45d9a37506e873a7c: no such file or directory\n"
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"54bcfe1a7de5ae6ee59f9ffe1ad968e9a11ea1013e961407121879c0894a46d1\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"rewritten\"],\"original\":\"97fedc435d8b094ee89a4445a2bdbda8838ed3ff40eafca45d9a37506e873a7c\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:10.604868424Z\",\"backup_end\":\"2026-11-22T08:32:11.297028729Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1105,\"data_added_packed\":1381,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"34b0eba1cb883ac35b4cbb03619fa1468c6ed5e842f2f583442108c22f901ceb\",\"short_id\":\"34b0eba1\"},{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"9aa1487729e8b8a5e5d92dcb3a38477f1cee20ccd26705bc7370dcbb1e950c1b\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:13.381075706Z\",\"backup_end\":\"2026-11-22T08:32:14.068995582Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1111,\"data_added_packed\":1387,\"total_files_processed\":1,\"total_bytes_processed\":19},\"id\":\"db856789b9fbcba49aaab0b1532faa3679d5dc611f18c092d42e62c1eb87d1b8\",\"short_id\":\"db856789\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/identical",
+            "init",
+            "--repository-version",
+            "1"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository bd1519c17c at [fixture]/identical\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "backup",
+            "--json",
+            "--time",
+            "2025-01-01 00:00:00",
+            "--host",
+            "fixture",
+            "--tag",
+            "old",
+            "--stdin",
+            "--stdin-filename",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":0,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":1,\"data_added\":273,\"data_added_packed\":411,\"total_files_processed\":1,\"total_bytes_processed\":13,\"total_duration\":0.68332392,\"backup_start\":\"2026-11-22T08:32:32.804936829Z\",\"backup_end\":\"2026-11-22T08:32:33.488260757Z\",\"snapshot_id\":\"3156f78c7422d9142ea766317b682e1328210762497c9ed5dcfab670580aff1f\"}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/identical",
+            "backup",
+            "--json",
+            "--time",
+            "2025-01-01 00:00:00",
+            "--host",
+            "fixture",
+            "--tag",
+            "old",
+            "--stdin",
+            "--stdin-filename",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":0,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":1,\"data_added\":273,\"data_added_packed\":411,\"total_files_processed\":1,\"total_bytes_processed\":13,\"total_duration\":0.688911177,\"backup_start\":\"2026-11-22T08:32:33.497686712Z\",\"backup_end\":\"2026-11-22T08:32:34.186597889Z\",\"snapshot_id\":\"e76741e0740e33df885f8528a2f25e491f8436a5fe1c9e1ec819d0a334600e09\"}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"b0b58f997e6e81a71222f14cfbec894bcca22655149fc834edc82300824e884a\",\"paths\":[\"/fixture\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:32.804936829Z\",\"backup_end\":\"2026-11-22T08:32:33.488260757Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":0,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":1,\"data_added\":273,\"data_added_packed\":411,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"3156f78c7422d9142ea766317b682e1328210762497c9ed5dcfab670580aff1f\",\"short_id\":\"3156f78c\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/identical",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"b0b58f997e6e81a71222f14cfbec894bcca22655149fc834edc82300824e884a\",\"paths\":[\"/fixture\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:33.497686712Z\",\"backup_end\":\"2026-11-22T08:32:34.186597889Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":0,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":1,\"data_added\":273,\"data_added_packed\":411,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"e76741e0740e33df885f8528a2f25e491f8436a5fe1c9e1ec819d0a334600e09\",\"short_id\":\"e76741e0\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/identical",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "3156f78c7422d9142ea766317b682e1328210762497c9ed5dcfab670580aff1f"
+          ],
+          "exit": 0,
+          "stdout": "\nsnapshot 3156f78c of [/fixture] at 2025-01-01 00:00:00 +0000 UTC by runner@fixture\n  copy started, this may take a while...\n[0:00]          0 packs copied\n\nsnapshot 18e71997 saved\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/identical",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"b0b58f997e6e81a71222f14cfbec894bcca22655149fc834edc82300824e884a\",\"paths\":[\"/fixture\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"original\":\"3156f78c7422d9142ea766317b682e1328210762497c9ed5dcfab670580aff1f\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:32.804936829Z\",\"backup_end\":\"2026-11-22T08:32:33.488260757Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":0,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":1,\"data_added\":273,\"data_added_packed\":411,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"18e71997a336f0e988d56c472b5f2b79580a7bc2744b302607e42c51f0df1909\",\"short_id\":\"18e71997\"},{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"b0b58f997e6e81a71222f14cfbec894bcca22655149fc834edc82300824e884a\",\"paths\":[\"/fixture\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:33.497686712Z\",\"backup_end\":\"2026-11-22T08:32:34.186597889Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":0,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":1,\"data_added\":273,\"data_added_packed\":411,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"e76741e0740e33df885f8528a2f25e491f8436a5fe1c9e1ec819d0a334600e09\",\"short_id\":\"e76741e0\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"b0b58f997e6e81a71222f14cfbec894bcca22655149fc834edc82300824e884a\",\"paths\":[\"/fixture\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:32.804936829Z\",\"backup_end\":\"2026-11-22T08:32:33.488260757Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":0,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":1,\"data_added\":273,\"data_added_packed\":411,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"3156f78c7422d9142ea766317b682e1328210762497c9ed5dcfab670580aff1f\",\"short_id\":\"3156f78c\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "backup",
+            "--json",
+            "--",
+            "[fixture]/unavailable",
+            "[fixture]/data"
+          ],
+          "exit": 0,
+          "stdout": "{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1108,\"data_added_packed\":1384,\"total_files_processed\":1,\"total_bytes_processed\":19,\"total_duration\":0.68152828,\"backup_start\":\"2026-11-22T08:32:38.319723469Z\",\"backup_end\":\"2026-11-22T08:32:39.001251741Z\",\"snapshot_id\":\"27c2540334bdd2f0b06edc1e231384460414bc26a6e8d3ed2cb383147b93c555\"}\n",
+          "stderr": "[fixture]/unavailable does not exist, skipping\n"
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"b0b58f997e6e81a71222f14cfbec894bcca22655149fc834edc82300824e884a\",\"paths\":[\"/fixture\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:32.804936829Z\",\"backup_end\":\"2026-11-22T08:32:33.488260757Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":0,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":1,\"data_added\":273,\"data_added_packed\":411,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"3156f78c7422d9142ea766317b682e1328210762497c9ed5dcfab670580aff1f\",\"short_id\":\"3156f78c\"},{\"time\":\"2026-11-22T08:32:38.319723469Z\",\"tree\":\"c078b5dd4929731986a195e038eabbb7655dcf2ee2dc9a7d2bc4c1f1c8e01b5c\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"runnervmnfvap\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:38.319723469Z\",\"backup_end\":\"2026-11-22T08:32:39.001251741Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1108,\"data_added_packed\":1384,\"total_files_processed\":1,\"total_bytes_processed\":19},\"id\":\"27c2540334bdd2f0b06edc1e231384460414bc26a6e8d3ed2cb383147b93c555\",\"short_id\":\"27c25403\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "backup",
+            "--json",
+            "--",
+            "[fixture]/unreadable",
+            "[fixture]/data"
+          ],
+          "exit": 3,
+          "stdout": "{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":0,\"tree_blobs\":2,\"data_added\":729,\"data_added_packed\":867,\"total_files_processed\":1,\"total_bytes_processed\":19,\"total_duration\":0.685937064,\"backup_start\":\"2026-11-22T08:32:39.698191003Z\",\"backup_end\":\"2026-11-22T08:32:40.384128067Z\",\"snapshot_id\":\"d970c2a38b816943447d08e2255ed9e5cf0c8e106a8c0d7a3aecae11a3c6b8a0\"}\n",
+          "stderr": "{\"message_type\":\"error\",\"error\":{\"message\":\"open [fixture]/unreadable: permission denied\"},\"during\":\"archival\",\"item\":\"[fixture]/unreadable\"}\n{\"message_type\":\"exit_error\",\"code\":3,\"message\":\"Warning: at least one source file could not be read\"}\n"
+        }
+      ]
+    },
+    {
+      "test_id": "native-locks-and-interruption",
+      "repository_format": 1,
+      "fixture_removed": true,
+      "status": "pass",
+      "observations": {
+        "backup_while_copy": "d0a0863a22af524c55454727023f86fab64f6ab78bf345e77d590979d58f3142",
+        "forget": 11,
+        "prune": 11,
+        "check": 11,
+        "same_destination_copy": 0,
+        "same_destination_representations": 1
+      },
+      "commands": [
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "init",
+            "--repository-version",
+            "1"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository 9b0a348103 at [fixture]/a\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "init",
+            "--repository-version",
+            "1"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository d8f74cbfbc at [fixture]/b\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "init",
+            "--repository-version",
+            "1"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository 101c80e1ae at [fixture]/c\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/d",
+            "init",
+            "--repository-version",
+            "1"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository 28cf8addcc at [fixture]/d\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "backup",
+            "--json",
+            "--",
+            "[fixture]/large"
+          ],
+          "exit": 0,
+          "stdout": "{\"message_type\":\"status\",\"percent_done\":0.32169755299886066,\"total_files\":1,\"total_bytes\":12582912,\"bytes_done\":4047892,\"current_files\":[\"[fixture]/large\"]}\n{\"message_type\":\"status\",\"percent_done\":0.8528227806091309,\"total_files\":1,\"total_bytes\":12582912,\"bytes_done\":10730994,\"current_files\":[\"[fixture]/large\"]}\n{\"message_type\":\"status\",\"percent_done\":1,\"total_files\":1,\"files_done\":1,\"total_bytes\":12582912,\"bytes_done\":12582912}\n{\"message_type\":\"status\",\"percent_done\":1,\"total_files\":1,\"files_done\":1,\"total_bytes\":12582912,\"bytes_done\":12582912}\n{\"message_type\":\"status\",\"percent_done\":1,\"total_files\":1,\"files_done\":1,\"total_bytes\":12582912,\"bytes_done\":12582912}\n{\"message_type\":\"status\",\"percent_done\":1,\"total_files\":1,\"files_done\":1,\"total_bytes\":12582912,\"bytes_done\":12582912}\n{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":7,\"tree_blobs\":3,\"data_added\":12584413,\"data_added_packed\":12585103,\"total_files_processed\":1,\"total_bytes_processed\":12582912,\"total_duration\":0.787688844,\"backup_start\":\"2026-11-22T08:32:10.604971401Z\",\"backup_end\":\"2026-11-22T08:32:11.392660245Z\",\"snapshot_id\":\"4a7f8e96733dde85635184366c107d5c9a7944083e30dce6ba6ec524e21600cb\"}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-22T08:32:10.604971401Z\",\"tree\":\"d2edb1abdaa0e93b24da8f285748e527ca7db01d3ccf1f5633175bd6e016fa36\",\"paths\":[\"[fixture]/large\"],\"hostname\":\"runnervmnfvap\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:10.604971401Z\",\"backup_end\":\"2026-11-22T08:32:11.392660245Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":7,\"tree_blobs\":3,\"data_added\":12584413,\"data_added_packed\":12585103,\"total_files_processed\":1,\"total_bytes_processed\":12582912},\"id\":\"4a7f8e96733dde85635184366c107d5c9a7944083e30dce6ba6ec524e21600cb\",\"short_id\":\"4a7f8e96\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-22T08:32:10.604971401Z\",\"tree\":\"d2edb1abdaa0e93b24da8f285748e527ca7db01d3ccf1f5633175bd6e016fa36\",\"paths\":[\"[fixture]/large\"],\"hostname\":\"runnervmnfvap\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:10.604971401Z\",\"backup_end\":\"2026-11-22T08:32:11.392660245Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":7,\"tree_blobs\":3,\"data_added\":12584413,\"data_added_packed\":12585103,\"total_files_processed\":1,\"total_bytes_processed\":12582912},\"id\":\"4a7f8e96733dde85635184366c107d5c9a7944083e30dce6ba6ec524e21600cb\",\"short_id\":\"4a7f8e96\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-22T08:32:10.604971401Z\",\"tree\":\"d2edb1abdaa0e93b24da8f285748e527ca7db01d3ccf1f5633175bd6e016fa36\",\"paths\":[\"[fixture]/large\"],\"hostname\":\"runnervmnfvap\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:10.604971401Z\",\"backup_end\":\"2026-11-22T08:32:11.392660245Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":7,\"tree_blobs\":3,\"data_added\":12584413,\"data_added_packed\":12585103,\"total_files_processed\":1,\"total_bytes_processed\":12582912},\"id\":\"4a7f8e96733dde85635184366c107d5c9a7944083e30dce6ba6ec524e21600cb\",\"short_id\":\"4a7f8e96\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "backup",
+            "--json",
+            "--",
+            "[fixture]/extra"
+          ],
+          "exit": 0,
+          "stdout": "{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1108,\"data_added_packed\":1384,\"total_files_processed\":1,\"total_bytes_processed\":15,\"total_duration\":0.685403207,\"backup_start\":\"2026-11-22T08:32:14.866857642Z\",\"backup_end\":\"2026-11-22T08:32:15.552260849Z\",\"snapshot_id\":\"d0a0863a22af524c55454727023f86fab64f6ab78bf345e77d590979d58f3142\"}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-22T08:32:10.604971401Z\",\"tree\":\"d2edb1abdaa0e93b24da8f285748e527ca7db01d3ccf1f5633175bd6e016fa36\",\"paths\":[\"[fixture]/large\"],\"hostname\":\"runnervmnfvap\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:10.604971401Z\",\"backup_end\":\"2026-11-22T08:32:11.392660245Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":7,\"tree_blobs\":3,\"data_added\":12584413,\"data_added_packed\":12585103,\"total_files_processed\":1,\"total_bytes_processed\":12582912},\"id\":\"4a7f8e96733dde85635184366c107d5c9a7944083e30dce6ba6ec524e21600cb\",\"short_id\":\"4a7f8e96\"},{\"time\":\"2026-11-22T08:32:14.866857642Z\",\"tree\":\"323296e378db7832842b0ad27ec08b4eca43bc4e6a448235232af50f7c669d1a\",\"paths\":[\"[fixture]/extra\"],\"hostname\":\"runnervmnfvap\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:14.866857642Z\",\"backup_end\":\"2026-11-22T08:32:15.552260849Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1108,\"data_added_packed\":1384,\"total_files_processed\":1,\"total_bytes_processed\":15},\"id\":\"d0a0863a22af524c55454727023f86fab64f6ab78bf345e77d590979d58f3142\",\"short_id\":\"d0a0863a\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "4a7f8e96733dde85635184366c107d5c9a7944083e30dce6ba6ec524e21600cb"
+          ],
+          "exit": 0,
+          "stdout": "\nsnapshot 4a7f8e96 of [[fixture]/large] at 2026-11-22 08:32:10.604971401 +0000 UTC by runner@runnervmnfvap\n  copy started, this may take a while...\n[0:00] 100.00%  2 / 2 packs copied\n\nsnapshot 3ff3dfa5 saved\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-22T08:32:10.604971401Z\",\"tree\":\"d2edb1abdaa0e93b24da8f285748e527ca7db01d3ccf1f5633175bd6e016fa36\",\"paths\":[\"[fixture]/large\"],\"hostname\":\"runnervmnfvap\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"original\":\"4a7f8e96733dde85635184366c107d5c9a7944083e30dce6ba6ec524e21600cb\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:10.604971401Z\",\"backup_end\":\"2026-11-22T08:32:11.392660245Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":7,\"tree_blobs\":3,\"data_added\":12584413,\"data_added_packed\":12585103,\"total_files_processed\":1,\"total_bytes_processed\":12582912},\"id\":\"3ff3dfa58bb376beeb933b6f26ebae452b21e5158c95bc9378ed5808ce33b6fd\",\"short_id\":\"3ff3dfa5\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "forget",
+            "--json",
+            "--keep-last",
+            "1"
+          ],
+          "exit": 11,
+          "stdout": "",
+          "stderr": "{\"message_type\":\"exit_error\",\"code\":11,\"message\":\"unable to create lock in backend: repository is already locked by PID 2537 on runnervmnfvap by runner (UID 1001, GID 1001)\\nlock was created at 2026-11-22 08:32:13 (5.665538341s ago)\\nstorage ID 0273f7e0\\nthe `unlock` command can be used to remove stale locks\"}\n"
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "prune"
+          ],
+          "exit": 11,
+          "stdout": "repo already locked, waiting up to 0s for the lock\n",
+          "stderr": "unable to create lock in backend: repository is already locked by PID 2537 on runnervmnfvap by runner (UID 1001, GID 1001)\nlock was created at 2026-11-22 08:32:13 (6.151223509s ago)\nstorage ID 0273f7e0\nthe `unlock` command can be used to remove stale locks\n"
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "check"
+          ],
+          "exit": 11,
+          "stdout": "create exclusive lock for repository\nrepo already locked, waiting up to 0s for the lock\n",
+          "stderr": "unable to create lock in backend: repository is already locked by PID 2537 on runnervmnfvap by runner (UID 1001, GID 1001)\nlock was created at 2026-11-22 08:32:13 (6.635163816s ago)\nstorage ID 0273f7e0\nthe `unlock` command can be used to remove stale locks\n"
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--limit-upload",
+            "2048",
+            "--pack-size",
+            "4",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "4a7f8e96733dde85635184366c107d5c9a7944083e30dce6ba6ec524e21600cb"
+          ],
+          "exit": 1,
+          "stdout": "\nsnapshot 4a7f8e96 of [[fixture]/large] at 2026-11-22 08:32:10.604971401 +0000 UTC by runner@runnervmnfvap\n  copy started, this may take a while...\n[0:06] 50.00%  1 / 2 packs copied\n\n",
+          "stderr": "\u001b[2Ksignal interrupt received, cleaning up\nFatal: context canceled\n"
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "check"
+          ],
+          "exit": 0,
+          "stdout": "create exclusive lock for repository\nload indexes\ncheck all packs\n1 additional files were found in the repo, which likely contain duplicate data.\nThis is non-critical, you can run `restic prune` to correct this.\ncheck snapshots, trees and blobs\n[0:00]          0 snapshots\nno errors were found\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/d",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "4a7f8e96733dde85635184366c107d5c9a7944083e30dce6ba6ec524e21600cb"
+          ],
+          "exit": 0,
+          "stdout": "\nsnapshot 4a7f8e96 of [[fixture]/large] at 2026-11-22 08:32:10.604971401 +0000 UTC by runner@runnervmnfvap\n  copy started, this may take a while...\n[0:00] 100.00%  2 / 2 packs copied\n\nsnapshot 237d51ee saved\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--limit-upload",
+            "2048",
+            "--pack-size",
+            "4",
+            "--no-cache",
+            "--repo",
+            "[fixture]/d",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "4a7f8e96733dde85635184366c107d5c9a7944083e30dce6ba6ec524e21600cb"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/d",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-22T08:32:10.604971401Z\",\"tree\":\"d2edb1abdaa0e93b24da8f285748e527ca7db01d3ccf1f5633175bd6e016fa36\",\"paths\":[\"[fixture]/large\"],\"hostname\":\"runnervmnfvap\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"original\":\"4a7f8e96733dde85635184366c107d5c9a7944083e30dce6ba6ec524e21600cb\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:10.604971401Z\",\"backup_end\":\"2026-11-22T08:32:11.392660245Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":7,\"tree_blobs\":3,\"data_added\":12584413,\"data_added_packed\":12585103,\"total_files_processed\":1,\"total_bytes_processed\":12582912},\"id\":\"237d51ee5f3289fe57d3402f7d588f36814c97bb11f00725b4b2d838180d90a8\",\"short_id\":\"237d51ee\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "4a7f8e96733dde85635184366c107d5c9a7944083e30dce6ba6ec524e21600cb"
+          ],
+          "exit": 0,
+          "stdout": "\nsnapshot 4a7f8e96 of [[fixture]/large] at 2026-11-22 08:32:10.604971401 +0000 UTC by runner@runnervmnfvap\n  copy started, this may take a while...\n[0:00] 100.00%  2 / 2 packs copied\n\nsnapshot 14ab7b89 saved\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-22T08:32:10.604971401Z\",\"tree\":\"d2edb1abdaa0e93b24da8f285748e527ca7db01d3ccf1f5633175bd6e016fa36\",\"paths\":[\"[fixture]/large\"],\"hostname\":\"runnervmnfvap\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"original\":\"4a7f8e96733dde85635184366c107d5c9a7944083e30dce6ba6ec524e21600cb\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:10.604971401Z\",\"backup_end\":\"2026-11-22T08:32:11.392660245Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":7,\"tree_blobs\":3,\"data_added\":12584413,\"data_added_packed\":12585103,\"total_files_processed\":1,\"total_bytes_processed\":12582912},\"id\":\"14ab7b898553b8d587a7a5525bde47006b99ac0e3ef5a7d21b3392676296a6dc\",\"short_id\":\"14ab7b89\"}]\n",
+          "stderr": ""
+        }
+      ]
+    },
+    {
+      "test_id": "identity-json-lineage",
+      "repository_format": 2,
+      "fixture_removed": true,
+      "status": "pass",
+      "observations": {
+        "initial": {
+          "id": "a9e4cb4295ac7e3bcbbfe2757527b9f16774b33e4e0865070a4de6616c83ce01",
+          "original": null,
+          "tree": "890163e3c55c1a1ab43c6eb6c43a71d6698392be9c116607ebef6098ea25acc0",
+          "time": "2025-01-01T00:00:00Z",
+          "hostname": "fixture",
+          "paths": [
+            "/tmp/bm-restic-cert-y21wz9aa/data"
+          ],
+          "tags": [
+            "old"
+          ]
+        },
+        "copied": {
+          "id": "4e8297e1011972d117aa2c8906b20b6c1714f0c886503fdb166b36f33ba3019d",
+          "original": "a9e4cb4295ac7e3bcbbfe2757527b9f16774b33e4e0865070a4de6616c83ce01",
+          "tree": "890163e3c55c1a1ab43c6eb6c43a71d6698392be9c116607ebef6098ea25acc0",
+          "time": "2025-01-01T00:00:00Z",
+          "hostname": "fixture",
+          "paths": [
+            "/tmp/bm-restic-cert-y21wz9aa/data"
+          ],
+          "tags": [
+            "old"
+          ]
+        },
+        "transitive": {
+          "id": "60812c28b92fc6dd4f8a570cd53f86d118d3354e3853a52bf3710b9892f9a4e8",
+          "original": "a9e4cb4295ac7e3bcbbfe2757527b9f16774b33e4e0865070a4de6616c83ce01",
+          "tree": "890163e3c55c1a1ab43c6eb6c43a71d6698392be9c116607ebef6098ea25acc0",
+          "time": "2025-01-01T00:00:00Z",
+          "hostname": "fixture",
+          "paths": [
+            "/tmp/bm-restic-cert-y21wz9aa/data"
+          ],
+          "tags": [
+            "old"
+          ]
+        },
+        "rewritten": {
+          "id": "069ebf344d3005d6b8820b65b3453ed8377741456c8d398c654ace8f660b1e43",
+          "original": "a9e4cb4295ac7e3bcbbfe2757527b9f16774b33e4e0865070a4de6616c83ce01",
+          "tree": "890163e3c55c1a1ab43c6eb6c43a71d6698392be9c116607ebef6098ea25acc0",
+          "time": "2025-01-01T00:00:00Z",
+          "hostname": "fixture",
+          "paths": [
+            "/tmp/bm-restic-cert-y21wz9aa/data"
+          ],
+          "tags": [
+            "rewritten"
+          ]
+        },
+        "deleted_source_exit": 0,
+        "repository_identities": [
+          {
+            "id": "f1192efa2f891d549d07eeae83c2888727ff8dcb33d58f3ac1b011704c9d9a87",
+            "version": 2,
+            "chunker_polynomial": "2480a2b1b2c531"
+          },
+          {
+            "id": "acd27732e6f9822948ffeb54bd48aa211d8f86b522e131049411cf8073ce8dab",
+            "version": 2,
+            "chunker_polynomial": "3aea0c612e28d3"
+          },
+          {
+            "id": "458eb5e3aaec7fcc45b3d95501783e389591f6962df8726b519eaed27bd50885",
+            "version": 2,
+            "chunker_polynomial": "2c5c254ce6180b"
+          }
+        ],
+        "identical_metadata_independent_ids": [
+          "c8a6b7acb4ee27742544b829d7229f7a4825434a5009ee22c3fbcf78fdfb404e",
+          "9478d1839fab3ddd602e0f99bda342a827375582d7dac43cf276dc13781dc225"
+        ],
+        "missing_requested_source_exit": 0,
+        "unreadable_source_exit": 3
+      },
+      "commands": [
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "init",
+            "--repository-version",
+            "2"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository f1192efa2f at [fixture]/a\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "init",
+            "--repository-version",
+            "2"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository acd27732e6 at [fixture]/b\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "init",
+            "--repository-version",
+            "2"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository 458eb5e3aa at [fixture]/c\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "cat",
+            "config"
+          ],
+          "exit": 0,
+          "stdout": "{\n  \"version\": 2,\n  \"id\": \"f1192efa2f891d549d07eeae83c2888727ff8dcb33d58f3ac1b011704c9d9a87\",\n  \"chunker_polynomial\": \"2480a2b1b2c531\"\n}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "cat",
+            "config"
+          ],
+          "exit": 0,
+          "stdout": "{\n  \"version\": 2,\n  \"id\": \"acd27732e6f9822948ffeb54bd48aa211d8f86b522e131049411cf8073ce8dab\",\n  \"chunker_polynomial\": \"3aea0c612e28d3\"\n}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "cat",
+            "config"
+          ],
+          "exit": 0,
+          "stdout": "{\n  \"version\": 2,\n  \"id\": \"458eb5e3aaec7fcc45b3d95501783e389591f6962df8726b519eaed27bd50885\",\n  \"chunker_polynomial\": \"2c5c254ce6180b\"\n}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "cat",
+            "config"
+          ],
+          "exit": 12,
+          "stdout": "",
+          "stderr": "Fatal: wrong password or no key found\n"
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "backup",
+            "--json",
+            "--time",
+            "2025-01-01 00:00:00",
+            "--host",
+            "fixture",
+            "--tag",
+            "old",
+            "--",
+            "[fixture]/data"
+          ],
+          "exit": 0,
+          "stdout": "{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1102,\"data_added_packed\":985,\"total_files_processed\":1,\"total_bytes_processed\":13,\"total_duration\":0.685116605,\"backup_start\":\"2026-11-22T08:32:38.461125407Z\",\"backup_end\":\"2026-11-22T08:32:39.146242108Z\",\"snapshot_id\":\"a9e4cb4295ac7e3bcbbfe2757527b9f16774b33e4e0865070a4de6616c83ce01\"}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"890163e3c55c1a1ab43c6eb6c43a71d6698392be9c116607ebef6098ea25acc0\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:38.461125407Z\",\"backup_end\":\"2026-11-22T08:32:39.146242108Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1102,\"data_added_packed\":985,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"a9e4cb4295ac7e3bcbbfe2757527b9f16774b33e4e0865070a4de6616c83ce01\",\"short_id\":\"a9e4cb42\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"890163e3c55c1a1ab43c6eb6c43a71d6698392be9c116607ebef6098ea25acc0\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:38.461125407Z\",\"backup_end\":\"2026-11-22T08:32:39.146242108Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1102,\"data_added_packed\":985,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"a9e4cb4295ac7e3bcbbfe2757527b9f16774b33e4e0865070a4de6616c83ce01\",\"short_id\":\"a9e4cb42\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "backup",
+            "--json",
+            "--time",
+            "2025-01-01 00:00:00",
+            "--host",
+            "fixture",
+            "--tag",
+            "old",
+            "--",
+            "[fixture]/data"
+          ],
+          "exit": 0,
+          "stdout": "{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1108,\"data_added_packed\":991,\"total_files_processed\":1,\"total_bytes_processed\":19,\"total_duration\":0.692277161,\"backup_start\":\"2026-11-22T08:32:41.241521644Z\",\"backup_end\":\"2026-11-22T08:32:41.933798813Z\",\"snapshot_id\":\"4a3ede84dccd13d9e311fc14bb184ed66ffd09c327e25d505134c1a7f726432f\"}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"6cadbd4c06faa6e23bbe69593522c4ae2f460f4298566297e3b7c925518a726a\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:41.241521644Z\",\"backup_end\":\"2026-11-22T08:32:41.933798813Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1108,\"data_added_packed\":991,\"total_files_processed\":1,\"total_bytes_processed\":19},\"id\":\"4a3ede84dccd13d9e311fc14bb184ed66ffd09c327e25d505134c1a7f726432f\",\"short_id\":\"4a3ede84\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "a9e4cb4295ac7e3bcbbfe2757527b9f16774b33e4e0865070a4de6616c83ce01"
+          ],
+          "exit": 0,
+          "stdout": "\nsnapshot a9e4cb42 of [[fixture]/data] at 2025-01-01 00:00:00 +0000 UTC by runner@fixture\n  copy started, this may take a while...\n[0:00] 100.00%  2 / 2 packs copied\n\nsnapshot 4e8297e1 saved\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"6cadbd4c06faa6e23bbe69593522c4ae2f460f4298566297e3b7c925518a726a\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:41.241521644Z\",\"backup_end\":\"2026-11-22T08:32:41.933798813Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1108,\"data_added_packed\":991,\"total_files_processed\":1,\"total_bytes_processed\":19},\"id\":\"4a3ede84dccd13d9e311fc14bb184ed66ffd09c327e25d505134c1a7f726432f\",\"short_id\":\"4a3ede84\"},{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"890163e3c55c1a1ab43c6eb6c43a71d6698392be9c116607ebef6098ea25acc0\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"original\":\"a9e4cb4295ac7e3bcbbfe2757527b9f16774b33e4e0865070a4de6616c83ce01\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:38.461125407Z\",\"backup_end\":\"2026-11-22T08:32:39.146242108Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1102,\"data_added_packed\":985,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"4e8297e1011972d117aa2c8906b20b6c1714f0c886503fdb166b36f33ba3019d\",\"short_id\":\"4e8297e1\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "a9e4cb4295ac7e3bcbbfe2757527b9f16774b33e4e0865070a4de6616c83ce01"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"6cadbd4c06faa6e23bbe69593522c4ae2f460f4298566297e3b7c925518a726a\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:41.241521644Z\",\"backup_end\":\"2026-11-22T08:32:41.933798813Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1108,\"data_added_packed\":991,\"total_files_processed\":1,\"total_bytes_processed\":19},\"id\":\"4a3ede84dccd13d9e311fc14bb184ed66ffd09c327e25d505134c1a7f726432f\",\"short_id\":\"4a3ede84\"},{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"890163e3c55c1a1ab43c6eb6c43a71d6698392be9c116607ebef6098ea25acc0\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"original\":\"a9e4cb4295ac7e3bcbbfe2757527b9f16774b33e4e0865070a4de6616c83ce01\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:38.461125407Z\",\"backup_end\":\"2026-11-22T08:32:39.146242108Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1102,\"data_added_packed\":985,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"4e8297e1011972d117aa2c8906b20b6c1714f0c886503fdb166b36f33ba3019d\",\"short_id\":\"4e8297e1\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "copy",
+            "--from-repo",
+            "[fixture]/b",
+            "--",
+            "4e8297e1011972d117aa2c8906b20b6c1714f0c886503fdb166b36f33ba3019d"
+          ],
+          "exit": 0,
+          "stdout": "\nsnapshot 4e8297e1 of [[fixture]/data] at 2025-01-01 00:00:00 +0000 UTC by runner@fixture\n  copy started, this may take a while...\n[0:00] 100.00%  2 / 2 packs copied\n\nsnapshot 60812c28 saved\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"890163e3c55c1a1ab43c6eb6c43a71d6698392be9c116607ebef6098ea25acc0\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"original\":\"a9e4cb4295ac7e3bcbbfe2757527b9f16774b33e4e0865070a4de6616c83ce01\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:38.461125407Z\",\"backup_end\":\"2026-11-22T08:32:39.146242108Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1102,\"data_added_packed\":985,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"60812c28b92fc6dd4f8a570cd53f86d118d3354e3853a52bf3710b9892f9a4e8\",\"short_id\":\"60812c28\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "tag",
+            "--set",
+            "rewritten",
+            "4e8297e1011972d117aa2c8906b20b6c1714f0c886503fdb166b36f33ba3019d"
+          ],
+          "exit": 0,
+          "stdout": "create exclusive lock for repository\nmodified 1 snapshots\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"6cadbd4c06faa6e23bbe69593522c4ae2f460f4298566297e3b7c925518a726a\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:41.241521644Z\",\"backup_end\":\"2026-11-22T08:32:41.933798813Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1108,\"data_added_packed\":991,\"total_files_processed\":1,\"total_bytes_processed\":19},\"id\":\"4a3ede84dccd13d9e311fc14bb184ed66ffd09c327e25d505134c1a7f726432f\",\"short_id\":\"4a3ede84\"},{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"890163e3c55c1a1ab43c6eb6c43a71d6698392be9c116607ebef6098ea25acc0\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"rewritten\"],\"original\":\"a9e4cb4295ac7e3bcbbfe2757527b9f16774b33e4e0865070a4de6616c83ce01\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:38.461125407Z\",\"backup_end\":\"2026-11-22T08:32:39.146242108Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1102,\"data_added_packed\":985,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"069ebf344d3005d6b8820b65b3453ed8377741456c8d398c654ace8f660b1e43\",\"short_id\":\"069ebf34\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "copy",
+            "--from-repo",
+            "[fixture]/b",
+            "--",
+            "069ebf344d3005d6b8820b65b3453ed8377741456c8d398c654ace8f660b1e43"
+          ],
+          "exit": 0,
+          "stdout": "\nsnapshot 069ebf34 of [[fixture]/data] at 2025-01-01 00:00:00 +0000 UTC by runner@fixture\n  copy started, this may take a while...\n[0:00]          0 packs copied\n\nsnapshot 379ec7db saved\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"890163e3c55c1a1ab43c6eb6c43a71d6698392be9c116607ebef6098ea25acc0\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"rewritten\"],\"original\":\"a9e4cb4295ac7e3bcbbfe2757527b9f16774b33e4e0865070a4de6616c83ce01\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:38.461125407Z\",\"backup_end\":\"2026-11-22T08:32:39.146242108Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1102,\"data_added_packed\":985,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"379ec7db3adb2b0e2002af55aeb42342fb3441c4412fb9f5e965ee6c04d7632c\",\"short_id\":\"379ec7db\"},{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"890163e3c55c1a1ab43c6eb6c43a71d6698392be9c116607ebef6098ea25acc0\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"original\":\"a9e4cb4295ac7e3bcbbfe2757527b9f16774b33e4e0865070a4de6616c83ce01\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:38.461125407Z\",\"backup_end\":\"2026-11-22T08:32:39.146242108Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1102,\"data_added_packed\":985,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"60812c28b92fc6dd4f8a570cd53f86d118d3354e3853a52bf3710b9892f9a4e8\",\"short_id\":\"60812c28\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "forget",
+            "--json",
+            "--keep-last",
+            "1",
+            "--dry-run"
+          ],
+          "exit": 0,
+          "stdout": "[{\"tags\":null,\"host\":\"fixture\",\"paths\":[\"[fixture]/data\"],\"keep\":[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"890163e3c55c1a1ab43c6eb6c43a71d6698392be9c116607ebef6098ea25acc0\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"rewritten\"],\"original\":\"a9e4cb4295ac7e3bcbbfe2757527b9f16774b33e4e0865070a4de6616c83ce01\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:38.461125407Z\",\"backup_end\":\"2026-11-22T08:32:39.146242108Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1102,\"data_added_packed\":985,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"379ec7db3adb2b0e2002af55aeb42342fb3441c4412fb9f5e965ee6c04d7632c\",\"short_id\":\"379ec7db\"}],\"remove\":[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"890163e3c55c1a1ab43c6eb6c43a71d6698392be9c116607ebef6098ea25acc0\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"original\":\"a9e4cb4295ac7e3bcbbfe2757527b9f16774b33e4e0865070a4de6616c83ce01\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:38.461125407Z\",\"backup_end\":\"2026-11-22T08:32:39.146242108Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1102,\"data_added_packed\":985,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"60812c28b92fc6dd4f8a570cd53f86d118d3354e3853a52bf3710b9892f9a4e8\",\"short_id\":\"60812c28\"}],\"reasons\":[{\"snapshot\":{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"890163e3c55c1a1ab43c6eb6c43a71d6698392be9c116607ebef6098ea25acc0\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"rewritten\"],\"original\":\"a9e4cb4295ac7e3bcbbfe2757527b9f16774b33e4e0865070a4de6616c83ce01\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:38.461125407Z\",\"backup_end\":\"2026-11-22T08:32:39.146242108Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1102,\"data_added_packed\":985,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"379ec7db3adb2b0e2002af55aeb42342fb3441c4412fb9f5e965ee6c04d7632c\",\"short_id\":\"379ec7db\"},\"matches\":[\"last snapshot\"]}]}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"890163e3c55c1a1ab43c6eb6c43a71d6698392be9c116607ebef6098ea25acc0\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"original\":\"a9e4cb4295ac7e3bcbbfe2757527b9f16774b33e4e0865070a4de6616c83ce01\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:38.461125407Z\",\"backup_end\":\"2026-11-22T08:32:39.146242108Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1102,\"data_added_packed\":985,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"60812c28b92fc6dd4f8a570cd53f86d118d3354e3853a52bf3710b9892f9a4e8\",\"short_id\":\"60812c28\"},{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"890163e3c55c1a1ab43c6eb6c43a71d6698392be9c116607ebef6098ea25acc0\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"rewritten\"],\"original\":\"a9e4cb4295ac7e3bcbbfe2757527b9f16774b33e4e0865070a4de6616c83ce01\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:38.461125407Z\",\"backup_end\":\"2026-11-22T08:32:39.146242108Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1102,\"data_added_packed\":985,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"379ec7db3adb2b0e2002af55aeb42342fb3441c4412fb9f5e965ee6c04d7632c\",\"short_id\":\"379ec7db\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "forget",
+            "a9e4cb4295ac7e3bcbbfe2757527b9f16774b33e4e0865070a4de6616c83ce01"
+          ],
+          "exit": 0,
+          "stdout": "[0:00] 100.00%  1 / 1 files deleted\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"6cadbd4c06faa6e23bbe69593522c4ae2f460f4298566297e3b7c925518a726a\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:41.241521644Z\",\"backup_end\":\"2026-11-22T08:32:41.933798813Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1108,\"data_added_packed\":991,\"total_files_processed\":1,\"total_bytes_processed\":19},\"id\":\"4a3ede84dccd13d9e311fc14bb184ed66ffd09c327e25d505134c1a7f726432f\",\"short_id\":\"4a3ede84\"},{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"890163e3c55c1a1ab43c6eb6c43a71d6698392be9c116607ebef6098ea25acc0\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"rewritten\"],\"original\":\"a9e4cb4295ac7e3bcbbfe2757527b9f16774b33e4e0865070a4de6616c83ce01\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:38.461125407Z\",\"backup_end\":\"2026-11-22T08:32:39.146242108Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1102,\"data_added_packed\":985,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"069ebf344d3005d6b8820b65b3453ed8377741456c8d398c654ace8f660b1e43\",\"short_id\":\"069ebf34\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "a9e4cb4295ac7e3bcbbfe2757527b9f16774b33e4e0865070a4de6616c83ce01"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "Load(<snapshot/a9e4cb4295>, 0, 0) failed: open [fixture]/a/snapshots/a9e4cb4295ac7e3bcbbfe2757527b9f16774b33e4e0865070a4de6616c83ce01: no such file or directory\nLoad(<snapshot/a9e4cb4295>, 0, 0) failed: open [fixture]/a/snapshots/a9e4cb4295ac7e3bcbbfe2757527b9f16774b33e4e0865070a4de6616c83ce01: no such file or directory\nIgnoring \"a9e4cb4295ac7e3bcbbfe2757527b9f16774b33e4e0865070a4de6616c83ce01\": failed to load snapshot a9e4cb42: open [fixture]/a/snapshots/a9e4cb4295ac7e3bcbbfe2757527b9f16774b33e4e0865070a4de6616c83ce01: no such file or directory\n"
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"890163e3c55c1a1ab43c6eb6c43a71d6698392be9c116607ebef6098ea25acc0\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"rewritten\"],\"original\":\"a9e4cb4295ac7e3bcbbfe2757527b9f16774b33e4e0865070a4de6616c83ce01\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:38.461125407Z\",\"backup_end\":\"2026-11-22T08:32:39.146242108Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1102,\"data_added_packed\":985,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"069ebf344d3005d6b8820b65b3453ed8377741456c8d398c654ace8f660b1e43\",\"short_id\":\"069ebf34\"},{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"6cadbd4c06faa6e23bbe69593522c4ae2f460f4298566297e3b7c925518a726a\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:41.241521644Z\",\"backup_end\":\"2026-11-22T08:32:41.933798813Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1108,\"data_added_packed\":991,\"total_files_processed\":1,\"total_bytes_processed\":19},\"id\":\"4a3ede84dccd13d9e311fc14bb184ed66ffd09c327e25d505134c1a7f726432f\",\"short_id\":\"4a3ede84\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/identical",
+            "init",
+            "--repository-version",
+            "2"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository f91d014505 at [fixture]/identical\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "backup",
+            "--json",
+            "--time",
+            "2025-01-01 00:00:00",
+            "--host",
+            "fixture",
+            "--tag",
+            "old",
+            "--stdin",
+            "--stdin-filename",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":0,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":1,\"data_added\":273,\"data_added_packed\":337,\"total_files_processed\":1,\"total_bytes_processed\":13,\"total_duration\":0.696916912,\"backup_start\":\"2026-11-22T08:33:00.482551155Z\",\"backup_end\":\"2026-11-22T08:33:01.179468075Z\",\"snapshot_id\":\"c8a6b7acb4ee27742544b829d7229f7a4825434a5009ee22c3fbcf78fdfb404e\"}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/identical",
+            "backup",
+            "--json",
+            "--time",
+            "2025-01-01 00:00:00",
+            "--host",
+            "fixture",
+            "--tag",
+            "old",
+            "--stdin",
+            "--stdin-filename",
+            "fixture"
+          ],
+          "exit": 0,
+          "stdout": "{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":0,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":1,\"data_added\":273,\"data_added_packed\":337,\"total_files_processed\":1,\"total_bytes_processed\":13,\"total_duration\":0.702235875,\"backup_start\":\"2026-11-22T08:33:01.19035244Z\",\"backup_end\":\"2026-11-22T08:33:01.892588307Z\",\"snapshot_id\":\"9478d1839fab3ddd602e0f99bda342a827375582d7dac43cf276dc13781dc225\"}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"b0b58f997e6e81a71222f14cfbec894bcca22655149fc834edc82300824e884a\",\"paths\":[\"/fixture\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:33:00.482551155Z\",\"backup_end\":\"2026-11-22T08:33:01.179468075Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":0,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":1,\"data_added\":273,\"data_added_packed\":337,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"c8a6b7acb4ee27742544b829d7229f7a4825434a5009ee22c3fbcf78fdfb404e\",\"short_id\":\"c8a6b7ac\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/identical",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"b0b58f997e6e81a71222f14cfbec894bcca22655149fc834edc82300824e884a\",\"paths\":[\"/fixture\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:33:01.19035244Z\",\"backup_end\":\"2026-11-22T08:33:01.892588307Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":0,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":1,\"data_added\":273,\"data_added_packed\":337,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"9478d1839fab3ddd602e0f99bda342a827375582d7dac43cf276dc13781dc225\",\"short_id\":\"9478d183\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/identical",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "c8a6b7acb4ee27742544b829d7229f7a4825434a5009ee22c3fbcf78fdfb404e"
+          ],
+          "exit": 0,
+          "stdout": "\nsnapshot c8a6b7ac of [/fixture] at 2025-01-01 00:00:00 +0000 UTC by runner@fixture\n  copy started, this may take a while...\n[0:00]          0 packs copied\n\nsnapshot e29ecd84 saved\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/identical",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"b0b58f997e6e81a71222f14cfbec894bcca22655149fc834edc82300824e884a\",\"paths\":[\"/fixture\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"original\":\"c8a6b7acb4ee27742544b829d7229f7a4825434a5009ee22c3fbcf78fdfb404e\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:33:00.482551155Z\",\"backup_end\":\"2026-11-22T08:33:01.179468075Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":0,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":1,\"data_added\":273,\"data_added_packed\":337,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"e29ecd841059ca22bf203c80bca9b47e972bd000d745b327f31691ef4ca88dd4\",\"short_id\":\"e29ecd84\"},{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"b0b58f997e6e81a71222f14cfbec894bcca22655149fc834edc82300824e884a\",\"paths\":[\"/fixture\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:33:01.19035244Z\",\"backup_end\":\"2026-11-22T08:33:01.892588307Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":0,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":1,\"data_added\":273,\"data_added_packed\":337,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"9478d1839fab3ddd602e0f99bda342a827375582d7dac43cf276dc13781dc225\",\"short_id\":\"9478d183\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"b0b58f997e6e81a71222f14cfbec894bcca22655149fc834edc82300824e884a\",\"paths\":[\"/fixture\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:33:00.482551155Z\",\"backup_end\":\"2026-11-22T08:33:01.179468075Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":0,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":1,\"data_added\":273,\"data_added_packed\":337,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"c8a6b7acb4ee27742544b829d7229f7a4825434a5009ee22c3fbcf78fdfb404e\",\"short_id\":\"c8a6b7ac\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "backup",
+            "--json",
+            "--",
+            "[fixture]/unavailable",
+            "[fixture]/data"
+          ],
+          "exit": 0,
+          "stdout": "{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1111,\"data_added_packed\":990,\"total_files_processed\":1,\"total_bytes_processed\":19,\"total_duration\":0.690882545,\"backup_start\":\"2026-11-22T08:33:06.090509146Z\",\"backup_end\":\"2026-11-22T08:33:06.781391691Z\",\"snapshot_id\":\"5ab8646c259617fcf207c45869cabdcbfba7eef9d27f3454c09e08e481f033dc\"}\n",
+          "stderr": "[fixture]/unavailable does not exist, skipping\n"
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2025-01-01T00:00:00Z\",\"tree\":\"b0b58f997e6e81a71222f14cfbec894bcca22655149fc834edc82300824e884a\",\"paths\":[\"/fixture\"],\"hostname\":\"fixture\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"tags\":[\"old\"],\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:33:00.482551155Z\",\"backup_end\":\"2026-11-22T08:33:01.179468075Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":0,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":1,\"data_added\":273,\"data_added_packed\":337,\"total_files_processed\":1,\"total_bytes_processed\":13},\"id\":\"c8a6b7acb4ee27742544b829d7229f7a4825434a5009ee22c3fbcf78fdfb404e\",\"short_id\":\"c8a6b7ac\"},{\"time\":\"2026-11-22T08:33:06.090509146Z\",\"tree\":\"3abef43f727a22655d7a4f8676058bd0a549ae6fd30b0af00d5d5822a992a961\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"runnervmnfvap\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:33:06.090509146Z\",\"backup_end\":\"2026-11-22T08:33:06.781391691Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1111,\"data_added_packed\":990,\"total_files_processed\":1,\"total_bytes_processed\":19},\"id\":\"5ab8646c259617fcf207c45869cabdcbfba7eef9d27f3454c09e08e481f033dc\",\"short_id\":\"5ab8646c\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "backup",
+            "--json",
+            "--",
+            "[fixture]/unreadable",
+            "[fixture]/data"
+          ],
+          "exit": 3,
+          "stdout": "{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":0,\"tree_blobs\":2,\"data_added\":729,\"data_added_packed\":594,\"total_files_processed\":1,\"total_bytes_processed\":19,\"total_duration\":0.684479517,\"backup_start\":\"2026-11-22T08:33:07.479643732Z\",\"backup_end\":\"2026-11-22T08:33:08.164123257Z\",\"snapshot_id\":\"88190af592cd2644e63550c6cf322d23e6b47174733445f307d701c97b046adb\"}\n",
+          "stderr": "{\"message_type\":\"error\",\"error\":{\"message\":\"open [fixture]/unreadable: permission denied\"},\"during\":\"archival\",\"item\":\"[fixture]/unreadable\"}\n{\"message_type\":\"exit_error\",\"code\":3,\"message\":\"Warning: at least one source file could not be read\"}\n"
+        }
+      ]
+    },
+    {
+      "test_id": "native-locks-and-interruption",
+      "repository_format": 2,
+      "fixture_removed": true,
+      "status": "pass",
+      "observations": {
+        "backup_while_copy": "d91d049ca1562f1c4cabe9defbb4642a401997a3acd36a64d4fc15254cbe99df",
+        "forget": 11,
+        "prune": 11,
+        "check": 11,
+        "same_destination_copy": 0,
+        "same_destination_representations": 1
+      },
+      "commands": [
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "init",
+            "--repository-version",
+            "2"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository 1abb8acf6b at [fixture]/a\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "init",
+            "--repository-version",
+            "2"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository 2cbeda8626 at [fixture]/b\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "init",
+            "--repository-version",
+            "2"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository cf34444edf at [fixture]/c\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/d",
+            "init",
+            "--repository-version",
+            "2"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository 20067c1059 at [fixture]/d\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "backup",
+            "--json",
+            "--",
+            "[fixture]/large"
+          ],
+          "exit": 0,
+          "stdout": "{\"message_type\":\"status\",\"percent_done\":0.5854021708170573,\"total_files\":1,\"total_bytes\":12582912,\"bytes_done\":7366064,\"current_files\":[\"[fixture]/large\"]}\n{\"message_type\":\"status\",\"percent_done\":1,\"total_files\":1,\"total_bytes\":12582912,\"bytes_done\":12582912}\n{\"message_type\":\"status\",\"percent_done\":1,\"total_files\":1,\"files_done\":1,\"total_bytes\":12582912,\"bytes_done\":12582912}\n{\"message_type\":\"status\",\"percent_done\":1,\"total_files\":1,\"files_done\":1,\"total_bytes\":12582912,\"bytes_done\":12582912}\n{\"message_type\":\"status\",\"percent_done\":1,\"total_files\":1,\"files_done\":1,\"total_bytes\":12582912,\"bytes_done\":12582912}\n{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":13,\"tree_blobs\":3,\"data_added\":12584815,\"data_added_packed\":12585646,\"total_files_processed\":1,\"total_bytes_processed\":12582912,\"total_duration\":0.76676621,\"backup_start\":\"2026-11-22T08:32:51.245423131Z\",\"backup_end\":\"2026-11-22T08:32:52.012189349Z\",\"snapshot_id\":\"9fc2697e32823e263f7eb1f74f3501b073bf0f5cf504a00cf6b6807f62ada417\"}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-22T08:32:51.245423131Z\",\"tree\":\"ed9d4074edd99f350a531bf13b3eb6924857be003a92f990c59fa113f6535605\",\"paths\":[\"[fixture]/large\"],\"hostname\":\"runnervmnfvap\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:51.245423131Z\",\"backup_end\":\"2026-11-22T08:32:52.012189349Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":13,\"tree_blobs\":3,\"data_added\":12584815,\"data_added_packed\":12585646,\"total_files_processed\":1,\"total_bytes_processed\":12582912},\"id\":\"9fc2697e32823e263f7eb1f74f3501b073bf0f5cf504a00cf6b6807f62ada417\",\"short_id\":\"9fc2697e\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-22T08:32:51.245423131Z\",\"tree\":\"ed9d4074edd99f350a531bf13b3eb6924857be003a92f990c59fa113f6535605\",\"paths\":[\"[fixture]/large\"],\"hostname\":\"runnervmnfvap\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:51.245423131Z\",\"backup_end\":\"2026-11-22T08:32:52.012189349Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":13,\"tree_blobs\":3,\"data_added\":12584815,\"data_added_packed\":12585646,\"total_files_processed\":1,\"total_bytes_processed\":12582912},\"id\":\"9fc2697e32823e263f7eb1f74f3501b073bf0f5cf504a00cf6b6807f62ada417\",\"short_id\":\"9fc2697e\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-22T08:32:51.245423131Z\",\"tree\":\"ed9d4074edd99f350a531bf13b3eb6924857be003a92f990c59fa113f6535605\",\"paths\":[\"[fixture]/large\"],\"hostname\":\"runnervmnfvap\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:51.245423131Z\",\"backup_end\":\"2026-11-22T08:32:52.012189349Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":13,\"tree_blobs\":3,\"data_added\":12584815,\"data_added_packed\":12585646,\"total_files_processed\":1,\"total_bytes_processed\":12582912},\"id\":\"9fc2697e32823e263f7eb1f74f3501b073bf0f5cf504a00cf6b6807f62ada417\",\"short_id\":\"9fc2697e\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "backup",
+            "--json",
+            "--",
+            "[fixture]/extra"
+          ],
+          "exit": 0,
+          "stdout": "{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1108,\"data_added_packed\":988,\"total_files_processed\":1,\"total_bytes_processed\":15,\"total_duration\":0.684515477,\"backup_start\":\"2026-11-22T08:32:55.570709626Z\",\"backup_end\":\"2026-11-22T08:32:56.255225103Z\",\"snapshot_id\":\"d91d049ca1562f1c4cabe9defbb4642a401997a3acd36a64d4fc15254cbe99df\"}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/a",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-22T08:32:51.245423131Z\",\"tree\":\"ed9d4074edd99f350a531bf13b3eb6924857be003a92f990c59fa113f6535605\",\"paths\":[\"[fixture]/large\"],\"hostname\":\"runnervmnfvap\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:51.245423131Z\",\"backup_end\":\"2026-11-22T08:32:52.012189349Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":13,\"tree_blobs\":3,\"data_added\":12584815,\"data_added_packed\":12585646,\"total_files_processed\":1,\"total_bytes_processed\":12582912},\"id\":\"9fc2697e32823e263f7eb1f74f3501b073bf0f5cf504a00cf6b6807f62ada417\",\"short_id\":\"9fc2697e\"},{\"time\":\"2026-11-22T08:32:55.570709626Z\",\"tree\":\"304df1ec3f8a790938a8cd1c43fb2e20016591cb0744a258a37dc051f428bb74\",\"paths\":[\"[fixture]/extra\"],\"hostname\":\"runnervmnfvap\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:55.570709626Z\",\"backup_end\":\"2026-11-22T08:32:56.255225103Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1108,\"data_added_packed\":988,\"total_files_processed\":1,\"total_bytes_processed\":15},\"id\":\"d91d049ca1562f1c4cabe9defbb4642a401997a3acd36a64d4fc15254cbe99df\",\"short_id\":\"d91d049c\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "9fc2697e32823e263f7eb1f74f3501b073bf0f5cf504a00cf6b6807f62ada417"
+          ],
+          "exit": 0,
+          "stdout": "\nsnapshot 9fc2697e of [[fixture]/large] at 2026-11-22 08:32:51.245423131 +0000 UTC by runner@runnervmnfvap\n  copy started, this may take a while...\n[0:00] 100.00%  2 / 2 packs copied\n\nsnapshot 6861c31e saved\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/c",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-22T08:32:51.245423131Z\",\"tree\":\"ed9d4074edd99f350a531bf13b3eb6924857be003a92f990c59fa113f6535605\",\"paths\":[\"[fixture]/large\"],\"hostname\":\"runnervmnfvap\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"original\":\"9fc2697e32823e263f7eb1f74f3501b073bf0f5cf504a00cf6b6807f62ada417\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:51.245423131Z\",\"backup_end\":\"2026-11-22T08:32:52.012189349Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":13,\"tree_blobs\":3,\"data_added\":12584815,\"data_added_packed\":12585646,\"total_files_processed\":1,\"total_bytes_processed\":12582912},\"id\":\"6861c31e2d20bdeb9c19b90b40311a70bd7a25fc02dc6a11da86b62a2608caa2\",\"short_id\":\"6861c31e\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "forget",
+            "--json",
+            "--keep-last",
+            "1"
+          ],
+          "exit": 11,
+          "stdout": "",
+          "stderr": "{\"message_type\":\"exit_error\",\"code\":11,\"message\":\"unable to create lock in backend: repository is already locked by PID 3280 on runnervmnfvap by runner (UID 1001, GID 1001)\\nlock was created at 2026-11-22 08:32:53 (5.760667903s ago)\\nstorage ID 93a6e60b\\nthe `unlock` command can be used to remove stale locks\"}\n"
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "prune"
+          ],
+          "exit": 11,
+          "stdout": "repo already locked, waiting up to 0s for the lock\n",
+          "stderr": "unable to create lock in backend: repository is already locked by PID 3280 on runnervmnfvap by runner (UID 1001, GID 1001)\nlock was created at 2026-11-22 08:32:53 (6.255358261s ago)\nstorage ID 93a6e60b\nthe `unlock` command can be used to remove stale locks\n"
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "check"
+          ],
+          "exit": 11,
+          "stdout": "create exclusive lock for repository\nrepo already locked, waiting up to 0s for the lock\n",
+          "stderr": "unable to create lock in backend: repository is already locked by PID 3280 on runnervmnfvap by runner (UID 1001, GID 1001)\nlock was created at 2026-11-22 08:32:53 (6.752276173s ago)\nstorage ID 93a6e60b\nthe `unlock` command can be used to remove stale locks\n"
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--limit-upload",
+            "2048",
+            "--pack-size",
+            "4",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "9fc2697e32823e263f7eb1f74f3501b073bf0f5cf504a00cf6b6807f62ada417"
+          ],
+          "exit": 1,
+          "stdout": "\nsnapshot 9fc2697e of [[fixture]/large] at 2026-11-22 08:32:51.245423131 +0000 UTC by runner@runnervmnfvap\n  copy started, this may take a while...\n[0:09] 50.00%  1 / 2 packs copied\n\n",
+          "stderr": "\u001b[2Ksignal interrupt received, cleaning up\nFatal: context canceled\n"
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "check"
+          ],
+          "exit": 0,
+          "stdout": "create exclusive lock for repository\nload indexes\ncheck all packs\n2 additional files were found in the repo, which likely contain duplicate data.\nThis is non-critical, you can run `restic prune` to correct this.\ncheck snapshots, trees and blobs\n[0:00]          0 snapshots\nno errors were found\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/d",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "9fc2697e32823e263f7eb1f74f3501b073bf0f5cf504a00cf6b6807f62ada417"
+          ],
+          "exit": 0,
+          "stdout": "\nsnapshot 9fc2697e of [[fixture]/large] at 2026-11-22 08:32:51.245423131 +0000 UTC by runner@runnervmnfvap\n  copy started, this may take a while...\n[0:00] 100.00%  2 / 2 packs copied\n\nsnapshot d4cbbeb7 saved\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--limit-upload",
+            "2048",
+            "--pack-size",
+            "4",
+            "--no-cache",
+            "--repo",
+            "[fixture]/d",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "9fc2697e32823e263f7eb1f74f3501b073bf0f5cf504a00cf6b6807f62ada417"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/d",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-22T08:32:51.245423131Z\",\"tree\":\"ed9d4074edd99f350a531bf13b3eb6924857be003a92f990c59fa113f6535605\",\"paths\":[\"[fixture]/large\"],\"hostname\":\"runnervmnfvap\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"original\":\"9fc2697e32823e263f7eb1f74f3501b073bf0f5cf504a00cf6b6807f62ada417\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:51.245423131Z\",\"backup_end\":\"2026-11-22T08:32:52.012189349Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":13,\"tree_blobs\":3,\"data_added\":12584815,\"data_added_packed\":12585646,\"total_files_processed\":1,\"total_bytes_processed\":12582912},\"id\":\"d4cbbeb722751cf3a7f4affa65ec84254baa019c30ff389fbfe1ddabc7a4b9eb\",\"short_id\":\"d4cbbeb7\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "copy",
+            "--from-repo",
+            "[fixture]/a",
+            "--",
+            "9fc2697e32823e263f7eb1f74f3501b073bf0f5cf504a00cf6b6807f62ada417"
+          ],
+          "exit": 0,
+          "stdout": "\nsnapshot 9fc2697e of [[fixture]/large] at 2026-11-22 08:32:51.245423131 +0000 UTC by runner@runnervmnfvap\n  copy started, this may take a while...\n[0:00] 100.00%  2 / 2 packs copied\n\nsnapshot c3b1efd2 saved\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/b",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-22T08:32:51.245423131Z\",\"tree\":\"ed9d4074edd99f350a531bf13b3eb6924857be003a92f990c59fa113f6535605\",\"paths\":[\"[fixture]/large\"],\"hostname\":\"runnervmnfvap\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"original\":\"9fc2697e32823e263f7eb1f74f3501b073bf0f5cf504a00cf6b6807f62ada417\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:32:51.245423131Z\",\"backup_end\":\"2026-11-22T08:32:52.012189349Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":13,\"tree_blobs\":3,\"data_added\":12584815,\"data_added_packed\":12585646,\"total_files_processed\":1,\"total_bytes_processed\":12582912},\"id\":\"c3b1efd26d5bf822cc741d27dade29772f9ea7d86780f632c2b5585298a2f6ca\",\"short_id\":\"c3b1efd2\"}]\n",
+          "stderr": ""
+        }
+      ]
+    },
+    {
+      "test_id": "cross-format-copy",
+      "repository_format": 2,
+      "fixture_removed": true,
+      "status": "pass",
+      "observations": {
+        "verified_directions": [
+          "1->2",
+          "2->1"
+        ]
+      },
+      "commands": [
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/v1",
+            "init",
+            "--repository-version",
+            "1"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository bc71225af6 at [fixture]/v1\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/v2",
+            "init",
+            "--repository-version",
+            "2"
+          ],
+          "exit": 0,
+          "stdout": "created restic repository 7c0a5b2ce7 at [fixture]/v2\n\nPlease note that knowledge of your password is required to access\nthe repository. Losing your password means that your data is\nirrecoverably lost.\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/v1",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/v1",
+            "backup",
+            "--json",
+            "--",
+            "[fixture]/data"
+          ],
+          "exit": 0,
+          "stdout": "{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1099,\"data_added_packed\":1375,\"total_files_processed\":1,\"total_bytes_processed\":10,\"total_duration\":0.677660856,\"backup_start\":\"2026-11-22T08:33:13.907746534Z\",\"backup_end\":\"2026-11-22T08:33:14.58540739Z\",\"snapshot_id\":\"879da2c20b4976d8c1860069faedaa842b63ea780104bf9c731bba9c85915ec7\"}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/v1",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-22T08:33:13.907746534Z\",\"tree\":\"e38b7e78bb6e8a0ac3b703185f0e6c42c559b673bb9c6779db451ee1c2c71a83\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"runnervmnfvap\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:33:13.907746534Z\",\"backup_end\":\"2026-11-22T08:33:14.58540739Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1099,\"data_added_packed\":1375,\"total_files_processed\":1,\"total_bytes_processed\":10},\"id\":\"879da2c20b4976d8c1860069faedaa842b63ea780104bf9c731bba9c85915ec7\",\"short_id\":\"879da2c2\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/v2",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/v2",
+            "backup",
+            "--json",
+            "--",
+            "[fixture]/data"
+          ],
+          "exit": 0,
+          "stdout": "{\"message_type\":\"summary\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1102,\"data_added_packed\":980,\"total_files_processed\":1,\"total_bytes_processed\":10,\"total_duration\":0.685625227,\"backup_start\":\"2026-11-22T08:33:15.971504507Z\",\"backup_end\":\"2026-11-22T08:33:16.657129742Z\",\"snapshot_id\":\"c6f068ba23181eca6a3ff6b67faa419fe57b77abbd92b57406901af64aa77a79\"}\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/v2",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-22T08:33:15.971504507Z\",\"tree\":\"a0a5f1132411b6f8789d796c51578de2e48cb1cb9d2463bbd1abf976863e0e4d\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"runnervmnfvap\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:33:15.971504507Z\",\"backup_end\":\"2026-11-22T08:33:16.657129742Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1102,\"data_added_packed\":980,\"total_files_processed\":1,\"total_bytes_processed\":10},\"id\":\"c6f068ba23181eca6a3ff6b67faa419fe57b77abbd92b57406901af64aa77a79\",\"short_id\":\"c6f068ba\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/v2",
+            "copy",
+            "--from-repo",
+            "[fixture]/v1",
+            "--",
+            "879da2c20b4976d8c1860069faedaa842b63ea780104bf9c731bba9c85915ec7"
+          ],
+          "exit": 0,
+          "stdout": "\nsnapshot 879da2c2 of [[fixture]/data] at 2026-11-22 08:33:13.907746534 +0000 UTC by runner@runnervmnfvap\n  copy started, this may take a while...\n[0:00] 100.00%  2 / 2 packs copied\n\nsnapshot 4867840d saved\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/v1",
+            "copy",
+            "--from-repo",
+            "[fixture]/v2",
+            "--",
+            "c6f068ba23181eca6a3ff6b67faa419fe57b77abbd92b57406901af64aa77a79"
+          ],
+          "exit": 0,
+          "stdout": "\nsnapshot c6f068ba of [[fixture]/data] at 2026-11-22 08:33:15.971504507 +0000 UTC by runner@runnervmnfvap\n  copy started, this may take a while...\n[0:00] 100.00%  2 / 2 packs copied\n\nsnapshot 358476e5 saved\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/v1",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-22T08:33:13.907746534Z\",\"tree\":\"e38b7e78bb6e8a0ac3b703185f0e6c42c559b673bb9c6779db451ee1c2c71a83\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"runnervmnfvap\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:33:13.907746534Z\",\"backup_end\":\"2026-11-22T08:33:14.58540739Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1099,\"data_added_packed\":1375,\"total_files_processed\":1,\"total_bytes_processed\":10},\"id\":\"879da2c20b4976d8c1860069faedaa842b63ea780104bf9c731bba9c85915ec7\",\"short_id\":\"879da2c2\"},{\"time\":\"2026-11-22T08:33:15.971504507Z\",\"tree\":\"a0a5f1132411b6f8789d796c51578de2e48cb1cb9d2463bbd1abf976863e0e4d\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"runnervmnfvap\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"original\":\"c6f068ba23181eca6a3ff6b67faa419fe57b77abbd92b57406901af64aa77a79\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:33:15.971504507Z\",\"backup_end\":\"2026-11-22T08:33:16.657129742Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1102,\"data_added_packed\":980,\"total_files_processed\":1,\"total_bytes_processed\":10},\"id\":\"358476e5a881c58e06c402c6b2c71f01a146d1bd25fa28e94d8ab68380710385\",\"short_id\":\"358476e5\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/v1",
+            "check"
+          ],
+          "exit": 0,
+          "stdout": "create exclusive lock for repository\nload indexes\ncheck all packs\ncheck snapshots, trees and blobs\n[0:00] 100.00%  2 / 2 snapshots\nno errors were found\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/v2",
+            "snapshots",
+            "--json"
+          ],
+          "exit": 0,
+          "stdout": "[{\"time\":\"2026-11-22T08:33:13.907746534Z\",\"tree\":\"e38b7e78bb6e8a0ac3b703185f0e6c42c559b673bb9c6779db451ee1c2c71a83\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"runnervmnfvap\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"original\":\"879da2c20b4976d8c1860069faedaa842b63ea780104bf9c731bba9c85915ec7\",\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:33:13.907746534Z\",\"backup_end\":\"2026-11-22T08:33:14.58540739Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1099,\"data_added_packed\":1375,\"total_files_processed\":1,\"total_bytes_processed\":10},\"id\":\"4867840dcb4c9c71cae46e853a377671faafae86c205fcdf69535a96ac1cc902\",\"short_id\":\"4867840d\"},{\"time\":\"2026-11-22T08:33:15.971504507Z\",\"tree\":\"a0a5f1132411b6f8789d796c51578de2e48cb1cb9d2463bbd1abf976863e0e4d\",\"paths\":[\"[fixture]/data\"],\"hostname\":\"runnervmnfvap\",\"username\":\"runner\",\"uid\":1001,\"gid\":1001,\"program_version\":\"restic 0.18.0\",\"summary\":{\"backup_start\":\"2026-11-22T08:33:15.971504507Z\",\"backup_end\":\"2026-11-22T08:33:16.657129742Z\",\"files_new\":1,\"files_changed\":0,\"files_unmodified\":0,\"dirs_new\":2,\"dirs_changed\":0,\"dirs_unmodified\":0,\"data_blobs\":1,\"tree_blobs\":3,\"data_added\":1102,\"data_added_packed\":980,\"total_files_processed\":1,\"total_bytes_processed\":10},\"id\":\"c6f068ba23181eca6a3ff6b67faa419fe57b77abbd92b57406901af64aa77a79\",\"short_id\":\"c6f068ba\"}]\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "/home/runner/work/_temp/restic-arm64",
+            "--no-cache",
+            "--repo",
+            "[fixture]/v2",
+            "check"
+          ],
+          "exit": 0,
+          "stdout": "create exclusive lock for repository\nload indexes\ncheck all packs\ncheck snapshots, trees and blobs\n[0:00] 100.00%  2 / 2 snapshots\nno errors were found\n",
+          "stderr": ""
+        }
+      ]
+    }
+  ],
+  "unchanged_inputs": true,
+  "passed": true
+}

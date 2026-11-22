@@ -397,3 +397,51 @@ certification job. Installing its profile still requires the report bytes,
 digest verification, and installed-wheel platform acceptance. The separate
 manual release workflow also requires authenticated dispatch. Release signoff
 remains open.
+
+## ARM64 artifact intake and lifecycle evidence
+
+Added `tools/verify_arm64_report.py` to verify the original artifact ZIP from
+the successful native GitHub run. It checks the recorded archive digest and
+exact report member, run commit, binary and source hashes, native architecture,
+five required cases, command evidence, and fixture cleanup. Its output is
+candidate metadata for review. The original artifact was unavailable in this
+workspace. The ARM64 profile is still pending.
+
+Added assertion-level evidence for D82 and D93. The tests inject unconfirmed
+lifecycle termination and show that another acquisition remains fenced. A
+separate test reads the persisted verified ownership receipt by generation.
+The register now has evidence for 109 of 139 confirmed requirements.
+
+| Check | Exit | Evidence |
+|---|---:|---|
+| Installed-wheel unit tests on CPython 3.12 and 3.13 | 0 each | 90 passed on each version, including verifier tests with fabricated inputs and the two new lifecycle assertions. |
+| `tools/validate_handoff.py` | 0 | Static schemas, examples, traceability, and installed profile reference. |
+| `tools/build_release.py --epoch 1704067200 --output /tmp/bm-arm64-review-dist` | 0 | Built the wheel and sdist. The source archive contains the verifier and its tests. |
+
+Authenticated retrieval of the original ARM64 artifact, installed-wheel ARM64
+acceptance, manual release workflow dispatch, and 30 remaining requirement
+rows still block release signoff. The current workspace treats Git metadata as
+read-only, so this checkpoint is present as working-tree changes.
+
+## ARM64 certification registered
+
+The supplied original `restic-linux-arm64-candidate-report.zip` passed
+`tools/verify_arm64_report.py` (exit 0). The checked-in report SHA-256 is
+`bd3590a53c3b9d913c705fb216bfde46946c4133590d77394c31b713678a9bcd`.
+All five native cases passed, including formats 1 and 2, both cross-format
+directions, and held-copy overlap for backup, source reads and copies to
+distinct destinations. Both formats reported exit 11 for conflicting forget,
+prune and check. Registered the exact ARM64 binary and those observed overlap
+modes. [Native run](https://github.com/RishikeshPVijay/backup-manager/actions/runs/45003235957)
+
+- `tools/validate_handoff.py` exited 0 with both installed profiles.
+- Built wheel and source archives. The installed wheel passed 91 unit tests
+  on each of Python 3.12 and 3.13, including acceptance of the exact ARM64
+  version/fingerprint pair and refusal of a mismatched architecture version.
+  Wheel SHA-256 `ad7ffaa057c720d9f75f19827eb088353b8ab5c32d92a7383baa20c23a6946cd`.
+- Parsed the manual CI acceptance matrix and verified its architecture and
+  digest entries against the registry. One native copy fixture now resolves
+  Restic from PATH, matching the acceptance runner's configured binary.
+- Installed-wheel ARM64 acceptance and authenticated CI dispatch remain
+  pending. The local host is x86-64 and its user scope bus check returned
+  operation not permitted. Thirty requirement assertions remain open.
