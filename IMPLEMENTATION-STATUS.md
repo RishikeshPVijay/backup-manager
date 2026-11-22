@@ -369,3 +369,31 @@ The 32 open rows, exact aarch64 certification and authenticated dispatch
 of the remote release workflow remain release gates. GitHub is reachable
 over SSH and the public Actions API supports read access. No
 non-interactive GitHub HTTPS credential is configured for manual dispatch.
+
+### Full matrix and hosted validation
+
+- `tools/run_acceptance.py --parallel 2 --output /tmp/bm-storage-approved-full`
+  exited 1. All 19 probes exited 0 and all 40 scenarios had passing evidence.
+  The release gate lists the 32 remaining requirements and the missing installed
+  ARM64 profile. Scenario manifest SHA-256
+  `30395a07e8dae8f62c5a73c93a0d4f5d2a1a6390298ecab1a3226880371c5fa4`.
+- The hosted build and dependency audit completed successfully on validation
+  commit `621a2f5`. The push created
+  `codex/storage-replacement-approval`. Remote main was left at its prior
+  commit. [Hosted build and audit](https://github.com/RishikeshPVijay/backup-manager/actions/runs/45001909420)
+- Commit `8af6596` ran the native GitHub Linux ARM64 candidate job. The
+  architecture and upstream archive verification, disposable certification,
+  and artifact upload steps all concluded successfully. The verified
+  decompressed candidate SHA-256 is
+  `a4aa97c7d651e87eb5ade27e32ae0f457887ee16b86958845e781aa18e524d03`.
+  The job uploaded artifact `14745954011` with SHA-256
+  `0669c47ed00d39836e5ee14c7c0102e622a9397e108bed143889e6a1e5088762`.
+  [Native ARM64 run](https://github.com/RishikeshPVijay/backup-manager/actions/runs/45003235957)
+  [Upstream Restic release](https://github.com/restic/restic/releases/tag/v0.18.0)
+
+The unauthenticated GitHub artifact download returned HTTP 404 from the web
+endpoint and HTTP 403 from the API. The exact candidate completed the remote
+certification job. Installing its profile still requires the report bytes,
+digest verification, and installed-wheel platform acceptance. The separate
+manual release workflow also requires authenticated dispatch. Release signoff
+remains open.
