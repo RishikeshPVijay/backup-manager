@@ -1,0 +1,44 @@
+name: Restic Linux ARM64 certification candidate
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - codex/storage-replacement-approval
+    paths:
+      - .github/workflows/restic-arm64.yml
+      - tools/certify_restic.py
+      - src/backup_manager/restic.py
+
+permissions:
+  contents: read
+
+jobs:
+  certify:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Verify runner architecture and upstream Restic archive
+        shell: bash
+        run: |
+          test "$(uname -m)" = aarch64
+          cd "$RUNNER_TEMP"
+          archive=restic_0.18.0_linux_arm64.bz2
+          curl --fail --location --retry 2 --output "$archive" "https://github.com/restic/restic/releases/download/v0.18.0/$archive"
+          printf '%s  %s\n' ce18179c25dc5f2e33e3c233ba1e580f9de1a4566d2977e8d9600210363ec209 "$archive" | sha256sum --check
+          bzip2 --decompress --stdout "$archive" > restic-arm64
+          chmod 0755 restic-arm64
+          ./restic-arm64 version
+          sha256sum restic-arm64
+      - name: Certify the exact candidate with disposable repositories
+        run: python tools/certify_restic.py --restic "$RUNNER_TEMP/restic-arm64" --report restic-arm64-certification.json
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: restic-linux-arm64-candidate-report
+          path: restic-arm64-certification.json
+          if-no-files-found: error
