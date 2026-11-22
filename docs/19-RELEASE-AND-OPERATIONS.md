@@ -109,14 +109,14 @@ includes the reference contracts, runbooks, fixture code and certification
 reports. Record both artifact hashes and the dependency lock hash.
 
 The hosted CI matrix builds and tests Python 3.12 and 3.13 and audits the pinned
-dependencies. The separate Linux safety workflow runs from the default branch on
-an isolated runner labeled `backup-manager-disposable`. Provision the exact
-Restic binary, a usable user systemd bus, local supported temporary storage,
-and private user mount namespaces first. Run the real loop fixture separately
-in a dedicated private container or VM with only disposable loop-device access.
-The fixture must never receive production devices or mountpoints. Use
-`tools/run_linux_regressions.py` to collect individual logs from either suite.
-The acceptance matrix and release evidence manifest remain separate I9 gates.
+dependencies. Dispatch the Linux safety workflow from the default branch. It
+uses GitHub-hosted Ubuntu VMs on x86-64 and ARM64 and verifies the certified
+Restic binary and user systemd scopes before running acceptance. The ext4 loop
+fixture uses a separate disposable VM with a private mount namespace. The
+fixture must never receive production devices or mountpoints. To run the
+scoped or mount-namespace suite independently, use
+`tools/run_linux_regressions.py` to collect individual logs. Review the
+acceptance manifests and the separate scoped and loop results before signoff.
 
 Output redaction matches known credential bytes in complete captured streams.
 Captured output with known credentials is omitted once native capture

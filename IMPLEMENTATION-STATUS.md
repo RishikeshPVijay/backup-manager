@@ -628,3 +628,27 @@ still listed D37 and D102 as unsigned. This review signs off both requirements
 and brings traceability to 139 of 139 confirmed requirements. A fresh
 default-branch run must confirm that the release gate exits 0 with the updated
 register. Release acceptance remains open.
+
+## I9 release acceptance complete
+
+Reviewed the replacement artifacts for the clean default-branch commit
+`9d6213205ac392fc5dafdf2fd6083e018afcc2ec`. Both acceptance reports have
+empty lists for unsigned requirements, missing profiles, and open scenarios.
+Each architecture passed all 19 probes, all 40 scenarios, and all five
+native Restic certification cases. D37 and D102 evidence passed again.
+All 12 scoped and three mount-namespace regressions passed. The ext4
+loop fixture passed acquisition, ownership, release, and external reuse
+and reported cleanup.
+
+The archive review checked ZIP integrity, commit and profile fingerprints,
+every recorded acceptance probe output hash, and fixture cleanup. Traceability
+covers all 139 confirmed requirements. The earlier packaging and dependency
+audit evidence is recorded above. This signoff records successful Linux
+release acceptance for the tested commit.
+
+| Supplied archive | SHA-256 |
+|---|---|
+| `linux-regression-results.zip` | `a167b54e32242ee05c3a66cebb4a9f6558ffaf649a43f619411c4460e94b230c` |
+| `loop-device-regression.zip` | `196d950281c8bd22863abc79a80365beb3fcec40e18001117e8985e309785602` |
+| `release-acceptance-evidence-x64.zip` | `7861128b2f3a083bc6f813d9c31b1135609b9ef7102269008b33c66a0ef09b83` |
+| `release-acceptance-evidence-arm64.zip` | `f63b2e7ce2107b68d3d4430529e174bb74d26f50c0af1144281df934770e5c34` |
