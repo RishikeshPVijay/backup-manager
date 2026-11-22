@@ -9,11 +9,45 @@ import subprocess
 import sys
 from tempfile import TemporaryDirectory
 from time import monotonic
+from unittest.mock import patch
+
+from acceptance_trace import record
+from backup_manager.claims import RepositoryClaim, admit_repository_claims
 
 from backup_manager.launch_journal import register_owner
 from backup_manager.process_identity import Presence, ProcessIdentity
 from backup_manager.state import initialize, state_read, state_write
 from backup_manager.supervisor import SupervisionUncertain, run_journaled
+
+
+def uncertain_cancellation(db, anchor, owner):
+    claim = RepositoryClaim("fixture-repo", 1, "COPY_DESTINATION")
+    with state_write(db, anchor, wait=5) as database:
+        database.execute(
+            """INSERT INTO repository_registrations
+               (repository_key, job_id, destination_id, restic_repository_id, repo_generation, approved_at)
+               VALUES ('fixture-repo', 'job', 'primary', 'restic-id', 1, 'now')"""
+        )
+        assert admit_repository_claims(database, "uncertain", owner, [claim])
+    try:
+        with patch("backup_manager.supervisor.empty_cgroup", return_value=False):
+            run_journaled(
+                db, anchor, "uncertain", owner, (sys.executable, "-c", "import time; time.sleep(45)"),
+                deadline=monotonic() + 10, cancelled=lambda: True,
+            )
+    except SupervisionUncertain:
+        pass
+    else:
+        raise AssertionError("Unproved termination returned successful cancellation.")
+    with state_write(db, anchor, wait=5) as database:
+        execution = database.execute(
+            """SELECT state, launched_at, termination_evidence FROM command_executions
+               WHERE operation_id = 'uncertain'"""
+        ).fetchone()
+        assert execution[0] == "LAUNCH_UNCERTAIN" and execution[1] and execution[2] is None
+        contender = register_owner(database, ProcessIdentity.capture(os.getpid()), "contender")
+        assert admit_repository_claims(database, "competing", contender, [claim]) is None
+        record(database, "AT-028", {"termination_evidence": None, "competing_claim": "blocked", "execution": execution[0]})
 
 
 def main():
@@ -90,6 +124,7 @@ print("fixture output")
             ("cancel", "TERMINATED", None), ("large", "TERMINATED", 0), ("stdin", "TERMINATED", 0),
             ("success", "TERMINATED", 0), ("timeout", "TERMINATED", None),
         ]
+        uncertain_cancellation(db, anchor, owner)
     print("Installed-wheel scope, detached descendant, durable receipt, cross-process cancellation and timeout passed.")
 
 

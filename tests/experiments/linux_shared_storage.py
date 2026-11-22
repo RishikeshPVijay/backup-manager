@@ -9,6 +9,7 @@ import sys
 from tempfile import TemporaryDirectory
 from time import monotonic, monotonic_ns, sleep
 
+from acceptance_trace import record
 from backup_manager.state import initialize, state_read
 from backup_manager.storage_coordinator import StorageCoordinator, StorageUnavailable
 
@@ -155,6 +156,9 @@ def main():
                 return database.execute("SELECT status FROM notification_attempts").fetchall() == [("succeeded",)] * 2
 
         poll(two_notifications_complete)
+        with state_read(db, anchor, wait=2) as database:
+            operations = database.execute("SELECT operation_id, kind, state FROM storage_operations ORDER BY rowid").fetchall()
+            record(database, "AT-022", {"operations": operations, "actions": (root / "actions").read_text().splitlines()})
     print("Verified shared acquisition, independent release, external preservation, final-waiter cancellation and fresh retry.")
 
 

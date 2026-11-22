@@ -18,7 +18,9 @@ class FixtureProvider:
     async def inspect(self, config, context):
         root = Path(config["root"])
         mounted = (root / "mounted").exists()
-        identity = StorageIdentity("fixture-disk", "fixture-disk", {"mount": "fixture"} if mounted else {}, True)
+        marker = root / "replacement-identity"
+        physical = marker.read_text() if marker.exists() else "fixture-disk"
+        identity = StorageIdentity(physical, physical, {"mount": "fixture"} if mounted else {}, True)
         return StorageInspection(
             StorageState.AVAILABLE if mounted else StorageState.UNAVAILABLE,
             mounted, str(root), identity, None,
@@ -42,5 +44,7 @@ class FixtureProvider:
         assert observed.mounted and observed.identity.evidence == ownership_evidence
         with (root / "actions").open("a") as stream:
             stream.write("release\n")
+        if (root / "fail-release").exists():
+            raise RuntimeError("Disposable release failure.")
         (root / "mounted").unlink()
         return LifecycleResult(await self.inspect(config, context), True, {})

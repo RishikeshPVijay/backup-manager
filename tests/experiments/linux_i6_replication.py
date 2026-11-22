@@ -37,7 +37,10 @@ def main():
                 fixture.restic(name, "backup", str(seed))
             preserved |= identities(fixture, name)
 
+        job_config = fixture.root / "jobs" / "fixture.toml"
+        designated_primary = job_config.read_bytes()
         first = fixture.cli("job", "run", "fixture", expected=2, overrides={"PRIMARY_SECRET": "wrong-fixture"})
+        assert job_config.read_bytes() == designated_primary
         assert first["data"]["destination_id"] == "secondary"
         first_id = first["data"]["snapshot_id"]
         secondary = {snapshot.id: snapshot for snapshot in inventory(fixture, "secondary")}

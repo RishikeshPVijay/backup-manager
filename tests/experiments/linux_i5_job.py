@@ -10,7 +10,7 @@ import sys
 from tempfile import TemporaryDirectory
 from time import monotonic, sleep
 
-from backup_manager.state import state_read
+from backup_manager.state import StateUnsafe, state_read
 
 
 def quote(value):
@@ -76,7 +76,24 @@ root = {quote(self.storage)}
             assert self.env[key] not in process.stdout
         payload = json.loads(process.stdout)
         assert payload["schema_version"] == 1
+        self.record_acceptance(process, payload)
         return payload
+
+    def record_acceptance(self, process, payload):
+        output = os.environ.get("BACKUP_MANAGER_ACCEPTANCE_TRACE")
+        if not output:
+            return
+        try:
+            with state_read(self.db, self.anchor, wait=5) as database:
+                events = database.execute("SELECT entity_id, type, occurred_at FROM events ORDER BY rowid").fetchall()
+        except StateUnsafe:
+            events = None
+        row = {"argv": process.args, "exit_code": process.returncode, "result": payload, "events": events}
+        encoded = json.dumps(row)
+        for name in ("PRIMARY_SECRET", "SECONDARY_SECRET", "HOOK_SECRET", "PEER_SECRET", "THIRD_SECRET"):
+            assert self.env[name] not in encoded
+        with Path(output).open("a", encoding="utf-8") as stream:
+            stream.write(encoded + "\n")
 
     def cli(self, *args, expected=0, overrides=None):
         process = subprocess.run(self.args(*args), env={**self.env, **(overrides or {})},
@@ -86,7 +103,7 @@ root = {quote(self.storage)}
     def restic(self, repo, *args):
         environment = {"PATH": os.defpath, "RESTIC_PASSWORD": self.env[f"{repo.upper()}_SECRET"]}
         return subprocess.run(
-            ["/usr/bin/restic", "--no-cache", "--repo", str(self.storage / repo), *args],
+            [shutil.which("restic"), "--no-cache", "--repo", str(self.storage / repo), *args],
             env=environment, capture_output=True, text=True, check=True, timeout=20,
         ).stdout
 
@@ -342,6 +359,12 @@ def main():
             finally:
                 if batch.poll() is None:
                     batch.terminate()
+
+        fixture.job(secondary=True)
+        mixed = fixture.cli("batch", "run", "fixture", "peer", expected=2, overrides={"PRIMARY_SECRET": "wrong-fixture"})
+        assert [(row["job_id"], row["status"]) for row in mixed["data"]["jobs"]] == [
+            ("fixture", "partial"), ("peer", "full"),
+        ]
 
         fixture.job(job_id="unregistered", primary_repo="missing")
         rejected = fixture.cli("job", "run", "unregistered", expected=3)

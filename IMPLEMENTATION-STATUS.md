@@ -294,3 +294,52 @@ The I8 local gate passed on Linux 6.12.101 x86-64. The hosted workflows were
 parsed locally. GitHub-hosted and dedicated self-hosted workflow executions,
 an aarch64 Restic profile, and the full acceptance evidence matrix remain
 release verification work. I9 release acceptance has not been signed off.
+
+## I9 acceptance checkpoint
+
+- [x] AT-001–AT-040. Bound the scenario definitions to executable probes and reviewed local Linux amd64 evidence. The acceptance harness retains exit codes, command logs, redacted CLI results, selected SQLite events, fixture cleanup observations, and report hashes.
+- [x] A3–A5/A9–A12, D14/D19/D41/D47/D49/D55/D76, R4/R9/G3. Added live failure and concurrency evidence for stale locks, corrupt state, unsupported binaries, same-target serialization, different-target overlap, cancellation without termination proof, late release failure, incomplete enumeration, distinct identical-metadata history, and migration rollback.
+- [x] A6/A7. Fresh exact-binary Restic certification passed locally for Linux amd64 formats 1 and 2.
+- [ ] D89/D90, remaining confirmed requirement evidence, aarch64 certification and remote workflow execution. Release acceptance stays open.
+
+| Command or fixture | Exit | Observed evidence |
+|---|---:|---|
+| `tools/validate_handoff.py` | 0 | Static consistency of installed certification reference, 140 traceability rows and 40 scenarios. |
+| `tools/run_acceptance.py --parallel 2 --output /tmp/bm-i9-acceptance-final` | 1 | All 15 selected probes exited 0. At that run's plan revision, 37 scenarios had adequate evidence. Same-target serialization, different-target overlap and incomplete-inventory coverage were still open. The release gate correctly stayed closed. |
+| `tools/run_acceptance.py --probe inventory --output /tmp/bm-i9-inventory` | 1 | Inventory probe exited 0. Two native enumeration failures leave the previous complete provenance intact and start zero copies. |
+| `tools/run_acceptance.py --probe copy-claims --output /tmp/bm-i9-copy-claims-final` | 1 | Copy-claims probe exited 0. Same-target admission blocks while the first process is live. Distinct targets have two simultaneously live contained Restic processes and successful terminal receipts. |
+| `tools/run_acceptance.py --probe identical --output /tmp/bm-i9-identical` | 1 | Identical-metadata probe exited 0. All three repositories retain both independently created logical identities, corroborated by SQLite provenance. |
+| Review of the four completed bundles against the final assertion plan | 0 | Verified equal build-host/source-base metadata, each report SHA-256, each probe exit, and empty fixture directories. All 40 scenarios have passing probes on Linux amd64. `/tmp/bm-i9-reviewed/scenarios.json` SHA-256 `fa22e987214e42a91a6f7c6ae4748ba485e2947049f2aaf94cff10913723774b`. Review output explicitly records release as blocked. |
+| Native certification within the matrix | 0 | All five cases passed and cleaned up. Report `/tmp/bm-i9-acceptance-final/native/certification.json` SHA-256 `649ff70da73a4e7cdd5c67ab199e790dd43ace0ad96d2dfffbd958f1d63db73f`. Restic 0.18.0 SHA-256 `7135345e471b64fe43356f8cc665d33d9e52fb042ba39e5cff77310c46d46857`. |
+| `tools/run_linux_regressions.py namespace --output /tmp/bm-i9-namespace` and the network-disabled ext4 loop-device fixture | 0 each | All three namespace probes passed. Ext4 fixture verified physical lifecycle operations, external mount preservation and loop/image cleanup. |
+| `pip_audit --no-deps --disable-pip -r /tmp/bm-i8-audit-all-targets.txt --format json` | 0 | No known vulnerabilities for the 11 pinned Python dependencies. Report `/tmp/bm-i9-dependency-audit.json`. |
+
+The initial evidence export used an incorrect event timestamp column and was
+discarded. The full matrix above used the corrected exporter. A preliminary
+copy fixture attempted a storage acquisition while holding a repository claim.
+The corrected fixture releases its inspection claim before acquiring the next
+storage lease, then requests the atomically ordered copy claim set.
+
+The traceability register now points 84 of the 139 confirmed requirements to
+observed assertions. The remaining 55 IDs are listed in
+`/tmp/bm-i9-reviewed/release-gate.json`. G2 is superseded and D106 remains
+paused. Local evidence comes from a working-tree candidate based on I8 commit
+`6d9f98e`. The remote acceptance workflow is configured for an isolated
+runner and has not executed in this session.
+
+The D89/D90 storage identity probe verifies that explicit
+`storage recover disk --yes` refuses a newly observed physical identity and
+preserves the prior binding and generation. The confirmed CLI grammar lacks
+an explicit contract for approving the verified replacement independently of
+repository approval. Treating generic recovery confirmation as replacement
+approval would change what the operator authorizes. That workflow needs an
+approved contract. The available host is Linux x86-64 and the installed
+Restic registry has no aarch64 profile. Both block release signoff.
+
+All 84 unit tests passed on CPython 3.12.16 and 3.13.5 with the exact
+candidate wheel. The Python 3.12 dependency consistency check exited 0.
+Final archive builds using `tools/build_release.py --epoch 1704067200` on
+both interpreters and the archive directory comparison exited 0. Exact
+hashes were wheel `ecf0bbfe67d4467035b57eb5eae44f8420bfb2e907ba0a49e0ce594921d360d0`,
+sdist `b6b65610bc6e1e480c8811d6b95b1318daaa732ad13380146ad5971feb509ad2`,
+and lock `b484fd4f981f15c79ec7b09502f9e0b40f16b3dbbe7a7a8ca4ef4925816ff0fd`.

@@ -1,0 +1,43 @@
+schema_version: 1
+# A gap keeps the row open even when its supporting probes pass.
+scenarios:
+  AT-001: {probes: [replication], expected: "Fallback snapshot originates on the first configured secondary and primary resumes its role on the next run."}
+  AT-002: {probes: [replication], expected: "The restored primary contains the fallback revision in the same convergence run."}
+  AT-003: {probes: [replication, operations], expected: "Divergent native histories converge across all three peers before the shared policy runs."}
+  AT-004: {probes: [replication], expected: "Both normal copy receipts use the primary and share the same four frozen source IDs."}
+  AT-005: {probes: [claims, copy-claims], expected: "Two independent executors serialize same-target Restic copy launches and both succeed."}
+  AT-006: {probes: [unit, native, copy-claims], expected: "Different targets enter the normal copy callback concurrently; two contained native Restic copies for distinct targets are simultaneously live and both succeed."}
+  AT-007: {probes: [faults], expected: "A pending requirement whose source disappears before launch uses another verified source."}
+  AT-008: {probes: [faults], expected: "One launched failure is retained and its target requirement stays blocked despite an alternate representation."}
+  AT-009: {probes: [launch, unit], expected: "A crash at handoff cannot record successful work or authorize conflicting claims."}
+  AT-010: {probes: [faults], expected: "Native zero exit with lost source evidence leaves exactly one UNVERIFIED attempt."}
+  AT-011: {probes: [unit, inventory], expected: "Incomplete enumeration preserves provenance and suppresses copy planning."}
+  AT-012: {probes: [jobs], expected: "The wrong repository ID is reported, its inventory stays empty, and the secondary receives backup."}
+  AT-013: {probes: [jobs], expected: "Wrong primary credentials isolate that target while a verified secondary succeeds."}
+  AT-014: {probes: [jobs, boundaries], expected: "Automatic work neither creates a missing repository nor clears a stale Restic lock."}
+  AT-015: {probes: [operations], expected: "Both frozen four-snapshot copies precede retention and each of the three peers retains two snapshots."}
+  AT-016: {probes: [operations], expected: "Failed primary forget leaves both peer retention operations successful and the job full."}
+  AT-017: {probes: [jobs], expected: "Both pre hooks and cleanup execute after failed preparation, with no backup, post hook, or source check."}
+  AT-018: {probes: [boundaries, shared, unit], expected: "An earlier durable job outcome survives a failed final storage release."}
+  AT-019: {probes: [crash, jobs], expected: "Owner SIGKILL blocks another job until the recorded child scope is confirmed empty."}
+  AT-020: {probes: [boundaries, unit], expected: "A corrupt database yields unsafe and leaves witness, corrupt file, repository, and storage lifecycle untouched."}
+  AT-021: {probes: [shared, jobs], expected: "An externally mounted resource is reused and remains mounted after final claim release."}
+  AT-022: {probes: [shared], expected: "One waiter may withdraw while its peer acquires and the last waiter stops unused acquisition."}
+  AT-023: {probes: [jobs], expected: "Concurrent jobs finish independently; invalid/full returns failed and partial/full returns partial."}
+  AT-024: {probes: [unit, boundaries], expected: "Unknown nested provider fields and multiple invalid job fields are rejected without echoing input."}
+  AT-025: {probes: [jobs, scoped, unit], expected: "Sentinels are absent from command arguments, database, logs, CLI JSON and errors."}
+  AT-026: {probes: [native, scoped], expected: "Exact Restic fingerprint passes fresh certification in both formats and a replaced binary never launches."}
+  AT-027: {probes: [boundaries], expected: "An unsupported exact fingerprint exits 7 and creates no snapshot."}
+  AT-028: {probes: [supervisor, jobs], expected: "Cancellation without proved child termination keeps claims fenced."}
+  AT-029: {probes: [faults], expected: "A started failure leaves one attempt and a blocked requirement despite another verified source."}
+  AT-030: {probes: [native, lineage, faults], expected: "Certified A-to-B-to-C copy preserves a valid lineage representation across repository formats."}
+  AT-031: {probes: [native, unit, identical], expected: "Similar snapshot metadata cannot falsely satisfy a distinct lineage requirement."}
+  AT-032: {probes: [replication], expected: "Chunker mismatch is reported while both required transfer phases succeed."}
+  AT-033: {probes: [jobs], expected: "A missing required source exits failed and leaves primary inventory count unchanged."}
+  AT-034: {probes: [jobs], expected: "The optional-source diagnostic is recorded while the required source produces a successful backup."}
+  AT-035: {probes: [operations], expected: "Dry-run preserves the database and witness byte-for-byte whereas preflight checks identity without taking a snapshot."}
+  AT-036: {probes: [operations], expected: "Wrong expected ID is rejected; matching full ID authorizes the replacement."}
+  AT-037: {probes: [launch], expected: "Faults after intent, scope-ready and exec never produce a successful terminal receipt."}
+  AT-038: {probes: [migration, unit], expected: "An invalid migration rolls back DDL, preserves the backup manifest and leaves admission fenced."}
+  AT-039: {probes: [claims], expected: "Reverse-ordered admission returns one complete claim and one busy result without hanging."}
+  AT-040: {probes: [faults], expected: "A failed secondary transfer leaves the independently successful third copy and existing history intact."}

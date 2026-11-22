@@ -5,6 +5,8 @@ from pathlib import Path
 import subprocess
 import sys
 from tempfile import TemporaryDirectory
+
+from acceptance_trace import record
 from time import monotonic, sleep
 
 from backup_manager.claims import RepositoryClaim, admit_repository_claims
@@ -43,11 +45,13 @@ def main():
         command = [sys.executable, __file__, str(db), str(anchor), str(gate)]
         with subprocess.Popen([*command, "ab"]) as first, subprocess.Popen([*command, "ba"]) as second:
             gate.touch()
-            assert sorted((first.wait(timeout=10), second.wait(timeout=10))) == [0, 5]
+            exits = sorted((first.wait(timeout=10), second.wait(timeout=10)))
+            assert exits == [0, 5]
         with state_read(db, anchor) as database:
             rows = database.execute("SELECT claim_set_id, repository_key FROM repository_claims ORDER BY repository_key").fetchall()
             assert [row[1] for row in rows] == ["a", "b"]
             assert rows[0][0] == rows[1][0]
+            record(database, "AT-039", {"child_exit_codes": exits, "claims": rows})
     print("Reverse-ordered requests produced one complete claim set and one busy result.")
 
 

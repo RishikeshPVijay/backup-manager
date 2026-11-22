@@ -6,6 +6,10 @@ import secrets
 import shutil
 from tempfile import TemporaryDirectory
 from time import monotonic
+from unittest.mock import patch
+
+from acceptance_trace import record
+import backup_manager.supervisor as supervisor
 
 from backup_manager.launch_journal import register_owner
 from backup_manager.process_identity import ProcessIdentity
@@ -53,7 +57,25 @@ def main():
         assert source_identity.id != target_identity.id
         payload = root / "payload"
         payload.write_text("disposable Restic fixture")
-        result = run("backup", adapter.backup(source, (payload,)))
+        observed_argv = []
+        actual_execute = supervisor.execute
+
+        def observe_launch(intent, argv, **options):
+            original = options["on_launch"]
+
+            def launch(receipt):
+                command_line = Path(f"/proc/{receipt.process.pid}/cmdline").read_bytes()
+                assert b"backup" in command_line.split(b"\0")
+                assert all(secret not in command_line for secret in (source.password, target.password))
+                observed_argv.append(True)
+                original(receipt)
+
+            options["on_launch"] = launch
+            return actual_execute(intent, argv, **options)
+
+        with patch.object(supervisor, "execute", side_effect=observe_launch):
+            result = run("backup", adapter.backup(source, (payload,)))
+        assert observed_argv == [True]
         inventory = parse_snapshots(run("source-inventory", adapter.snapshots(source)))
         snapshot = confirm_backup(result, (), inventory, expected_paths=(payload,))
         run("copy", adapter.copy(source, target, (snapshot,)))
@@ -61,6 +83,8 @@ def main():
         assert copied.original == snapshot and copied.tree == inventory[0].tree
         for secret in (source.password, target.password):
             assert secret not in db.read_bytes() and secret not in anchor.read_bytes()
+        with state_read(db, anchor, wait=5) as database:
+            record(database, "AT-025", {"live_restic_argv": "sentinels absent", "persisted": "sentinels absent"})
     print("Scoped exact-profile backup/copy confirmed and disposable repositories cleaned up.")
 
 

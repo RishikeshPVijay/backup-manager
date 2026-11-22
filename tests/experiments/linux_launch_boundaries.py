@@ -14,11 +14,19 @@ from backup_manager.process_identity import ProcessIdentity
 from backup_manager.state import initialize, state_read, state_write
 from backup_manager.supervisor import run_journaled
 import backup_manager.supervisor as supervisor
+from backup_manager.claims import RepositoryClaim, admit_repository_claims
+from acceptance_trace import record
 
 
 def fault(db, anchor, marker, boundary):
     with state_write(db, anchor, wait=5) as database:
         owner = register_owner(database, ProcessIdentity.capture(os.getpid()), "boundary")
+        database.execute(
+            """INSERT INTO repository_registrations
+               (repository_key, job_id, destination_id, restic_repository_id, repo_generation, approved_at)
+               VALUES ('repo', 'job', 'primary', 'fixture-id', 1, 'now')"""
+        )
+        assert admit_repository_claims(database, "boundary", owner, [RepositoryClaim("repo", 1, "COPY_SOURCE")])
     real = supervisor.execute
 
     def interrupted(*args, **kwargs):
@@ -58,6 +66,13 @@ def scenario(boundary):
             assert states == ([("launch_intent",)] if boundary == "intent" else [
                 ("launch_intent",), ("scope_ready",),
             ])
+        with state_write(db, anchor, wait=5) as database:
+            contender = register_owner(database, ProcessIdentity.capture(os.getpid()), "contender")
+            assert admit_repository_claims(
+                database, "competing", contender, [RepositoryClaim("repo", 1, "READ")],
+                compatible_pairs={frozenset({"COPY_SOURCE", "READ"})},
+            ) is None
+            record(database, "AT-009", {"boundary": boundary, "competing_claim": "blocked", "initial_event_types": states})
         until = monotonic() + 10
         while not any(recovered for _, recovered in reconcile_crashed_owners(db, anchor)):
             if monotonic() >= until:
@@ -68,6 +83,8 @@ def scenario(boundary):
             assert database.execute("SELECT state, exit_code FROM command_executions").fetchall() == [
                 ("TERMINATED", None),
             ]
+            assert database.execute("SELECT state FROM repository_claim_sets").fetchall() == [("RELEASED",)]
+            record(database, "AT-037", {"boundary": boundary, "marker": marker.exists(), "end": "interrupted"})
 
 
 if __name__ == "__main__":
