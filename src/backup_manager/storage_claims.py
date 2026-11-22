@@ -306,3 +306,52 @@ def complete_release(database, operation_id, *, physical_release_confirmed):
         (operation_id,),
     )
     return True
+
+
+def approve_replacement(database, resource_id, identity, expected_identity):
+    """Advance a verified replacement binding after checking both coordination domains."""
+    physical = identity.physical_identity
+    coordination = identity.coordination_id
+    if not identity.verified_physical or not physical or physical != expected_identity or not coordination:
+        raise StateUnsafe("Observed storage does not match the expected physical identity.")
+    current = database.execute(
+        """SELECT coordination_id, expected_identity, identity_generation
+           FROM storage_resources WHERE resource_id = ?""", (resource_id,),
+    ).fetchone()
+    if current is None or current[1] is None:
+        raise StateUnsafe("Replacement requires a prior verified physical binding.")
+    old_coordination, old_identity, generation = current
+    if database.execute(
+        """SELECT 1 FROM storage_resources WHERE resource_id != ?
+           AND (expected_identity IN (?, ?) OR coordination_id IN (?, ?)) LIMIT 1""",
+        (resource_id, old_identity, physical, old_coordination, coordination),
+    ).fetchone():
+        raise StateUnsafe("Another storage resource shares the physical or coordination identity.")
+    if live_claims(database, old_coordination) or live_claims(database, coordination):
+        raise StateUnsafe("Active storage claims block replacement approval.")
+    blockers = (
+        ("""SELECT 1 FROM storage_operations WHERE resource_id = ? AND state != 'TERMINATED'""", (resource_id,)),
+        ("""SELECT 1 FROM storage_ownership WHERE resource_id = ? AND owned_by_manager = 1""", (resource_id,)),
+        ("""SELECT 1 FROM repository_initializations WHERE coordination_id IN (?, ?)""", (old_coordination, coordination)),
+        ("""SELECT 1 FROM repository_registrations JOIN repository_claims USING (repository_key)
+            JOIN repository_claim_sets USING (claim_set_id) WHERE storage_id = ? AND state != 'RELEASED'""", (resource_id,)),
+    )
+    if any(database.execute(query + " LIMIT 1", arguments).fetchone() for query, arguments in blockers):
+        raise StateUnsafe("Unsettled repository work or storage ownership blocks replacement approval.")
+    if old_identity == physical:
+        if old_coordination != coordination:
+            raise StateUnsafe("Provider coordination changed without a physical replacement.")
+        return ResourceGeneration(resource_id, coordination, generation)
+    generation += 1
+    database.execute(
+        """UPDATE storage_resources SET coordination_id = ?, expected_identity = ?, identity_generation = ?
+           WHERE resource_id = ?""", (coordination, physical, generation, resource_id),
+    )
+    from .launch_journal import now
+
+    database.execute(
+        "INSERT INTO events VALUES (?, ?, ?, ?, ?)",
+        (str(uuid4()), resource_id, "storage_replacement_approved",
+         json.dumps({"previous_identity": old_identity, "physical_identity": physical, "generation": generation}), now()),
+    )
+    return ResourceGeneration(resource_id, coordination, generation)

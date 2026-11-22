@@ -12,6 +12,7 @@ Every command accepts `--config PATH` (default `/etc/backup-manager/config.toml`
 | `storage list` | none | none | no |
 | `storage inspect` | `STORAGE_ID` | `--preflight` | optional lifecycle |
 | `storage recover` | `STORAGE_ID` | `--yes` | yes |
+| `storage approve-replacement` | `STORAGE_ID --expected-id PHYSICAL_ID` | `--yes` | yes |
 | `repository init` | `JOB_ID DEST_ID` | `--yes` | yes |
 | `repository register` | `JOB_ID DEST_ID` | `--yes` | yes |
 | `repository inspect` | `JOB_ID DEST_ID` | `--preflight` | no or lifecycle |
@@ -39,3 +40,5 @@ Every command accepts `--config PATH` (default `/etc/backup-manager/config.toml`
 ```
 
 Stable exit codes: 0 full; 2 partial; 3 failed; 4 invalid; 5 busy; 6 cancelled; 7 unsupported; 8 unsafe; 9 internal. Batch precedence failure > partial > full. Never use exit 0 when a required convergence destination is unavailable. JSON error context must be secret-redacted and may not contain command environment or raw provider exceptions.
+
+Storage approval requires a mounted, physically verified replacement. Use the exact `physical_identity` returned by `storage inspect --json` after independently checking the device. Interactive confirmation is `STORAGE_ID/PHYSICAL_ID`. Repository replacement has its own confirmation.

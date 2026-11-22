@@ -41,20 +41,42 @@ def stale_lock(fixture, primary):
     assert not list(lock_path.iterdir())
 
 
-def storage_identity_cannot_be_silently_reapproved(fixture):
+def separate_identity_approvals(fixture):
     replacement = fixture.storage / "replacement-identity"
     replacement.write_text("replacement-disk")
-    try:
-        changed = fixture.cli("storage", "recover", "disk", "--yes", expected=8)
-        assert changed["errors"]
-        with state_read(fixture.db, fixture.anchor, wait=5) as database:
-            row = database.execute(
-                "SELECT expected_identity, identity_generation FROM storage_resources WHERE resource_id = 'disk'",
-            ).fetchone()
-            assert row == ("fixture-disk", 1)
-            record(database, "D89-D90", {"changed_storage": "fenced", "stored_identity": row})
-    finally:
-        replacement.unlink()
+    with state_read(fixture.db, fixture.anchor, wait=5) as database:
+        original = database.execute(
+            """SELECT restic_repository_id, repo_generation FROM repository_registrations
+               WHERE job_id = 'fixture' AND destination_id = 'primary'""",
+        ).fetchone()
+    fixture.cli("storage", "recover", "disk", "--yes", expected=8)
+    fixture.cli("storage", "approve-replacement", "disk", "--expected-id", "wrong", "--yes", expected=8)
+    fixture.cli("storage", "approve-replacement", "disk", "--expected-id", "replacement-disk", expected=4)
+    inspected = fixture.cli("storage", "inspect", "disk")
+    assert inspected["data"]["physical_identity"] == "replacement-disk"
+    with state_read(fixture.db, fixture.anchor, wait=5) as database:
+        assert database.execute("SELECT expected_identity, identity_generation FROM storage_resources").fetchall() == [
+            ("fixture-disk", 1),
+        ]
+
+    primary = fixture.storage / "primary"
+    primary.rename(fixture.root / "previous-primary")
+    fixture.restic("primary", "init", "--repository-version", "2")
+    new_repo = json.loads(fixture.restic("primary", "cat", "config"))["id"]
+    fixture.cli("repository", "approve-replacement", "fixture", "primary", "--expected-id", new_repo, "--yes", expected=8)
+    approved = fixture.cli("storage", "approve-replacement", "disk", "--expected-id", "replacement-disk", "--yes")
+    assert approved["data"]["generation"] == 2
+    fixture.cli("repository", "inspect", "fixture", "primary", expected=8)
+    with state_read(fixture.db, fixture.anchor, wait=5) as database:
+        assert database.execute(
+            """SELECT restic_repository_id, repo_generation FROM repository_registrations
+               WHERE job_id = 'fixture' AND destination_id = 'primary'""",
+        ).fetchone() == original
+        record(database, "D89-D90", {"storage_generation": 2, "repository_generation": original[1]})
+    fixture.cli("repository", "approve-replacement", "fixture", "primary", "--expected-id", new_repo, "--yes")
+    fixture.cli("repository", "inspect", "fixture", "primary")
+    assert (fixture.storage / "mounted").exists()
+    assert not (fixture.storage / "actions").exists()
 
 
 def hold_storage(config, ready, release):
@@ -142,8 +164,6 @@ def main():
         assert prior == (fixture.db.read_bytes(), fixture.anchor.read_bytes())
         invalid.write_text(original)
 
-        storage_identity_cannot_be_silently_reapproved(fixture)
-
         # State corruption blocks admission before storage lifecycle or Restic.
         inventory = fixture.restic("primary", "snapshots", "--json")
         fixture.db.write_bytes(b"corrupt disposable database")
@@ -154,11 +174,13 @@ def main():
         assert fixture.db.read_bytes() == b"corrupt disposable database"
         assert fixture.restic("primary", "snapshots", "--json") == inventory
         assert not (fixture.storage / "actions").exists()
+    with TemporaryDirectory(prefix="bm-storage-replacement-") as temporary:
+        separate_identity_approvals(Fixture(Path(temporary)))
     with TemporaryDirectory(prefix="bm-i9-release-failure-") as temporary:
         fixture = Fixture(Path(temporary))
         fixture.job()
         later_release_failure(fixture)
-    print("Later release failure and storage identity refusal gates passed.")
+    print("Later release failure and independent storage and repository approval gates passed.")
     print("Unsupported binary, missing repository, stale lock, strict config, and corrupt-state gates passed.")
 
 

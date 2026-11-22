@@ -57,7 +57,7 @@ def build_parser():
         "config": ("validate",),
         "job": ("list", "show", "run"),
         "batch": ("run",),
-        "storage": ("list", "inspect", "recover"),
+        "storage": ("list", "inspect", "recover", "approve-replacement"),
         "repository": ("init", "register", "inspect", "unlock", "approve-replacement"),
         "retention": ("run", "preview"),
         "verify": ("run",),
@@ -98,6 +98,8 @@ def configure_command(parser, group, action):
         mode.add_argument("--preflight", action="store_true")
     if group == "storage" and action != "list":
         parser.add_argument("storage", type=identifier)
+        if action == "approve-replacement":
+            parser.add_argument("--expected-id", required=True)
     if group == "repository":
         parser.add_argument("destination", type=identifier)
         if action == "approve-replacement":
@@ -119,7 +121,7 @@ def configure_command(parser, group, action):
     if group == "state" and action in {"backup", "recover"}:
         parser.add_argument("path", type=Path)
     if command in {
-        ("storage", "recover"), ("repository", "init"), ("repository", "register"),
+        ("storage", "recover"), ("storage", "approve-replacement"), ("repository", "init"), ("repository", "register"),
         ("repository", "unlock"), ("repository", "approve-replacement"),
         ("operation", "cancel"), ("state", "init"), ("state", "recover"),
     }:
@@ -187,7 +189,7 @@ def dispatch(args):
         except (state.StateUnsafe, OSError, sqlite3.Error, ValueError, TypeError, KeyError, TimeoutError,
                 ResticEvidenceError, SecretUnavailable, subprocess.TimeoutExpired):
             return Result(Status.UNSAFE, errors=(Diagnostic("RECOVERY_UNVERIFIED", "Backup or current safety evidence cannot authorize recovery."),))
-    if args.group in {"storage", "doctor"} and getattr(args, "action", None) != "recover":
+    if args.group in {"storage", "doctor"} and getattr(args, "action", None) not in {"recover", "approve-replacement"}:
         return inspection_command(args)
     if args.group == "state" and args.action in {"init", "check", "backup"}:
         config = load_global(getattr(args, "config", DEFAULT_CONFIG))
@@ -207,14 +209,19 @@ def dispatch(args):
         except state.StateUnsafe as error:
             return Result(Status.UNSAFE, errors=(Diagnostic("STATE_UNSAFE", str(error)),))
         return Result(data=data)
-    if args.group == "storage" and args.action == "recover":
+    if args.group == "storage" and args.action in {"recover", "approve-replacement"}:
         config = load_global(getattr(args, "config", DEFAULT_CONFIG))
         if config.errors:
             return Result(Status.INVALID, errors=config.errors)
         if args.storage not in config.data["storage"]:
             return Result(Status.INVALID, errors=(Diagnostic("UNKNOWN_STORAGE", "Storage identifier is not configured."),))
-        confirm(args, args.storage)
+        replacement = args.action == "approve-replacement"
+        if replacement and (not args.expected_id.isprintable() or not args.expected_id.strip()):
+            raise InvalidInvocation
+        confirm(args, f"{args.storage}/{args.expected_id}" if replacement else args.storage)
         execution = config.data.get("execution", {})
+        if replacement:
+            execution = {**EXECUTION_DEFAULTS, **execution}
         budgets = (execution.get("acquire_timeout_seconds"), execution.get("release_timeout_seconds"))
         if any(budget is None for budget in budgets):
             return Result(Status.INVALID, errors=(Diagnostic("STORAGE_BUDGET", "Storage recovery requires configured lifecycle budgets."),))
@@ -224,11 +231,13 @@ def dispatch(args):
                 Path(config.data["state"]["path"]), Path(config.data["state"]["anchor_path"]),
                 config.data["storage"], acquire_seconds=budgets[0], release_seconds=budgets[1],
             )
-            return Result(data=coordinator.recover_storage(
-                args.storage, deadline=monotonic_ns() + timeout * 1_000_000_000,
-            ))
-        except (state.StateUnsafe, TimeoutError):
-            return Result(Status.UNSAFE, errors=(Diagnostic("STORAGE_RECOVERY", "Storage remains fenced pending reconciliation."),))
+            deadline = monotonic_ns() + timeout * 1_000_000_000
+            if replacement:
+                return Result(data=coordinator.approve_storage_replacement(args.storage, args.expected_id, deadline=deadline))
+            return Result(data=coordinator.recover_storage(args.storage, deadline=deadline))
+        except (state.StateUnsafe, OSError, TimeoutError):
+            code = "STORAGE_REPLACEMENT_UNVERIFIED" if replacement else "STORAGE_RECOVERY"
+            return Result(Status.UNSAFE, errors=(Diagnostic(code, "Storage remains fenced pending reconciliation."),))
     if args.group == "batch" and bool(args.jobs) == args.all:
         raise InvalidInvocation
     if getattr(args, "limit", None) and args.limit > 1000:
@@ -449,6 +458,7 @@ def inspection_command(args):
             return Result(Status.FULL if inspected.state.value == "available" else Status.FAILED, data={
                 "storage_id": args.storage, "state": inspected.state.value, "mounted": inspected.mounted,
                 "verified_physical": identity.verified_physical, "mountpoint": inspected.mountpoint,
+                "physical_identity": identity.physical_identity if identity.verified_physical else None,
             })
     except (state.StateUnsafe, StorageUnavailable, OSError, TimeoutError, JobStopped):
         return Result(Status.UNSAFE, errors=(Diagnostic("STORAGE_UNVERIFIED", "Storage inspection could not be verified."),))

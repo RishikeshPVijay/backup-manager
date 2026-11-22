@@ -4,7 +4,7 @@ import unittest
 
 from backup_manager.plugin_api import StorageIdentity
 from backup_manager.state import StateUnsafe, initialize, state_write
-from backup_manager.storage_claims import admit_storage_claim, reconcile_identity
+from backup_manager.storage_claims import admit_storage_claim, approve_replacement, reconcile_identity
 
 
 class StorageClaimsTests(unittest.TestCase):
@@ -25,6 +25,47 @@ class StorageClaimsTests(unittest.TestCase):
                 changed = StorageIdentity("uuid2", "uuid2", {}, True)
                 with self.assertRaises(StateUnsafe):
                     reconcile_identity(database, "disk", changed, None)
+
+    def test_replacement_is_fenced_by_live_claims_ownership_and_aliases(self):
+        with TemporaryDirectory() as temp:
+            root = Path(temp)
+            db = root / "db" / "state"
+            witness = root / "witness" / "state"
+            db.parent.mkdir(mode=0o700)
+            witness.parent.mkdir(mode=0o700)
+            initialize(db, witness)
+            with state_write(db, witness) as database:
+                old = StorageIdentity("old", "old", {}, True)
+                new = StorageIdentity("new", "new", {}, True)
+                resource = reconcile_identity(database, "disk", old, None)
+                database.execute("INSERT INTO process_owners (owner_id, boot_id, state) VALUES ('owner', 'boot', 'ACTIVE')")
+                claim = admit_storage_claim(database, resource, "owner")
+                with self.assertRaisesRegex(StateUnsafe, "Active storage claims"):
+                    approve_replacement(database, "disk", new, "new")
+                database.execute("UPDATE storage_claims SET state = 'RELEASED' WHERE claim_id = ?", (claim,))
+                database.execute("INSERT INTO storage_ownership VALUES ('disk', 1, 1, '{}')")
+                with self.assertRaisesRegex(StateUnsafe, "ownership"):
+                    approve_replacement(database, "disk", new, "new")
+                database.execute("UPDATE storage_ownership SET owned_by_manager = 0")
+                database.execute(
+                    """INSERT INTO storage_operations (operation_id, resource_id, kind, state)
+                       VALUES ('release', 'disk', 'release', 'RECOVERY_REQUIRED')"""
+                )
+                with self.assertRaisesRegex(StateUnsafe, "Unsettled"):
+                    approve_replacement(database, "disk", new, "new")
+                database.execute("UPDATE storage_operations SET state = 'TERMINATED' WHERE operation_id = 'release'")
+                reconcile_identity(database, "other", new, None)
+                with self.assertRaisesRegex(StateUnsafe, "shares"):
+                    approve_replacement(database, "disk", new, "new")
+                database.execute("DELETE FROM storage_resources WHERE resource_id = 'other'")
+                self.assertEqual(approve_replacement(database, "disk", new, "new").generation, 2)
+                self.assertEqual(approve_replacement(database, "disk", new, "new").generation, 2)
+                self.assertEqual(database.execute(
+                    "SELECT count(*) FROM events WHERE type = 'storage_replacement_approved'"
+                ).fetchone(), (1,))
+                self.assertEqual(database.execute(
+                    "SELECT generation, owned_by_manager FROM storage_ownership"
+                ).fetchall(), [(1, 0)])
 
     def test_equal_explicit_identities_share_release_fence(self):
         with TemporaryDirectory() as temp:

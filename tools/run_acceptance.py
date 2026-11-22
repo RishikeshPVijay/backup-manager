@@ -33,6 +33,7 @@ PROBES = {
     "lineage": "linux_i6_native_equivalence",
     "inventory": "linux_i9_inventory",
     "identical": "linux_i9_identical",
+    "followups": "linux_release_followups",
     "migration": "linux_i9_migration",
     "native": ("tools/certify_restic.py",),
 }

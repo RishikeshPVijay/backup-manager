@@ -13,11 +13,11 @@ scenarios:
   AT-010: {probes: [faults], expected: "Native zero exit with lost source evidence leaves exactly one UNVERIFIED attempt."}
   AT-011: {probes: [unit, inventory], expected: "Incomplete enumeration preserves provenance and suppresses copy planning."}
   AT-012: {probes: [jobs], expected: "The wrong repository ID is reported, its inventory stays empty, and the secondary receives backup."}
-  AT-013: {probes: [jobs], expected: "Wrong primary credentials isolate that target while a verified secondary succeeds."}
+  AT-013: {probes: [jobs, followups], expected: "Wrong primary credentials isolate that target while a verified secondary succeeds."}
   AT-014: {probes: [jobs, boundaries], expected: "Automatic work neither creates a missing repository nor clears a stale Restic lock."}
   AT-015: {probes: [operations], expected: "Both frozen four-snapshot copies precede retention and each of the three peers retains two snapshots."}
   AT-016: {probes: [operations], expected: "Failed primary forget leaves both peer retention operations successful and the job full."}
-  AT-017: {probes: [jobs], expected: "Both pre hooks and cleanup execute after failed preparation, with no backup, post hook, or source check."}
+  AT-017: {probes: [jobs, followups], expected: "Both pre hooks and cleanup execute after failed preparation, with no backup, post hook, or source check."}
   AT-018: {probes: [boundaries, shared, unit], expected: "An earlier durable job outcome survives a failed final storage release."}
   AT-019: {probes: [crash, jobs], expected: "Owner SIGKILL blocks another job until the recorded child scope is confirmed empty."}
   AT-020: {probes: [boundaries, unit], expected: "A corrupt database yields unsafe and leaves witness, corrupt file, repository, and storage lifecycle untouched."}
@@ -33,10 +33,10 @@ scenarios:
   AT-030: {probes: [native, lineage, faults], expected: "Certified A-to-B-to-C copy preserves a valid lineage representation across repository formats."}
   AT-031: {probes: [native, unit, identical], expected: "Similar snapshot metadata cannot falsely satisfy a distinct lineage requirement."}
   AT-032: {probes: [replication], expected: "Chunker mismatch is reported while both required transfer phases succeed."}
-  AT-033: {probes: [jobs], expected: "A missing required source exits failed and leaves primary inventory count unchanged."}
+  AT-033: {probes: [jobs, followups], expected: "A missing required source exits failed and leaves primary inventory count unchanged."}
   AT-034: {probes: [jobs], expected: "The optional-source diagnostic is recorded while the required source produces a successful backup."}
   AT-035: {probes: [operations], expected: "Dry-run preserves the database and witness byte-for-byte whereas preflight checks identity without taking a snapshot."}
-  AT-036: {probes: [operations], expected: "Wrong expected ID is rejected; matching full ID authorizes the replacement."}
+  AT-036: {probes: [operations, boundaries, unit], expected: "Expected ID and confirmation gate both replacements; storage approval leaves the repository binding unchanged; active claims, ownership, and aliases fence storage approval."}
   AT-037: {probes: [launch], expected: "Faults after intent, scope-ready and exec never produce a successful terminal receipt."}
   AT-038: {probes: [migration, unit], expected: "An invalid migration rolls back DDL, preserves the backup manifest and leaves admission fenced."}
   AT-039: {probes: [claims], expected: "Reverse-ordered admission returns one complete claim and one busy result without hanging."}

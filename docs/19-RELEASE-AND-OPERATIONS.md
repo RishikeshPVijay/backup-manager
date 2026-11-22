@@ -122,3 +122,20 @@ Output redaction matches known credential bytes in complete captured streams.
 Captured output with known credentials is omitted once native capture
 truncates. Encoded or transformed forms can evade exact matching. Configure
 trusted hooks to avoid emitting credentials under any format.
+
+## Approving replacement storage
+
+Stop scheduling uses of the resource and drain its claims and lifecycle work.
+For the Linux filesystem provider, update the configured filesystem UUID for
+the intended device and mount it at the configured mountpoint. Verify the
+device independently. Read the exact provider identity from
+`storage inspect STORAGE_ID --json` and run
+`storage approve-replacement STORAGE_ID --expected-id PHYSICAL_ID --yes`.
+The Linux provider reports the identity in the form `filesystem:UUID`.
+
+Approval refuses unverified identities, an identity already bound to another
+resource, unsettled claims or lifecycle operations, and outstanding manager
+mount ownership. Clear those fences through explicit recovery of the original
+binding before approving a replacement. The command changes the storage
+generation and writes an audit event. A replacement that also contains a
+different Restic repository requires the separate repository approval command.

@@ -13,7 +13,7 @@ from .plugin_api import ExecutionContext, StorageState
 from .process_identity import ProcessIdentity
 from .providers import discover
 from .state import StateUnsafe, state_read, state_write
-from .storage_claims import drop_claim, lifecycle_view, live_claims, plan_acquisition, plan_release, reconcile_identity
+from .storage_claims import approve_replacement, drop_claim, lifecycle_view, live_claims, plan_acquisition, plan_release, reconcile_identity
 from .storage_dispatch import start_dispatch
 from .storage_driver import fence_operation
 
@@ -174,6 +174,31 @@ class StorageCoordinator:
         if pending:
             self.dispatch(plan, resource_id, self.release_seconds, evidence)
 
+
+    def approve_storage_replacement(self, resource_id, expected_identity, *, deadline):
+        with self.read() as database:
+            baseline = database.execute(
+                "SELECT coordination_id, expected_identity, identity_generation FROM storage_resources WHERE resource_id = ?",
+                (resource_id,),
+            ).fetchone()
+            if baseline is None:
+                raise StateUnsafe("Replacement requires an existing storage binding.")
+            lifecycle = lifecycle_view(database, baseline[0])
+        inspection, identity = self.observe(resource_id, deadline)
+        if inspection.state is not StorageState.AVAILABLE or not inspection.mounted:
+            raise StateUnsafe("Replacement storage must be mounted and verified.")
+        with self.write() as database:
+            current = database.execute(
+                "SELECT coordination_id, expected_identity, identity_generation FROM storage_resources WHERE resource_id = ?",
+                (resource_id,),
+            ).fetchone()
+            if (
+                current != baseline or lifecycle_view(database, baseline[0]) != lifecycle
+                or monotonic_ns() >= deadline
+            ):
+                raise StateUnsafe("Storage binding or lifecycle changed during approval, or approval expired.")
+            resource = approve_replacement(database, resource_id, identity, expected_identity)
+        return {"resource_id": resource_id, "physical_identity": expected_identity, "generation": resource.generation}
 
     def recover_storage(self, resource_id, *, deadline):
         """Reconcile an idle resource without performing any physical release."""

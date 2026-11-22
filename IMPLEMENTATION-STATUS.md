@@ -343,3 +343,29 @@ both interpreters and the archive directory comparison exited 0. Exact
 hashes were wheel `ecf0bbfe67d4467035b57eb5eae44f8420bfb2e907ba0a49e0ce594921d360d0`,
 sdist `b6b65610bc6e1e480c8811d6b95b1318daaa732ad13380146ad5971feb509ad2`,
 and lock `b484fd4f981f15c79ec7b09502f9e0b40f16b3dbbe7a7a8ca4ef4925816ff0fd`.
+
+## Post-I9 storage replacement and traceability
+
+Operator approval resolved the D89/D90 CLI contract. Run
+`storage approve-replacement STORAGE_ID --expected-id PHYSICAL_ID --yes`
+after verifying and mounting the replacement. The command advances the
+storage identity generation and records the approved old and new bindings.
+Active claims, unresolved lifecycle or repository work, outstanding owned
+mounts, identity aliases, and unverifiable observations prevent approval.
+Repository registration and approval remain independent. The acceptance
+fixture exercises both approval orders and confirms the provider's mount
+marker is preserved.
+
+| Command or fixture | Exit | Evidence |
+|---|---:|---|
+| `tools/validate_handoff.py` | 0 | Static schemas, examples, traceability and certification reference. |
+| Installed-wheel unit suite on CPython 3.12.16 and 3.13.5 | 0 each | 85 tests each. New tests reject active claims, ownership, unresolved lifecycle, and aliases, then check one generation advance, one audit event and idempotence. |
+| `tools/run_acceptance.py --parallel 2 --probe boundaries --probe operations --probe unit --output /tmp/bm-storage-approval-gate` | 1 | All three probes exited 0. Exact-ID approval was required and left the registered repository ID and generation intact until separate repository approval. Subset runner exit 1 records an open release gate. |
+| `tools/run_acceptance.py --probe followups --output /tmp/bm-release-followups` | 1 | Probe exited 0 after validating empty credential isolation, default required sources, both history formats, and ordered independent cleanup. Subset runner kept the release gate open. |
+| `tools/build_release.py --epoch 1704067200` on both versions followed by archive comparison | 0 | Byte-identical archives. Wheel SHA-256 `7bec4f7e96e243479cb79ba4fe7995b8abef8fe2023dffcf22a610cdc8777d8a`; sdist SHA-256 `95389ee501f2f170e967634b16421e1c9742375c8eeee6494acc02cc92cd24e4`. Wheel member bytes matched the installed test wheel. |
+
+Assertion-level traceability covers 107 of 139 confirmed requirements.
+The 32 open rows, exact aarch64 certification and authenticated dispatch
+of the remote release workflow remain release gates. GitHub is reachable
+over SSH and the public Actions API supports read access. No
+non-interactive GitHub HTTPS credential is configured for manual dispatch.
