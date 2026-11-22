@@ -37,6 +37,14 @@ The printed metadata is input to profile review. Installing a profile still
 requires review of the observed compatibility claims, the registered report
 reference, and ARM64 installed-wheel acceptance.
 
-The manual acceptance workflow requires a disposable self-hosted runner for
-each architecture. Provision the architecture-specific certified Restic on
-PATH and working user systemd scopes before dispatch.
+Dispatch **Linux safety regressions** on the default branch. It uses
+GitHub-hosted Ubuntu 24.04 VMs for x86-64 and ARM64. Each acceptance VM
+downloads and verifies its exact certified Restic executable and checks
+that the runner user can start a systemd scope on cgroup v2. The ext4
+regression uses a separate x86-64 VM with a private mount namespace and
+private device nodes.
+
+Download `release-acceptance-evidence-x64` and
+`release-acceptance-evidence-arm64` from the run. Look in each archive for
+`hosted-preflight.log` and, once the acceptance runner has executed,
+`acceptance/release-gate.json` and `acceptance/scenarios.json`.

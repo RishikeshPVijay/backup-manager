@@ -504,3 +504,24 @@ disconnect injected during a scoped copy, with peer success and no retry
 asserted. D102 and L3 need native evidence of shared lifecycle coordination
 and cross-process physical reconciliation. Both manually generated workflow
 artifacts remain pending.
+
+## GitHub-hosted Linux workflow
+
+Run `45006727526` queued for an x64 self-hosted runner. The repository has
+no registered self-hosted runners. The replacement workflow uses
+`ubuntu-24.04` and `ubuntu-24.04-arm`. It checks the exact Debian amd64
+package and upstream ARM64 archive before extraction, checks the registered
+executable digest and version, and verifies a populated cgroup v2 scope under
+the runner user. Acceptance artifacts retain the preflight log if setup
+fails. The ext4 fixture runs inside a private mount namespace with a private
+`/dev` on its own hosted VM.
+
+| Check | Exit | Evidence |
+|---|---:|---|
+| Installed-wheel `python -m unittest discover -s tests/unit` | 0 | 113 tests passed on Python 3.13. |
+| `python tools/validate_handoff.py` | 0 | Both registered profile report references validated. |
+| Workflow YAML, matrix and shell checks | 0 | Both runner images and registered binary pins matched. All workflow run blocks and the helper passed Bash syntax checks. The helper refused a non-hosted runner. |
+| Debian download probe from this workspace | 6 | DNS unavailable. The package name and archive checksum were checked against the Debian package listing. |
+
+Hosted preflight, loop execution and both acceptance artifacts still need a
+new workflow run on the default branch. Release acceptance remains open.
