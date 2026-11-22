@@ -525,3 +525,49 @@ fails. The ext4 fixture runs inside a private mount namespace with a private
 
 Hosted preflight, loop execution and both acceptance artifacts still need a
 new workflow run on the default branch. Release acceptance remains open.
+
+## Hosted acceptance evidence review
+
+Reviewed both supplied acceptance archives for commit
+`1a0e9fb833c596b051894e9965f18a24a5911717`. ZIP integrity checks and
+all recorded probe report hashes passed. Both architectures matched the
+registered Restic version and fingerprint, passed 19 probes and 40 scenarios,
+and reported empty fixture directories. Both native Restic reports passed all
+five certification cases. The release reports had no missing profiles or
+open scenarios. The three unsigned requirements in each report account for
+the acceptance job exit of 1.
+
+| Supplied archive | SHA-256 |
+|---|---|
+| `release-acceptance-evidence-x64.zip` | `f05543a62538f53437d0deb79dd14a2679e31b0eec048f33a6219dad4e8da9be` |
+| `release-acceptance-evidence-arm64.zip` | `7a71ca17fe494d1f63a3f9d622c51b3674fadf3427e45a19170c0ee21dc2440c` |
+
+Verified L3 using the hosted shared and crash probes plus the existing
+storage-driver assertions. The independent clients preserved a freshly
+observed external mount, the shared trace recorded five settled acquire or
+release operations, and owner recovery released the fenced claim after
+verified scope exit. The storage-driver tests cover durable ownership and
+fresh physical inspection. Traceability now covers 137 of 139 confirmed
+requirements.
+
+D37 still needs a target-disconnect assertion during scoped copy. The hosted
+fault probe injects a bad password or source loss. D102 still needs an
+assertion connecting backup, maintenance and repository administration to
+the same storage lifecycle. The acceptance ZIPs do not contain the separate
+`scoped` job output. Release acceptance remains open.
+
+## Hosted scoped regression archive review
+
+`linux-regression-results.zip` passed ZIP integrity checking. Its SHA-256 is
+`f84935b237f5af567f8743624035f221bcbbc626f4c6b54ffcf4e6b8e286836a`.
+Hosted preflight, native Restic certification and all 12 scoped probes passed.
+All three mount-namespace probes exited 2 with Python reporting permission
+denied opening the fixture in the checkout. The workflow had run the suite
+through sudo before each fixture mapped its invoking user to namespace root.
+
+The workflow now runs the namespace suite as the checkout owner. On the
+disposable hosted VM it temporarily permits unprivileged user namespace
+capabilities if Ubuntu's AppArmor sysctl requires it, then restores the
+original setting when the step exits. Each probe still creates a private
+mount namespace. The local namespace suite exited 0 with all three fixtures
+passing. Hosted verification of this workflow change remains pending.

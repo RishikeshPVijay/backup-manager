@@ -25,13 +25,20 @@ jobs:
       - run: python tools/run_linux_regressions.py scoped --output scoped-results
       - if: ${{ !cancelled() && steps.wheel.outcome == 'success' }}
         name: Test disposable mount namespaces
+        shell: bash
         run: |
-          status=0
-          sudo -n "$(command -v python)" tools/run_linux_regressions.py namespace --output namespace-results || status=$?
-          if test -d namespace-results; then
-            sudo -n chown -R "$(id -u):$(id -g)" namespace-results
+          test "$RUNNER_ENVIRONMENT" = github-hosted
+          # Map the checkout owner to root inside each fixture's user namespace.
+          # Ubuntu may restrict namespace capabilities even when unshare succeeds.
+          setting=kernel.apparmor_restrict_unprivileged_userns
+          if test -e /proc/sys/kernel/apparmor_restrict_unprivileged_userns; then
+            original=$(sudo -n sysctl -n "$setting")
+            if [[ "$original" != 0 ]]; then
+              trap 'sudo -n sysctl -w "$setting=$original"' EXIT
+              sudo -n sysctl -w "$setting=0"
+            fi
           fi
-          exit "$status"
+          python tools/run_linux_regressions.py namespace --output namespace-results
       - if: always()
         uses: actions/upload-artifact@v4
         with:

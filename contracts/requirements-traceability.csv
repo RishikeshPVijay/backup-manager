@@ -123,7 +123,7 @@ G6,confirmed,AT-003;AT-015,verified,The entire logical set is transferred before
 G7,confirmed,AT-008;AT-010,verified,Successful backup followed by a failed/unverified required transfer yields exit 2 and a partial job.
 L1,confirmed,AT-017,verified,LocalAcceptanceTests.test_failed_preparation_attempts_all_pre_and_cleanup_hooks records independent failures and skips sources and backup and post. Its successful counterpart checks phase order.
 L2,confirmed,AT-018;AT-022,verified,The earlier job is durable while another claimant remains; the final release has separate state and notification.
-L3,confirmed,AT-019;AT-021;AT-022,not_executed,Storage driver and coordinator unit tests exercise durable ownership and fresh observations. Still requires cross-process scope-backed reconciliation evidence.
+L3,confirmed,AT-019;AT-021;AT-022,verified,Hosted shared probe records five settled operations and asserts a fresh external mount is reused and preserved. The crash probe proves containment exit before claim release and storage driver tests assert durable ownership and fresh inspection.
 L4,confirmed,AT-022;AT-023,verified,LocalAcceptanceTests.test_global_slot_is_held_while_destination_selection_waits verifies the slot stays occupied during resource selection and is released after the job finishes.
 L5,confirmed,AT-017,verified,Failed preparation skips the source phase even when its configured required path is absent.
 L6,confirmed,AT-022,verified,Unverified identity without a coordination key is refused; equal explicit keys share claim fencing.
